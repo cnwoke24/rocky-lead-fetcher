@@ -73,7 +73,7 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
       {/* Modal */}
       <div className="absolute inset-0 grid place-items-center px-4">
         <div
-          className={`w-full max-w-[980px] rounded-2xl bg-white shadow-2xl border border-neutral-200 overflow-hidden will-change-transform will-change-opacity ${
+          className={`w-full max-w-[720px] rounded-2xl bg-white shadow-2xl border border-neutral-200 overflow-hidden will-change-transform will-change-opacity ${
             closing
               ? "animate-[pop-out_.18s_ease-in_forwards]"
               : "animate-[pop-in_.28s_cubic-bezier(0.22,1,0.36,1)]"
@@ -88,7 +88,8 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
               <img 
                 src={jackieDemo} 
                 alt="Jackie AI agent demo" 
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover object-center"
+                style={{ objectPosition: '65% center' }}
               />
               <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/95 text-neutral-900 text-[11px] font-semibold shadow">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live Demo
