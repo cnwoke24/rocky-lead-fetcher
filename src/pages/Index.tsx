@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Zap, Phone, Bell, BarChart3, Check, Shield, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import TryMeModal from "@/components/TryMeModal";
 
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
@@ -11,6 +12,7 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
   const [navSolid, setNavSolid] = useState(false);
   const [show, setShow] = useState(false);
+  const [tryOpen, setTryOpen] = useState(false);
   const { toast } = useToast();
   
   const pricingRef = useRef<HTMLDivElement | null>(null);
@@ -160,7 +162,7 @@ export default function Index() {
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap reveal in" style={{transitionDelay: '300ms'}}>
               <a href="#pricing" onClick={(e)=>{e.preventDefault(); go(pricingRef);}} className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Get Started</a>
-              <a href="#learn" onClick={(e)=>{e.preventDefault(); go(howRef);}} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Try me</a>
+              <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Try me</button>
             </div>
           </div>
 
@@ -303,6 +305,9 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      {/* Try Me Modal */}
+      <TryMeModal open={tryOpen} onClose={() => setTryOpen(false)} />
     </div>
   );
 }
