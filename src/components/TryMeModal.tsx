@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import jackieDemo from "@/assets/jackie-demo.png";
 
 /** Sanitize phone input to digits (and keep leading +) */
 function normalizePhone(input: string): string {
@@ -51,8 +52,6 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
 
   if (!open) return null;
 
-  const youtubeSrc = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
-
   return (
     <div className="fixed inset-0 z-[60]">
       {/* Local styles for animations */}
@@ -84,14 +83,12 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
           aria-label="Try me demo"
         >
           <div className="grid grid-cols-1 md:grid-cols-2">
-            {/* LEFT: looping YouTube (muted) */}
+            {/* LEFT: demo image */}
             <div className="relative bg-neutral-200 md:min-h-[420px] overflow-hidden">
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src={youtubeSrc}
-                title="Jackie demo"
-                allow="autoplay; encrypted-media"
-                style={{ pointerEvents: "none" }} // prevents YouTube UI interaction
+              <img 
+                src={jackieDemo} 
+                alt="Jackie AI agent demo" 
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute left-3 top-3 inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/95 text-neutral-900 text-[11px] font-semibold shadow">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live Demo
