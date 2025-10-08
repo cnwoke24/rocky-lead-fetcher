@@ -82,7 +82,7 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
           aria-modal="true"
           aria-label="Try me demo"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr]">
             {/* LEFT: demo image */}
             <div className="relative bg-neutral-200 md:min-h-[420px] overflow-hidden">
               <img 
