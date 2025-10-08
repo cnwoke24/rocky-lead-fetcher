@@ -1,5 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,10 +16,6 @@ serve(async (req) => {
       throw new Error('STRIPE_SECRET_KEY not configured');
     }
 
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: '2025-08-27.basil',
-    });
-
     const { email, amount } = await req.json();
 
     if (!email || !amount) {
@@ -33,14 +28,27 @@ serve(async (req) => {
       );
     }
 
-    const cents = Math.round(parseFloat(amount) * 100);
+    const cents = Math.round(parseFloat(String(amount)) * 100);
 
-    // Find Stripe Customer by email
-    const customers = await stripe.customers.search({
-      query: `email:'${email}'`,
+    // Find Stripe Customer by email using Search API
+    const query = `email:'${String(email).replace(/'/g, "\\'")}'`;
+    const customersResp = await fetch(`https://api.stripe.com/v1/customers/search?query=${encodeURIComponent(query)}`, {
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Stripe-Version': '2025-08-27.basil',
+        'Accept': 'application/json',
+      }
     });
 
-    if (customers.data.length === 0) {
+    if (!customersResp.ok) {
+      const errText = await customersResp.text();
+      console.error('Stripe customers search error:', errText);
+      throw new Error('Failed to search Stripe customer');
+    }
+
+    const customers = await customersResp.json();
+
+    if (!customers.data || customers.data.length === 0) {
       return new Response(
         JSON.stringify({ error: 'Customer not found' }),
         {
@@ -50,24 +58,74 @@ serve(async (req) => {
       );
     }
 
-    const customerId = customers.data[0].id;
+    const customerId = customers.data[0].id as string;
 
     // Create invoice item
-    await stripe.invoiceItems.create({
-      customer: customerId,
-      amount: cents,
-      currency: 'usd',
-      description: 'Custom setup fee',
+    const invoiceItemForm = new URLSearchParams();
+    invoiceItemForm.append('customer', customerId);
+    invoiceItemForm.append('amount', String(cents));
+    invoiceItemForm.append('currency', 'usd');
+    invoiceItemForm.append('description', 'Custom setup fee');
+
+    const invoiceItemResp = await fetch('https://api.stripe.com/v1/invoiceitems', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Stripe-Version': '2025-08-27.basil',
+        'Accept': 'application/json',
+      },
+      body: invoiceItemForm.toString(),
     });
 
-    // Create and finalize invoice
-    const invoice = await stripe.invoices.create({
-      customer: customerId,
-      collection_method: 'charge_automatically',
-      auto_advance: true,
+    if (!invoiceItemResp.ok) {
+      const errText = await invoiceItemResp.text();
+      console.error('Stripe invoice item error:', errText);
+      throw new Error('Failed to create invoice item');
+    }
+
+    // Create invoice
+    const invoiceForm = new URLSearchParams();
+    invoiceForm.append('customer', customerId);
+    invoiceForm.append('collection_method', 'charge_automatically');
+    invoiceForm.append('auto_advance', 'true');
+
+    const invoiceResp = await fetch('https://api.stripe.com/v1/invoices', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Stripe-Version': '2025-08-27.basil',
+        'Accept': 'application/json',
+      },
+      body: invoiceForm.toString(),
     });
 
-    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
+    if (!invoiceResp.ok) {
+      const errText = await invoiceResp.text();
+      console.error('Stripe create invoice error:', errText);
+      throw new Error('Failed to create invoice');
+    }
+
+    const invoice = await invoiceResp.json();
+
+    // Finalize invoice
+    const finalizeResp = await fetch(`https://api.stripe.com/v1/invoices/${invoice.id}/finalize`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stripeKey}`,
+        'Stripe-Version': '2025-08-27.basil',
+        'Accept': 'application/json',
+      }
+    });
+
+    if (!finalizeResp.ok) {
+      const errText = await finalizeResp.text();
+      console.error('Stripe finalize invoice error:', errText);
+      throw new Error('Failed to finalize invoice');
+    }
+
+    const finalizedInvoice = await finalizeResp.json();
 
     console.log('Setup fee charged:', finalizedInvoice.id, 'for customer:', email);
 
@@ -84,7 +142,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error charging setup fee:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as any)?.message ?? String(error) }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
