@@ -147,7 +147,7 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37] mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -299,8 +299,8 @@ const Dashboard = () => {
 };
 
 const StepPill = ({ done, current, icon, label, onAction, actionLabel, disabled }: any) => (
-  <div className={`flex items-center gap-3 rounded-2xl border ${done ? 'border-green-200 bg-green-50' : current ? 'border-primary/30 bg-primary/5' : 'border-border bg-muted/30'} p-3`}>
-    <div className={`h-9 w-9 grid place-items-center rounded-xl ${done ? 'bg-green-100' : current ? 'bg-primary/10' : 'bg-muted'}`}>{icon}</div>
+  <div className={`flex items-center gap-3 rounded-2xl border ${done ? 'border-green-200 bg-green-50' : current ? 'border-blue-200 bg-blue-50' : 'border-border bg-muted/30'} p-3`}>
+    <div className={`h-9 w-9 grid place-items-center rounded-xl ${done ? 'bg-green-100' : current ? 'bg-blue-100' : 'bg-muted'}`}>{icon}</div>
     <div className="flex-1">
       <div className="text-sm font-medium flex items-center gap-2">{label}{done && <Badge className="bg-green-600 hover:bg-green-600">Done</Badge>}{!done && current && <Badge variant="secondary">Next</Badge>}</div>
       <p className="text-xs text-muted-foreground mt-0.5">{done ? 'Completed' : current ? 'Action required' : 'Locked until previous step'}</p>

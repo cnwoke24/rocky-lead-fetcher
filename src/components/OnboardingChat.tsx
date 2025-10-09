@@ -203,7 +203,7 @@ export function OnboardingChat() {
   if (isInitializing) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF37]" />
       </div>
     );
   }
