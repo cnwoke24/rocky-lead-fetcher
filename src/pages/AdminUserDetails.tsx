@@ -32,57 +32,113 @@ const AdminUserDetails = () => {
   const loadUserData = async () => {
     if (!userId) return;
 
-    const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-
-    const { data: agreementData } = await supabase
-      .from("agreements")
-      .select("*")
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    const { data: agentData } = await supabase
-      .from("agent_status")
-      .select("is_enabled")
-      .eq("user_id", userId)
-      .single();
-
-    const { data: summariesData } = await supabase
-      .from("daily_summaries")
-      .select("*")
-      .eq("user_id", userId)
-      .order("summary_date", { ascending: false })
-      .limit(5);
-
-    // Load onboarding conversation
-    const { data: convData } = await supabase
-      .from("onboarding_conversations")
-      .select("*")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    setConversation(convData);
-
-    if (convData) {
-      const { data: msgData } = await supabase
-        .from("onboarding_messages")
+    try {
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
         .select("*")
-        .eq("conversation_id", convData.id)
-        .order("created_at", { ascending: true });
+        .eq("id", userId)
+        .single();
 
-      setMessages(msgData || []);
+      if (profileError) {
+        console.error("Error loading profile:", profileError);
+        toast({
+          title: "Error",
+          description: "Failed to load user profile",
+          variant: "destructive",
+        });
+      }
+
+      const { data: agreementData, error: agreementError } = await supabase
+        .from("agreements")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (agreementError) {
+        console.error("Error loading agreement:", agreementError);
+      }
+
+      const { data: agentData, error: agentError } = await supabase
+        .from("agent_status")
+        .select("is_enabled")
+        .eq("user_id", userId)
+        .single();
+
+      if (agentError) {
+        console.error("Error loading agent status:", agentError);
+      }
+
+      const { data: summariesData, error: summariesError } = await supabase
+        .from("daily_summaries")
+        .select("*")
+        .eq("user_id", userId)
+        .order("summary_date", { ascending: false })
+        .limit(5);
+
+      if (summariesError) {
+        console.error("Error loading summaries:", summariesError);
+      }
+
+      // Load onboarding conversation with detailed logging
+      console.log("Loading onboarding conversation for user:", userId);
+      const { data: convData, error: convError } = await supabase
+        .from("onboarding_conversations")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (convError) {
+        console.error("Error loading conversation:", convError);
+        toast({
+          title: "Error",
+          description: "Failed to load onboarding conversation",
+          variant: "destructive",
+        });
+      } else {
+        console.log("Conversation data:", convData);
+        setConversation(convData);
+
+        if (convData) {
+          console.log("Loading messages for conversation:", convData.id);
+          const { data: msgData, error: msgError } = await supabase
+            .from("onboarding_messages")
+            .select("*")
+            .eq("conversation_id", convData.id)
+            .order("created_at", { ascending: true });
+
+          if (msgError) {
+            console.error("Error loading messages:", msgError);
+            toast({
+              title: "Error",
+              description: "Failed to load conversation messages",
+              variant: "destructive",
+            });
+          } else {
+            console.log("Messages loaded:", msgData?.length || 0);
+            setMessages(msgData || []);
+          }
+        } else {
+          console.log("No conversation found for user");
+          setMessages([]);
+        }
+      }
+
+      setProfile(profileData);
+      setAgreement(agreementData);
+      setAgentStatus(agentData?.is_enabled || false);
+      setSummaries(summariesData || []);
+    } catch (error) {
+      console.error("Unexpected error loading user data:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setProfile(profileData);
-    setAgreement(agreementData);
-    setAgentStatus(agentData?.is_enabled || false);
-    setSummaries(summariesData || []);
-    setLoading(false);
   };
 
   const markOnboardingComplete = async () => {
