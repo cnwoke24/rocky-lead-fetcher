@@ -1,1 +1,19 @@
 project_id = "mkzwkrwqqtvluieksdoz"
+
+[functions.setup-admin]
+verify_jwt = false
+
+[functions.create-payment]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.charge-setup]
+verify_jwt = true
+
+[functions.create-checkout-session]
+verify_jwt = true
+
+[functions.onboarding-chat]
+verify_jwt = true
