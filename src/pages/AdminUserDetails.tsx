@@ -22,6 +22,8 @@ const AdminUserDetails = () => {
   const [agreementContent, setAgreementContent] = useState("");
   const [amount, setAmount] = useState("");
   const [summaries, setSummaries] = useState<any[]>([]);
+  const [conversation, setConversation] = useState<any>(null);
+  const [messages, setMessages] = useState<any[]>([]);
 
   useEffect(() => {
     loadUserData();
@@ -54,6 +56,27 @@ const AdminUserDetails = () => {
       .eq("user_id", userId)
       .order("summary_date", { ascending: false })
       .limit(5);
+
+    // Load onboarding conversation
+    const { data: convData } = await supabase
+      .from("onboarding_conversations")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    setConversation(convData);
+
+    if (convData) {
+      const { data: msgData } = await supabase
+        .from("onboarding_messages")
+        .select("*")
+        .eq("conversation_id", convData.id)
+        .order("created_at", { ascending: true });
+
+      setMessages(msgData || []);
+    }
 
     setProfile(profileData);
     setAgreement(agreementData);
@@ -309,6 +332,40 @@ const AdminUserDetails = () => {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">No summaries available yet</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Onboarding Conversation</CardTitle>
+            <CardDescription>Chat transcript with Rocky</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!conversation ? (
+              <p className="text-sm text-muted-foreground">No onboarding conversation yet</p>
+            ) : (
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                        msg.role === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-foreground"
+                      }`}
+                    >
+                      <p className="text-xs font-medium mb-1">
+                        {msg.role === "user" ? "Customer" : "Rocky"}
+                      </p>
+                      <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
