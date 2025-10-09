@@ -7,12 +7,12 @@ import {
   Bell,
   Bot,
   ClipboardCheck,
-  DollarSign,
   FileSignature,
   Lock,
   Play,
   Settings,
   User,
+  Wrench,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -263,7 +263,7 @@ const Dashboard = () => {
               <StepPill 
                 done={setupFeePaid} 
                 current={agreementSigned && !setupFeePaid} 
-                icon={<DollarSign className="h-5 w-5" />} 
+                icon={<Wrench className="h-5 w-5" />} 
                 label="Setup Fee" 
                 onAction={agreementSigned && !setupFeePaid ? handlePayment : undefined}
                 disabled={!agreementSigned}
