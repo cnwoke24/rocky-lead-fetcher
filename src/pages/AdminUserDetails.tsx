@@ -307,6 +307,50 @@ const AdminUserDetails = () => {
     setEditAmount("");
   };
 
+  const markSetupFeePaid = async () => {
+    if (!agreement) {
+      toast({
+        title: "Error",
+        description: "No agreement found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (agreement.paid_at) {
+      toast({
+        title: "Error",
+        description: "Setup fee is already marked as paid",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("agreements")
+      .update({
+        paid_at: new Date().toISOString(),
+        status: "paid"
+      })
+      .eq("id", agreement.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to mark setup fee as paid",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Setup fee marked as paid"
+    });
+
+    loadUserData();
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
@@ -455,13 +499,23 @@ const AdminUserDetails = () => {
                         )}
                       </p>
                       {!agreement.paid_at && (
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={startEditingAmount}
-                        >
-                          Edit Amount
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={startEditingAmount}
+                          >
+                            Edit Amount
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            onClick={markSetupFeePaid}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Mark as Paid
+                          </Button>
+                        </div>
                       )}
                     </>
                   )}
