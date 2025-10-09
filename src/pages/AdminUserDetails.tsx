@@ -24,6 +24,8 @@ const AdminUserDetails = () => {
   const [summaries, setSummaries] = useState<any[]>([]);
   const [conversation, setConversation] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
+  const [isEditingAmount, setIsEditingAmount] = useState(false);
+  const [editAmount, setEditAmount] = useState("");
 
   useEffect(() => {
     loadUserData();
@@ -241,6 +243,70 @@ const AdminUserDetails = () => {
     setAgentStatus(!agentStatus);
   };
 
+  const updateAgreementAmount = async () => {
+    if (!agreement || !editAmount) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const amountInCents = Math.round(parseFloat(editAmount) * 100);
+    
+    if (isNaN(amountInCents) || amountInCents <= 0) {
+      toast({
+        title: "Error",
+        description: "Amount must be a positive number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (agreement.paid_at) {
+      toast({
+        title: "Error",
+        description: "Cannot modify amount for paid agreements",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("agreements")
+      .update({ amount_cents: amountInCents })
+      .eq("id", agreement.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update agreement amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({ 
+      title: "Success", 
+      description: `Amount updated to $${editAmount}` 
+    });
+    
+    setIsEditingAmount(false);
+    setEditAmount("");
+    loadUserData();
+  };
+
+  const startEditingAmount = () => {
+    setEditAmount((agreement.amount_cents / 100).toFixed(2));
+    setIsEditingAmount(true);
+  };
+
+  const cancelEditingAmount = () => {
+    setIsEditingAmount(false);
+    setEditAmount("");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
@@ -354,16 +420,52 @@ const AdminUserDetails = () => {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-3">
               {agreement && (
-                <p className="text-sm text-muted-foreground">
-                  Amount: ${(agreement.amount_cents / 100).toFixed(2)}
-                  {agreement.paid_at && (
-                    <span className="block mt-1">
-                      Paid: {new Date(agreement.paid_at).toLocaleDateString()}
-                    </span>
+                <>
+                  {isEditingAmount ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="edit-amount">Amount (USD)</Label>
+                      <Input
+                        id="edit-amount"
+                        type="number"
+                        step="0.01"
+                        value={editAmount}
+                        onChange={(e) => setEditAmount(e.target.value)}
+                        placeholder="0.00"
+                        autoFocus
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={updateAgreementAmount}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={cancelEditingAmount}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-muted-foreground">
+                        Amount: ${(agreement.amount_cents / 100).toFixed(2)}
+                        {agreement.paid_at && (
+                          <span className="block mt-1">
+                            Paid: {new Date(agreement.paid_at).toLocaleDateString()}
+                          </span>
+                        )}
+                      </p>
+                      {!agreement.paid_at && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={startEditingAmount}
+                        >
+                          Edit Amount
+                        </Button>
+                      )}
+                    </>
                   )}
-                </p>
+                </>
               )}
             </CardContent>
           </Card>
