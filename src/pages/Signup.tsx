@@ -155,7 +155,7 @@ const Signup = () => {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-[#D4AF37] hover:bg-[#C5A028] text-white"
               disabled={loading}
             >
               {loading ? "Creating account..." : "Sign Up"}
