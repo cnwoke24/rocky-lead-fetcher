@@ -62,24 +62,24 @@ const Onboarding = () => {
       if (!el || el.hasAttribute('data-initialized')) return;
 
       try {
+        // Get current user
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user?.id || 'anonymous-user';
+
         // Get token from backend
-        const { data, error } = await supabase.functions.invoke('chatkit-session', {
-          body: {
-            workflow: { 
-              id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573', 
-              version: '1' 
-            },
-            user: { id: 'anonymous-user' }
-          }
-        });
+        const { data, error } = await supabase.functions.invoke('chatkit-session');
 
         if (error) throw error;
 
-        // Initialize ChatKit
+        // Initialize ChatKit with workflow on client side
         el.setOptions({
           auth: { token: data.token },
           theme: 'light',
-          accentColor: '#D4AF37'
+          accentColor: '#D4AF37',
+          workflow: { 
+            id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573', 
+            version: '1' 
+          }
         });
 
         el.setAttribute('data-initialized', 'true');

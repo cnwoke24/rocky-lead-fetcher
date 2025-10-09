@@ -11,7 +11,6 @@ serve(async (req) => {
   }
 
   try {
-    const { workflow, user } = await req.json();
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     
     if (!OPENAI_API_KEY) {
@@ -27,15 +26,21 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'gpt-4o-realtime-preview-2024-12-17',
-        workflow,
-        user,
+        voice: 'alloy',
+        instructions: 'You are the onboarding assistant for Rocky AI. Be concise and helpful.'
       }),
     });
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('OpenAI API error:', error);
-      throw new Error('Failed to create ChatKit session');
+      console.error('OpenAI API error:', response.status, error);
+      return new Response(
+        JSON.stringify({ error: `OpenAI API error: ${error}` }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500 
+        }
+      );
     }
 
     const data = await response.json();
