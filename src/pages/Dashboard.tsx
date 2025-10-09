@@ -111,32 +111,47 @@ const Dashboard = () => {
   const handleSignAgreement = async () => {
     if (!agreement) return;
 
-    const { error } = await supabase
-      .from("agreements")
-      .update({ status: "signed", signed_at: new Date().toISOString() })
-      .eq("id", agreement.id);
+    try {
+      // Update agreement to signed status and verify it succeeded
+      const { data: updatedAgreement, error: updateError } = await supabase
+        .from("agreements")
+        .update({ status: "signed", signed_at: new Date().toISOString() })
+        .eq("id", agreement.id)
+        .select()
+        .single();
 
-    if (error) {
-      toast({ title: "Error", description: "Failed to sign agreement", variant: "destructive" });
-      return;
-    }
+      if (updateError || !updatedAgreement) {
+        console.error("Error updating agreement:", updateError);
+        toast({ title: "Error", description: "Failed to sign agreement", variant: "destructive" });
+        return;
+      }
 
-    toast({ title: "Agreement Signed", description: "Redirecting to payment..." });
-    setShowAgreementModal(false);
+      console.log("Agreement successfully updated to signed:", updatedAgreement);
+      toast({ title: "Agreement Signed", description: "Redirecting to payment..." });
+      setShowAgreementModal(false);
 
-    // Call payment function
-    const { data, error: paymentError } = await supabase.functions.invoke("create-payment");
+      // Call payment function
+      const { data, error: paymentError } = await supabase.functions.invoke("create-payment");
 
-    if (paymentError || !data?.url) {
+      if (paymentError || !data?.url) {
+        console.error("Payment error:", paymentError);
+        toast({
+          title: "Error",
+          description: paymentError?.message || "Failed to create payment session",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      window.open(data.url, "_blank");
+    } catch (error) {
+      console.error("Unexpected error in handleSignAgreement:", error);
       toast({
         title: "Error",
-        description: "Failed to create payment session",
+        description: error instanceof Error ? error.message : "Failed to process agreement",
         variant: "destructive",
       });
-      return;
     }
-
-    window.open(data.url, "_blank");
   };
 
   const onboardingDone = profile?.onboarding_completed || false;
