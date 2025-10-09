@@ -94,16 +94,11 @@ const Onboarding = () => {
           return;
         }
 
-        // Initialize ChatKit with workflow on client side
+        // Initialize ChatKit with correct parameters
         el.setOptions({
-          auth: { token: (data as any).token },
-          theme: 'light',
-          accentColor: '#D4AF37',
-          workflow: {
-            id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
-            version: '1'
-          },
-          user: { id: userId }
+          token: (data as any).token,
+          workflowId: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
+          version: '1'
         });
 
         el.setAttribute('data-initialized', 'true');
