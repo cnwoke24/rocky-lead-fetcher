@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Bell,
   Bot,
@@ -19,27 +21,77 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
-  const [onboardingDone, setOnboardingDone] = useState(false);
-  const [agreementSigned, setAgreementSigned] = useState(false);
-  const allPrereqsDone = onboardingDone && agreementSigned;
-
+  const [userId, setUserId] = useState<string>("");
+  const [profile, setProfile] = useState<any>(null);
+  const [agreement, setAgreement] = useState<any>(null);
+  const [agentEnabled, setAgentEnabled] = useState(false);
+  const [showAgreementModal, setShowAgreementModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [dailySummaries] = useState<Record<string, string>>({
-    '2025-10-08': 'Today your AI agent completed its first workflow cycle, responding to customer inquiries and logging actions.',
-    '2025-10-07': 'Agent initiated automated outreach and handled test calls successfully.',
-  });
+  const [dailySummaries, setDailySummaries] = useState<Record<string, string>>({});
 
   const summaryText = dailySummaries[selectedDate] || 'No summary available for this day.';
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/signup");
-      } else {
-        setLoading(false);
-      }
+    loadUserData();
+    
+    // Check for payment success/cancel
+    const payment = searchParams.get("payment");
+    if (payment === "success") {
+      toast({ title: "Payment Successful", description: "Your setup fee has been processed!" });
+    } else if (payment === "canceled") {
+      toast({ title: "Payment Canceled", description: "You can try again anytime.", variant: "destructive" });
+    }
+  }, [searchParams]);
+
+  const loadUserData = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate("/signup");
+      return;
+    }
+
+    setUserId(session.user.id);
+
+    // Load profile
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
+
+    // Load agreement
+    const { data: agreementData } = await supabase
+      .from("agreements")
+      .select("*")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+
+    // Load agent status
+    const { data: agentData } = await supabase
+      .from("agent_status")
+      .select("is_enabled")
+      .eq("user_id", session.user.id)
+      .single();
+
+    // Load summaries
+    const { data: summariesData } = await supabase
+      .from("daily_summaries")
+      .select("*")
+      .eq("user_id", session.user.id);
+
+    const summariesMap: Record<string, string> = {};
+    summariesData?.forEach((s) => {
+      summariesMap[s.summary_date] = s.content;
     });
+
+    setProfile(profileData);
+    setAgreement(agreementData);
+    setAgentEnabled(agentData?.is_enabled || false);
+    setDailySummaries(summariesMap);
+    setLoading(false);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
@@ -48,12 +100,47 @@ const Dashboard = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/");
   };
+
+  const handleSignAgreement = async () => {
+    if (!agreement) return;
+
+    const { error } = await supabase
+      .from("agreements")
+      .update({ status: "signed", signed_at: new Date().toISOString() })
+      .eq("id", agreement.id);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to sign agreement", variant: "destructive" });
+      return;
+    }
+
+    toast({ title: "Agreement Signed", description: "Redirecting to payment..." });
+    setShowAgreementModal(false);
+
+    // Call payment function
+    const { data, error: paymentError } = await supabase.functions.invoke("create-payment");
+
+    if (paymentError || !data?.url) {
+      toast({
+        title: "Error",
+        description: "Failed to create payment session",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    window.open(data.url, "_blank");
+  };
+
+  const onboardingDone = profile?.onboarding_completed || false;
+  const agreementSigned = agreement?.status === "signed" || agreement?.status === "paid";
+  const allPrereqsDone = onboardingDone && agreementSigned;
 
   if (loading) {
     return (
@@ -117,8 +204,22 @@ const Dashboard = () => {
               <CardDescription>Complete these steps to activate your AI voice agent.</CardDescription>
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-3">
-              <StepPill done={onboardingDone} current={!onboardingDone} icon={<ClipboardCheck className="h-5 w-5" />} label="Onboarding Call" onAction={() => setOnboardingDone(true)} actionLabel={onboardingDone ? undefined : 'Mark Complete'} />
-              <StepPill done={agreementSigned} current={onboardingDone && !agreementSigned} icon={<FileSignature className="h-5 w-5" />} label="Sign Agreement" onAction={() => setAgreementSigned(true)} disabled={!onboardingDone} actionLabel="Open Agreement" />
+              <StepPill 
+                done={onboardingDone} 
+                current={!onboardingDone} 
+                icon={<ClipboardCheck className="h-5 w-5" />} 
+                label="Onboarding Call" 
+                actionLabel={onboardingDone ? undefined : 'Pending'} 
+              />
+              <StepPill 
+                done={agreementSigned} 
+                current={onboardingDone && !agreementSigned} 
+                icon={<FileSignature className="h-5 w-5" />} 
+                label="Sign Agreement" 
+                onAction={agreement && agreement.status === "pending" ? () => setShowAgreementModal(true) : undefined} 
+                disabled={!onboardingDone || !agreement} 
+                actionLabel={agreement && agreement.status === "pending" ? "Open Agreement" : onboardingDone && !agreement ? "Waiting for Admin" : undefined} 
+              />
             </CardContent>
           </Card>
 
@@ -173,6 +274,25 @@ const Dashboard = () => {
       </div>
 
       <footer className="py-8 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Rocky AI. All rights reserved.</footer>
+      
+      <Dialog open={showAgreementModal} onOpenChange={setShowAgreementModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Service Agreement</DialogTitle>
+            <DialogDescription>Please review and accept the agreement to proceed</DialogDescription>
+          </DialogHeader>
+          <div className="border rounded-lg p-4 max-h-96 overflow-y-auto bg-muted/20">
+            <pre className="text-sm whitespace-pre-wrap">{agreement?.content}</pre>
+          </div>
+          <div className="text-sm font-semibold">
+            Total Amount: ${(agreement?.amount_cents / 100).toFixed(2)} USD
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAgreementModal(false)}>Cancel</Button>
+            <Button onClick={handleSignAgreement}>Accept & Pay</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
