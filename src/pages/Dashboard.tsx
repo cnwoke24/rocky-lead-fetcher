@@ -353,7 +353,7 @@ const StepPill = ({ done, current, icon, label, onAction, actionLabel, disabled 
       <div className="text-sm font-medium flex items-center gap-2">{label}{done && <Badge className="bg-green-600 hover:bg-green-600">Done</Badge>}{!done && current && <Badge variant="secondary">Next</Badge>}</div>
       <p className="text-xs text-muted-foreground mt-0.5">{done ? 'Completed' : current ? 'Action required' : 'Locked until previous step'}</p>
     </div>
-    {onAction && !done && (<Button size="sm" onClick={onAction} disabled={disabled}>{actionLabel || 'Open'}</Button>)}
+    {onAction && !done && (<Button size="sm" onClick={onAction} disabled={disabled} variant={actionLabel === "Pay Now" ? "gold" : "default"}>{actionLabel || 'Open'}</Button>)}
   </div>
 );
 
