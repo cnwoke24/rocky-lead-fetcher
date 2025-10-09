@@ -17,6 +17,22 @@ serve(async (req) => {
       throw new Error('OPENAI_API_KEY is not configured');
     }
 
+    // Parse request body to get user info
+    let requestBody: any = {};
+    try {
+      requestBody = await req.json();
+    } catch {
+      // Body is optional, will use anonymous user
+    }
+
+    const inputUser = requestBody?.user;
+    // Normalize user to object with id
+    const user = typeof inputUser === 'string'
+      ? { id: inputUser }
+      : (inputUser && typeof inputUser === 'object')
+        ? inputUser
+        : { id: `anon-${crypto.randomUUID()}` };
+
     // Create a ChatKit session token via OpenAI API
     const response = await fetch('https://api.openai.com/v1/chatkit/sessions', {
       method: 'POST',
@@ -26,6 +42,7 @@ serve(async (req) => {
         'OpenAI-Beta': 'chatkit_beta=v1',
       },
       body: JSON.stringify({
+        user,
         workflow: {
           id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
           version: '1'

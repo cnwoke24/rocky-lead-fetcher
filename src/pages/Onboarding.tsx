@@ -76,10 +76,13 @@ const Onboarding = () => {
 
         // Get current user
         const { data: { session } } = await supabase.auth.getSession();
-        const userId = session?.user?.id || 'anonymous-user';
+        const userId = session?.user?.id || `anon-${crypto.randomUUID?.() || Math.random().toString(36).slice(2)}`;
+        const userEmail = session?.user?.email;
 
-        // Get token from backend
-        const { data, error } = await supabase.functions.invoke('chatkit-session');
+        // Get token from backend with user info
+        const { data, error } = await supabase.functions.invoke('chatkit-session', {
+          body: { user: { id: userId, email: userEmail } }
+        });
         if (error) throw error;
         console.log('[ChatKit] token received?', !!(data as any)?.token);
 
