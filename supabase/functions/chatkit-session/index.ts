@@ -23,6 +23,7 @@ serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
+        'OpenAI-Beta': 'chatkit_beta=v1',
       },
       body: JSON.stringify({
         workflow_id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
