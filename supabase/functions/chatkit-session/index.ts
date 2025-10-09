@@ -26,12 +26,12 @@ serve(async (req) => {
     }
 
     const inputUser = requestBody?.user;
-    // Normalize user to object with id
-    const user = typeof inputUser === 'string'
-      ? { id: inputUser }
-      : (inputUser && typeof inputUser === 'object')
-        ? inputUser
-        : { id: `anon-${crypto.randomUUID()}` };
+    // Extract user ID as string (API expects string, not object)
+    const userId = typeof inputUser === 'string'
+      ? inputUser
+      : inputUser?.id
+        ? String(inputUser.id)
+        : `anon-${crypto.randomUUID()}`;
 
     // Create a ChatKit session token via OpenAI API
     const response = await fetch('https://api.openai.com/v1/chatkit/sessions', {
@@ -42,7 +42,7 @@ serve(async (req) => {
         'OpenAI-Beta': 'chatkit_beta=v1',
       },
       body: JSON.stringify({
-        user,
+        user: userId,
         workflow: {
           id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
           version: '1'
