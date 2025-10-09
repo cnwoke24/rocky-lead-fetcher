@@ -7,6 +7,7 @@ import {
   Bell,
   Bot,
   ClipboardCheck,
+  DollarSign,
   FileSignature,
   Lock,
   Play,
@@ -154,9 +155,36 @@ const Dashboard = () => {
     }
   };
 
+  const handlePayment = async () => {
+    try {
+      console.log("Creating payment session...");
+      const { data, error: paymentError } = await supabase.functions.invoke("create-payment");
+
+      if (paymentError || !data?.url) {
+        console.error("Payment error:", paymentError);
+        toast({
+          title: "Error",
+          description: paymentError?.message || "Failed to create payment session",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      window.open(data.url, "_blank");
+    } catch (error) {
+      console.error("Unexpected error in handlePayment:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to process payment",
+        variant: "destructive",
+      });
+    }
+  };
+
   const onboardingDone = profile?.onboarding_completed || false;
   const agreementSigned = agreement?.status === "signed" || agreement?.status === "paid";
-  const allPrereqsDone = onboardingDone && agreementSigned;
+  const setupFeePaid = agreement?.paid_at !== null;
+  const allPrereqsDone = onboardingDone && agreementSigned && setupFeePaid;
 
   if (loading) {
     return (
@@ -231,6 +259,15 @@ const Dashboard = () => {
                 onAction={agreement && agreement.status === "pending" ? () => setShowAgreementModal(true) : undefined} 
                 disabled={!onboardingDone || !agreement} 
                 actionLabel={agreement && agreement.status === "pending" ? "Open Agreement" : onboardingDone && !agreement ? "Waiting for Admin" : undefined} 
+              />
+              <StepPill 
+                done={setupFeePaid} 
+                current={agreementSigned && !setupFeePaid} 
+                icon={<DollarSign className="h-5 w-5" />} 
+                label="Setup Fee" 
+                onAction={agreementSigned && !setupFeePaid ? handlePayment : undefined}
+                disabled={!agreementSigned}
+                actionLabel={agreementSigned && !setupFeePaid ? "Pay Now" : !agreementSigned ? "Sign Agreement First" : undefined}
               />
             </CardContent>
           </Card>
