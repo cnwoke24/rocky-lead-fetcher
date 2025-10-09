@@ -131,10 +131,10 @@ export default function Index() {
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
-                <button className="px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-800 hover:bg-neutral-100 transition-all duration-200 ease-out hover:scale-[1.04] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Sign in</button>
-                <button onClick={() => go(pricingRef)} className="px-4 h-10 inline-flex items-center gap-2 rounded-full font-semibold text-white bg-[#0B63D8] hover:bg-[#0A58C5] shadow-[0_6px_20px_rgba(11,99,216,.25)] transition-all duration-200 ease-out hover:scale-[1.06] hover:shadow-[0_14px_36px_rgba(11,99,216,.38)]">
+                <a href="/login" className="px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-800 hover:bg-neutral-100 transition-all duration-200 ease-out hover:scale-[1.04] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Sign in</a>
+                <a href="/signup" className="px-4 h-10 inline-flex items-center gap-2 rounded-full font-semibold text-white bg-[#0B63D8] hover:bg-[#0A58C5] shadow-[0_6px_20px_rgba(11,99,216,.25)] transition-all duration-200 ease-out hover:scale-[1.06] hover:shadow-[0_14px_36px_rgba(11,99,216,.38)]">
                   Sign up <ChevronRight className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function Index() {
               AI-powered calling that converts gym & salon leads into paying customers through intelligent conversations and CRM integration.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap reveal in" style={{transitionDelay: '300ms'}}>
-              <a href="#pricing" onClick={(e)=>{e.preventDefault(); go(pricingRef);}} className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Get Started</a>
+              <a href="/signup" className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Get Started</a>
               <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Try me</button>
             </div>
           </div>
