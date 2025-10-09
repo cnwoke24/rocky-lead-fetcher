@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import rockyLogo from "@/assets/rocky-logo.png";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -103,8 +104,8 @@ const Signup = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
-              🐾
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+              <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-3xl font-bold">Rocky AI</h1>
           </div>
