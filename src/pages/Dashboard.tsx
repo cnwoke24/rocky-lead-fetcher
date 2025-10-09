@@ -18,6 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import rockyLogo from "@/assets/rocky-logo.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -158,8 +159,8 @@ const Dashboard = () => {
       <header className="sticky top-0 z-30 backdrop-blur border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 grid place-items-center rounded-xl bg-primary/10">
-              <Bot className="h-5 w-5" />
+            <div className="h-9 w-9 rounded-xl flex items-center justify-center">
+              <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="text-sm text-muted-foreground leading-none">Rocky AI</div>

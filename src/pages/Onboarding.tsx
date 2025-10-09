@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import rockyLogo from "@/assets/rocky-logo.png";
 
 type Message = {
   role: "user" | "assistant";
@@ -191,8 +192,8 @@ const Onboarding = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
-                🐾
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+                <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
               </div>
               <h1 className="text-4xl font-bold">Rocky AI</h1>
             </div>

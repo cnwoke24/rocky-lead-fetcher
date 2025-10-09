@@ -3,6 +3,7 @@ import { Zap, Phone, Bell, BarChart3, Check, Shield, ChevronDown, ChevronRight }
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
+import rockyLogo from "@/assets/rocky-logo.png";
 
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
@@ -118,7 +119,9 @@ export default function Index() {
           >
             <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 md:gap-6 px-3 md:px-5 py-2 md:py-3 brand-font">
               <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-9 h-9 rounded-xl brand-gradient grid place-items-center text-lg text-white shadow" aria-label="Rocky logo">🐾</div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center" aria-label="Rocky logo">
+                  <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
+                </div>
                 <span className="text-base md:text-lg tracking-tight brand-title">Rocky AI • <span className="text-neutral-600">Fetch Leads</span></span>
               </div>
 
@@ -295,7 +298,9 @@ export default function Index() {
       <footer className="border-t border-neutral-200 py-8 brand-font">
         <div className="mx-auto max-w-7xl px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-600">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg brand-gradient grid place-items-center text-sm text-white">🐾</div>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+              <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
+            </div>
             <span>© 2025 Rocky AI. All rights reserved.</span>
           </div>
           <div className="flex gap-6">
