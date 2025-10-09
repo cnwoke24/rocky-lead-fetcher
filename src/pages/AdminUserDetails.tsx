@@ -194,6 +194,31 @@ const AdminUserDetails = () => {
     loadUserData();
   };
 
+  const resetAgreementStatus = async () => {
+    if (!agreement) return;
+
+    const { error } = await supabase
+      .from("agreements")
+      .update({ 
+        status: "pending", 
+        signed_at: null,
+        paid_at: null 
+      })
+      .eq("id", agreement.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to reset agreement status",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({ title: "Success", description: "Agreement status reset to pending" });
+    loadUserData();
+  };
+
   const toggleAgent = async () => {
     const { error } = await supabase
       .from("agent_status")
@@ -264,90 +289,123 @@ const AdminUserDetails = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5" />
-                  Onboarding Status
-                </CardTitle>
-                <CardDescription>Mark when onboarding call is completed</CardDescription>
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <CheckCircle className="h-4 w-4" />
+                    Onboarding Call
+                  </CardTitle>
+                </div>
+                {profile?.onboarding_completed ? (
+                  <Badge className="bg-green-600">Complete</Badge>
+                ) : (
+                  <Badge variant="secondary">Not Complete</Badge>
+                )}
               </div>
-              {profile?.onboarding_completed ? (
-                <Badge className="bg-green-600">Complete</Badge>
-              ) : (
-                <Badge variant="secondary">Pending</Badge>
+            </CardHeader>
+            <CardContent>
+              {!profile?.onboarding_completed && (
+                <Button size="sm" onClick={markOnboardingComplete}>Mark Complete</Button>
               )}
-            </div>
-          </CardHeader>
-          <CardContent>
-            {!profile?.onboarding_completed && (
-              <Button onClick={markOnboardingComplete}>Mark as Complete</Button>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Agreement Management
-            </CardTitle>
-            <CardDescription>Create and manage customer agreements</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {agreement ? (
-              <div className="space-y-2">
-                <Label>Current Agreement Status</Label>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    className={
-                      agreement.status === "paid"
-                        ? "bg-green-600"
-                        : agreement.status === "signed"
-                        ? "bg-blue-600"
-                        : ""
-                    }
-                    variant={agreement.status === "pending" ? "secondary" : "default"}
-                  >
-                    {agreement.status}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    Amount: ${(agreement.amount_cents / 100).toFixed(2)}
-                  </span>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <FileText className="h-4 w-4" />
+                    Signed Agreement
+                  </CardTitle>
                 </div>
+                {agreement?.status === "signed" || agreement?.status === "paid" ? (
+                  <Badge className="bg-green-600">Complete</Badge>
+                ) : (
+                  <Badge variant="secondary">Not Complete</Badge>
+                )}
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="agreement">Agreement Content</Label>
-                  <Textarea
-                    id="agreement"
-                    value={agreementContent}
-                    onChange={(e) => setAgreementContent(e.target.value)}
-                    placeholder="Enter agreement terms..."
-                    rows={6}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="amount">Amount (USD)</Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="0.00"
-                  />
-                </div>
-                <Button onClick={createAgreement}>
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Create Agreement
+            </CardHeader>
+            <CardContent>
+              {(agreement?.status === "signed" || agreement?.status === "paid") && (
+                <Button size="sm" variant="outline" onClick={resetAgreementStatus}>
+                  Reset Status
                 </Button>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <DollarSign className="h-4 w-4" />
+                    Setup Fee
+                  </CardTitle>
+                </div>
+                {agreement?.paid_at ? (
+                  <Badge className="bg-green-600">Complete</Badge>
+                ) : (
+                  <Badge variant="secondary">Not Complete</Badge>
+                )}
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent>
+              {agreement && (
+                <p className="text-sm text-muted-foreground">
+                  Amount: ${(agreement.amount_cents / 100).toFixed(2)}
+                  {agreement.paid_at && (
+                    <span className="block mt-1">
+                      Paid: {new Date(agreement.paid_at).toLocaleDateString()}
+                    </span>
+                  )}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {!agreement && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Create Agreement
+              </CardTitle>
+              <CardDescription>Set up a new agreement for this customer</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="agreement">Agreement Content</Label>
+                <Textarea
+                  id="agreement"
+                  value={agreementContent}
+                  onChange={(e) => setAgreementContent(e.target.value)}
+                  placeholder="Enter agreement terms..."
+                  rows={6}
+                />
+              </div>
+              <div>
+                <Label htmlFor="amount">Amount (USD)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                />
+              </div>
+              <Button onClick={createAgreement}>
+                <DollarSign className="h-4 w-4 mr-2" />
+                Create Agreement
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>
