@@ -174,10 +174,6 @@ const Dashboard = () => {
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               Sign Out
             </Button>
-            <Avatar className="h-9 w-9">
-              <AvatarImage src="https://api.dicebear.com/7.x/initials/svg?seed=RA" alt="User" />
-              <AvatarFallback>RA</AvatarFallback>
-            </Avatar>
           </div>
         </div>
       </header>
