@@ -62,30 +62,55 @@ const Onboarding = () => {
       if (!el || el.hasAttribute('data-initialized')) return;
 
       try {
+        // Ensure the custom element is defined
+        if (window.customElements && !window.customElements.get('openai-chatkit')) {
+          console.log('[ChatKit] waiting for custom element definition...');
+          try {
+            await (window.customElements as any).whenDefined('openai-chatkit');
+          } catch (e) {
+            console.warn('[ChatKit] custom element whenDefined failed', e);
+          }
+        }
+
         // Get current user
         const { data: { session } } = await supabase.auth.getSession();
         const userId = session?.user?.id || 'anonymous-user';
 
         // Get token from backend
         const { data, error } = await supabase.functions.invoke('chatkit-session');
-
         if (error) throw error;
+        console.log('[ChatKit] token received?', !!(data as any)?.token);
+
+        // Wait until setOptions is available
+        let attempts = 0;
+        while (attempts < 20 && (typeof el.setOptions !== 'function')) {
+          attempts++;
+          await new Promise((r) => setTimeout(r, 100));
+        }
+        console.log('[ChatKit] element ready?', typeof el.setOptions === 'function');
+
+        if (typeof el.setOptions !== 'function') {
+          console.error('[ChatKit] setOptions is not available on element');
+          return;
+        }
 
         // Initialize ChatKit with workflow on client side
         el.setOptions({
-          auth: { token: data.token },
+          auth: { token: (data as any).token },
           theme: 'light',
           accentColor: '#D4AF37',
-          workflow: { 
-            id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573', 
-            version: '1' 
-          }
+          workflow: {
+            id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
+            version: '1'
+          },
+          user: { id: userId }
         });
 
         el.setAttribute('data-initialized', 'true');
 
         // Optional event listeners
-        el.addEventListener('chatkit.response.start', () => console.log('AI streaming...'));
+        el.addEventListener('chatkit.response.start', () => console.log('[ChatKit] AI streaming...'));
+        el.addEventListener('error', (e: any) => console.error('[ChatKit] element error', e));
       } catch (error) {
         console.error('Failed to initialize ChatKit:', error);
       }
@@ -133,7 +158,7 @@ const Onboarding = () => {
         </div>
 
         <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
-          <openai-chatkit id="rocky-chat" style={{ height: '560px', width: '100%' }} />
+          <openai-chatkit id="rocky-chat" style={{ height: '560px', width: '100%', display: 'block' }} />
         </div>
 
         <div className="flex justify-end">
