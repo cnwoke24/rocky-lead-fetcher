@@ -176,33 +176,33 @@ const Onboarding = () => {
 
   if (authChecking) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B63D8] mx-auto mb-4"></div>
+          <p className="text-neutral-600">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-white text-neutral-900">
       <div className="container mx-auto py-12 px-4 max-w-4xl">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-border border-2 border-foreground rounded-xl flex items-center justify-center text-2xl font-bold">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
               🐾
             </div>
             <h1 className="text-4xl font-bold">Rocky AI</h1>
           </div>
           <h2 className="text-2xl font-semibold mb-2">Welcome to your onboarding</h2>
-          <p className="text-muted-foreground">
+          <p className="text-neutral-600">
             Let's get your custom voice agent configured for your business.
           </p>
         </div>
 
         {!onboardingComplete ? (
-          <div className="bg-card border border-border rounded-lg p-6 mb-6">
+          <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
             <div className="flex flex-col h-[500px]">
               <div className="flex-1 overflow-y-auto mb-4 space-y-4">
                 {messages.map((message, index) => (
@@ -213,8 +213,8 @@ const Onboarding = () => {
                     <div
                       className={`max-w-[80%] rounded-lg px-4 py-2 ${
                         message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-foreground"
+                          ? "bg-[#0B63D8] text-white"
+                          : "bg-neutral-100 text-neutral-900"
                       }`}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -239,9 +239,9 @@ const Onboarding = () => {
           </div>
         ) : (
           <>
-            <div className="bg-card border border-border rounded-lg p-6 mb-6">
+            <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Book your setup call</h3>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-neutral-600 mb-4">
                 Great! Now let's schedule a time to configure your custom voice agent.
               </p>
               <div

@@ -99,22 +99,22 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white text-neutral-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-border border-2 border-foreground rounded-xl flex items-center justify-center text-2xl font-bold">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
               🐾
             </div>
             <h1 className="text-3xl font-bold">Rocky AI</h1>
           </div>
           <h2 className="text-2xl font-semibold mb-2">Create your account</h2>
-          <p className="text-muted-foreground">
+          <p className="text-neutral-600">
             Start fetching more leads with Rocky AI
           </p>
         </div>
 
-        <div className="bg-card border border-border rounded-lg p-6 space-y-6">
+        <div className="bg-white border border-neutral-200 rounded-lg p-6 space-y-6 shadow-lg">
           <form onSubmit={handleEmailSignup} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -163,10 +163,10 @@ const Signup = () => {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
+              <span className="w-full border-t border-neutral-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or</span>
+              <span className="bg-white px-2 text-neutral-500">Or</span>
             </div>
           </div>
 
@@ -197,9 +197,9 @@ const Signup = () => {
             Continue with Google
           </Button>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-neutral-600">
             Already have an account?{" "}
-            <a href="/login" className="text-primary hover:underline">
+            <a href="/login" className="text-[#0B63D8] hover:underline font-semibold">
               Log in
             </a>
           </p>

@@ -32,22 +32,22 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B63D8] mx-auto mb-4"></div>
+          <p className="text-neutral-600">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white text-neutral-900">
       <div className="container mx-auto py-12 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-border border-2 border-foreground rounded-xl flex items-center justify-center text-2xl font-bold">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
                 🐾
               </div>
               <h1 className="text-3xl font-bold">Rocky AI Dashboard</h1>
@@ -57,10 +57,10 @@ const Dashboard = () => {
             </Button>
           </div>
 
-          <div className="bg-card border border-border rounded-lg p-12 text-center">
+          <div className="bg-white border border-neutral-200 rounded-lg p-12 text-center shadow-lg">
             <div className="text-6xl mb-6">🚀</div>
             <h2 className="text-3xl font-bold mb-4">Welcome to your Rocky AI Dashboard</h2>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-neutral-600 text-lg">
               Your AI voice agent is ready to fetch leads for you!
             </p>
           </div>
