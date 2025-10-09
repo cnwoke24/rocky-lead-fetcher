@@ -1,30 +1,24 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import rockyLogo from "@/assets/rocky-logo.png";
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'openai-chatkit': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        id?: string;
+        style?: React.CSSProperties;
+      };
+    }
+  }
+}
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Hi! I'm Rocky 🐾 Let's get your AI voice agent set up. First, what's your business name?",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [onboardingComplete, setOnboardingComplete] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [authChecking, setAuthChecking] = useState(true);
+  const [chatkitLoaded, setChatkitLoaded] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -46,134 +40,59 @@ const Onboarding = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // Load Calendly widget
+    // Load ChatKit script
     const script = document.createElement("script");
-    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.src = "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js";
     script.async = true;
+    script.onload = () => setChatkitLoaded(true);
     document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!chatkitLoaded) return;
 
-  const streamChat = async (userMessage: string) => {
-    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/onboarding-chat`;
-    
-    try {
-      const resp = await fetch(CHAT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ messages: [...messages, { role: "user", content: userMessage }] }),
-      });
+    const initializeChatKit = async () => {
+      const el = document.getElementById('rocky-chat') as any;
+      if (!el || el.hasAttribute('data-initialized')) return;
 
-      if (resp.status === 429) {
-        toast({
-          title: "Rate limit exceeded",
-          description: "Please try again in a moment.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (resp.status === 402) {
-        toast({
-          title: "Service unavailable",
-          description: "Please contact support.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (!resp.ok || !resp.body) {
-        throw new Error("Failed to start stream");
-      }
-
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let textBuffer = "";
-      let streamDone = false;
-      let assistantContent = "";
-
-      // Add empty assistant message
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-      while (!streamDone) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        textBuffer += decoder.decode(value, { stream: true });
-
-        let newlineIndex: number;
-        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-          let line = textBuffer.slice(0, newlineIndex);
-          textBuffer = textBuffer.slice(newlineIndex + 1);
-
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") {
-            streamDone = true;
-            break;
+      try {
+        // Get token from backend
+        const { data, error } = await supabase.functions.invoke('chatkit-session', {
+          body: {
+            workflow: { 
+              id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573', 
+              version: '1' 
+            },
+            user: { id: 'anonymous-user' }
           }
+        });
 
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-            if (content) {
-              assistantContent += content;
-              setMessages((prev) => {
-                const newMessages = [...prev];
-                newMessages[newMessages.length - 1] = {
-                  role: "assistant",
-                  content: assistantContent,
-                };
-                return newMessages;
-              });
-            }
-          } catch {
-            textBuffer = line + "\n" + textBuffer;
-            break;
-          }
-        }
+        if (error) throw error;
+
+        // Initialize ChatKit
+        el.setOptions({
+          auth: { token: data.token },
+          theme: 'light',
+          accentColor: '#D4AF37'
+        });
+
+        el.setAttribute('data-initialized', 'true');
+
+        // Optional event listeners
+        el.addEventListener('chatkit.response.start', () => console.log('AI streaming...'));
+      } catch (error) {
+        console.error('Failed to initialize ChatKit:', error);
       }
+    };
 
-      // Check if onboarding is complete based on message content
-      if (assistantContent.toLowerCase().includes("setup call") || 
-          assistantContent.toLowerCase().includes("book") ||
-          assistantContent.toLowerCase().includes("everything you need")) {
-        setOnboardingComplete(true);
-      }
-    } catch (error) {
-      console.error("Chat error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userMessage = input.trim();
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
-    setIsLoading(true);
-
-    await streamChat(userMessage);
-    setIsLoading(false);
-  };
+    initializeChatKit();
+  }, [chatkitLoaded]);
 
   if (authChecking) {
     return (
@@ -213,66 +132,19 @@ const Onboarding = () => {
           </p>
         </div>
 
-        {!onboardingComplete ? (
-          <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
-            <div className="flex flex-col h-[500px]">
-              <div className="flex-1 overflow-y-auto mb-4 space-y-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                        message.role === "user"
-                          ? "bg-[#0B63D8] text-white"
-                          : "bg-neutral-100 text-neutral-900"
-                      }`}
-                    >
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
+        <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
+          <openai-chatkit id="rocky-chat" style={{ height: '560px', width: '100%' }} />
+        </div>
 
-              <form onSubmit={handleSend} className="flex gap-2">
-                <Input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type your message..."
-                  disabled={isLoading}
-                />
-                <Button type="submit" disabled={isLoading || !input.trim()}>
-                  {isLoading ? "..." : "Send"}
-                </Button>
-              </form>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Book your setup call</h3>
-              <p className="text-neutral-600 mb-4">
-                Great! Now let's schedule a time to configure your custom voice agent.
-              </p>
-              <div
-                className="calendly-inline-widget"
-                data-url="https://calendly.com/YOUR-NAME/30min"
-                style={{ minWidth: "320px", height: "600px" }}
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <Button
-                size="lg"
-                onClick={() => navigate("/dashboard")}
-              >
-                Continue to Dashboard
-              </Button>
-            </div>
-          </>
-        )}
+        <div className="flex justify-end">
+          <Button
+            size="lg"
+            onClick={() => navigate("/dashboard")}
+            className="bg-[#D4AF37] hover:bg-[#C5A028] text-white"
+          >
+            Continue to Dashboard
+          </Button>
+        </div>
       </div>
     </div>
   );
