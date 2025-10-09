@@ -12,15 +12,21 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const authHeader = req.headers.get("Authorization")!;
+  
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    {
+      global: {
+        headers: { Authorization: authHeader }
+      }
+    }
   );
 
   try {
     console.log("Payment function started");
     
-    const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
     const user = data.user;
@@ -36,11 +42,13 @@ serve(async (req) => {
       .from("agreements")
       .select("*")
       .eq("user_id", user.id)
-      .eq("status", "signed")
+      .in("status", ["signed", "paid"])
       .single();
 
     if (agreementError || !agreement) {
-      throw new Error("No signed agreement found");
+      console.error("Agreement query error:", agreementError);
+      console.error("User ID:", user.id);
+      throw new Error(`No signed agreement found: ${agreementError?.message || 'No data returned'}`);
     }
 
     console.log("Agreement found, amount:", agreement.amount_cents);
