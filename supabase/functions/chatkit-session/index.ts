@@ -18,16 +18,15 @@ serve(async (req) => {
     }
 
     // Create a ChatKit session token via OpenAI API
-    const response = await fetch('https://api.openai.com/v1/realtime/sessions', {
+    const response = await fetch('https://api.openai.com/v1/chatkit/sessions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-realtime-preview-2024-12-17',
-        voice: 'alloy',
-        instructions: 'You are the onboarding assistant for Rocky AI. Be concise and helpful.'
+        workflow_id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
+        version: '1'
       }),
     });
 
@@ -44,9 +43,13 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    console.log('[ChatKit Session] Response:', { hasClientSecret: !!data.client_secret, hasToken: !!data.token });
     
     return new Response(
-      JSON.stringify({ token: data.client_secret?.value || data.token }),
+      JSON.stringify({ 
+        token: data.client_secret?.value || data.token,
+        expires_at: data.expires_at 
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200 

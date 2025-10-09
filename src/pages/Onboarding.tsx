@@ -10,6 +10,8 @@ declare global {
       'openai-chatkit': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         id?: string;
         style?: React.CSSProperties;
+        'workflow-id'?: string;
+        version?: string;
       };
     }
   }
@@ -94,18 +96,18 @@ const Onboarding = () => {
           return;
         }
 
-        // Initialize ChatKit with correct parameters
+        // Initialize ChatKit with token only (workflow set via HTML attributes)
         el.setOptions({
-          token: (data as any).token,
-          workflowId: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
-          version: '1'
+          token: (data as any).token
         });
 
         el.setAttribute('data-initialized', 'true');
+        console.log('[ChatKit] Initialized with token');
 
-        // Optional event listeners
+        // Event listeners for debugging
+        el.addEventListener('chatkit.ready', () => console.log('[ChatKit] Widget ready'));
         el.addEventListener('chatkit.response.start', () => console.log('[ChatKit] AI streaming...'));
-        el.addEventListener('error', (e: any) => console.error('[ChatKit] element error', e));
+        el.addEventListener('error', (e: any) => console.error('[ChatKit] Error:', e.detail || e));
       } catch (error) {
         console.error('Failed to initialize ChatKit:', error);
       }
@@ -153,7 +155,12 @@ const Onboarding = () => {
         </div>
 
         <div className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-lg">
-          <openai-chatkit id="rocky-chat" style={{ height: '560px', width: '100%', display: 'block' }} />
+          <openai-chatkit 
+            id="rocky-chat" 
+            workflow-id="wf_68e7e5ca571881908542b343253306900a32b7fa93548573"
+            version="1"
+            style={{ height: '560px', width: '100%', display: 'block' }} 
+          />
         </div>
 
         <div className="flex justify-end">
