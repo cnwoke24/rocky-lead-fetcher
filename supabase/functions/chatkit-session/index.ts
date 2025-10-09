@@ -26,8 +26,10 @@ serve(async (req) => {
         'OpenAI-Beta': 'chatkit_beta=v1',
       },
       body: JSON.stringify({
-        workflow_id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
-        version: '1'
+        workflow: {
+          id: 'wf_68e7e5ca571881908542b343253306900a32b7fa93548573',
+          version: '1'
+        }
       }),
     });
 
