@@ -219,7 +219,7 @@ export function OnboardingChat() {
             <div
               className={`max-w-[80%] rounded-lg px-4 py-2 ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-[#D4AF37] text-white"
                   : "bg-muted text-foreground"
               }`}
             >
@@ -252,7 +252,7 @@ export function OnboardingChat() {
             disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" disabled={isLoading || !input.trim()} size="icon">
+          <Button type="submit" disabled={isLoading || !input.trim()} size="icon" className="bg-[#D4AF37] hover:bg-[#C5A028] text-white">
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>
         </form>
