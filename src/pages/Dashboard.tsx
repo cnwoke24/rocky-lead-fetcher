@@ -310,7 +310,7 @@ const StepPill = ({ done, current, icon, label, onAction, actionLabel, disabled 
 );
 
 const SidebarLink = ({ icon, label, active, disabled }: any) => (
-  <button disabled={disabled} className={`w-full flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition border ${active ? 'bg-primary/10 border-primary/20' : 'hover:bg-muted border-transparent'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+  <button disabled={disabled} className={`w-full flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition border ${active ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted border-transparent'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
     <span className="h-8 w-8 grid place-items-center rounded-lg bg-muted">{icon}</span>
     <span className="font-medium">{label}</span>
   </button>
