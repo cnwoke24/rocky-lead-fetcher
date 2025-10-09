@@ -189,11 +189,22 @@ const Onboarding = () => {
     <div className="min-h-screen bg-white text-neutral-900">
       <div className="container mx-auto py-12 px-4 max-w-4xl">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
-              🐾
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg">
+                🐾
+              </div>
+              <h1 className="text-4xl font-bold">Rocky AI</h1>
             </div>
-            <h1 className="text-4xl font-bold">Rocky AI</h1>
+            <Button
+              variant="outline"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate("/");
+              }}
+            >
+              Sign Out
+            </Button>
           </div>
           <h2 className="text-2xl font-semibold mb-2">Welcome to your onboarding</h2>
           <p className="text-neutral-600">
