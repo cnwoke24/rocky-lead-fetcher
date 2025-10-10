@@ -82,7 +82,24 @@ const Onboarding = () => {
         <div className="flex justify-end">
           <Button
             size="lg"
-            onClick={() => navigate("/dashboard")}
+            onClick={async () => {
+              // Check subscription status before navigating
+              const { data: { user } } = await supabase.auth.getUser();
+              if (!user) return;
+
+              const { data: subscription } = await supabase
+                .from("subscriptions")
+                .select("status")
+                .eq("user_id", user.id)
+                .maybeSingle();
+
+              // If no subscription or not active, go to payment page
+              if (!subscription || !['trial', 'active'].includes(subscription.status)) {
+                navigate("/subscription-payment");
+              } else {
+                navigate("/dashboard");
+              }
+            }}
             className="bg-[#D4AF37] hover:bg-[#C5A028] text-white"
           >
             Continue to Dashboard

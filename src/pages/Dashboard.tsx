@@ -33,6 +33,7 @@ const Dashboard = () => {
   const [showAgreementModal, setShowAgreementModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [dailySummaries, setDailySummaries] = useState<Record<string, string>>({});
+  const [subscription, setSubscription] = useState<any>(null);
 
   const summaryText = dailySummaries[selectedDate] || 'No summary available for this day.';
 
@@ -41,7 +42,9 @@ const Dashboard = () => {
     
     // Check for payment success/cancel
     const payment = searchParams.get("payment");
-    if (payment === "success") {
+    const sessionId = searchParams.get("session_id");
+    
+    if (payment === "success" || sessionId) {
       toast({ title: "Payment Successful", description: "Your setup fee has been processed!" });
     } else if (payment === "canceled") {
       toast({ title: "Payment Canceled", description: "You can try again anytime.", variant: "destructive" });
@@ -56,6 +59,21 @@ const Dashboard = () => {
     }
 
     setUserId(session.user.id);
+
+    // Check subscription status
+    const { data: subscriptionData } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+
+    setSubscription(subscriptionData);
+
+    // If no active subscription, redirect to payment page
+    if (!subscriptionData || !['trial', 'active'].includes(subscriptionData.status)) {
+      navigate("/subscription-payment");
+      return;
+    }
 
     // Load profile
     const { data: profileData } = await supabase
@@ -210,7 +228,17 @@ const Dashboard = () => {
               <div className="text-base font-semibold leading-none">Customer Dashboard</div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {subscription && (
+              <div className="text-right mr-2">
+                <div className="text-xs text-muted-foreground">Subscription</div>
+                <Badge variant={subscription.status === 'trial' ? 'secondary' : 'default'} className="text-xs">
+                  {subscription.status === 'trial' ? 'Free Trial' : 
+                   subscription.status === 'active' ? 'Active' : 
+                   subscription.status === 'past_due' ? 'Past Due' : 'Inactive'}
+                </Badge>
+              </div>
+            )}
             <Button variant="ghost" size="icon" className="rounded-full">
               <Bell className="h-5 w-5" />
             </Button>
