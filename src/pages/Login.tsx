@@ -15,28 +15,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in and redirect based on role
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    // Redirect if already logged in and keep listening for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id);
-        
-        const isAdmin = roles?.some(r => r.role === "admin");
-        navigate(isAdmin ? "/admin" : "/dashboard");
+        navigate("/dashboard");
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id);
-        
-        const isAdmin = roles?.some(r => r.role === "admin");
-        navigate(isAdmin ? "/admin" : "/dashboard");
+        navigate("/dashboard");
       }
     });
 
@@ -65,6 +53,7 @@ const Login = () => {
         title: "Success!",
         description: "Logged in successfully. Redirecting...",
       });
+      navigate("/dashboard");
     }
   };
 
