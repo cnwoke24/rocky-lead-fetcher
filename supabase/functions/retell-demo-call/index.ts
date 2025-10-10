@@ -45,9 +45,9 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from_number: '[YOUR_PHONE_NUMBER]',
+        from_number: '+15076687433',
         to_number: formattedPhone,
-        agent_id: '[YOUR_AGENT_ID]',
+        agent_id: 'agent_63426c2713064c5f302799ae36',
       }),
     });
 
