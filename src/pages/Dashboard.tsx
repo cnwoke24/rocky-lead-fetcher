@@ -284,6 +284,30 @@ const Dashboard = () => {
             <CardContent>
               {!allPrereqsDone ? (
                 <BlockedOverlay title="Agent Locked" subtitle="Complete onboarding and sign the agreement to unlock your agent." />
+              ) : !agentEnabled ? (
+                <div className="relative">
+                  <div className="flex items-center gap-4 opacity-50">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=RockyAgent" alt="Agent" />
+                      <AvatarFallback>AI</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="text-lg font-semibold">Rocky Voice Agent</div>
+                      <p className="text-sm text-muted-foreground">Automates customer outreach and qualification workflows.</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-4">
+                    <div className="flex items-center gap-3">
+                      <Bot className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <div className="font-medium text-sm">Coming Soon</div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Your voice agent is being set up by our team. You'll be notified when it's ready!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <div className="flex items-center gap-4">
                   <Avatar className="h-16 w-16">
