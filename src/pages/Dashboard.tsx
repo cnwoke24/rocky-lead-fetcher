@@ -60,7 +60,15 @@ const Dashboard = () => {
 
     setUserId(session.user.id);
 
-    // Check subscription status
+    // Sync subscription status with Stripe
+    try {
+      const { data: stripeData } = await supabase.functions.invoke("check-subscription");
+      console.log("Stripe subscription check:", stripeData);
+    } catch (error) {
+      console.error("Error checking Stripe subscription:", error);
+    }
+
+    // Check subscription status from database
     const { data: subscriptionData } = await supabase
       .from("subscriptions")
       .select("*")
@@ -68,12 +76,6 @@ const Dashboard = () => {
       .maybeSingle();
 
     setSubscription(subscriptionData);
-
-    // If no active subscription, redirect to payment page
-    if (!subscriptionData || !['trial', 'active'].includes(subscriptionData.status)) {
-      navigate("/subscription-payment");
-      return;
-    }
 
     // Load profile
     const { data: profileData } = await supabase
@@ -266,6 +268,22 @@ const Dashboard = () => {
         </aside>
 
         <main className="lg:col-span-9 xl:col-span-10 space-y-6">
+          {(!subscription || !['trial', 'active'].includes(subscription.status)) && (
+            <Card className="border-orange-200 bg-orange-50">
+              <CardHeader>
+                <CardTitle className="text-orange-900">Subscription Required</CardTitle>
+                <CardDescription className="text-orange-700">
+                  Start your free 14-day trial to access your AI voice agent and all features.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button onClick={() => navigate("/subscription-payment")} className="bg-[#D4AF37] hover:bg-[#C5A028]">
+                  Start Free Trial
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+          
           <Card>
             <CardHeader>
               <CardTitle>Getting Started</CardTitle>
