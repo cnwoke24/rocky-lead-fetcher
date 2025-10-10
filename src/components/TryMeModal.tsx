@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import jackieDemo from "@/assets/jackie-demo.png";
+import { supabase } from "@/integrations/supabase/client";
 
 /** Sanitize phone input to digits (and keep leading +) */
 function normalizePhone(input: string): string {
@@ -130,18 +131,15 @@ export default function TryMeModal({ open, onClose, ytId = "Bq2IQZoCJzc" }: Prop
                     }
                     setCalling(true);
                     try {
-                      // Replace with your server route that triggers Retell AI
-                      const res = await fetch("/api/retell-demo-call", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ phone: digits }),
+                      const { data, error } = await supabase.functions.invoke('retell-demo-call', {
+                        body: { phone: digits }
                       });
-                      if (!res.ok) throw new Error("preview");
+                      
+                      if (error) throw error;
                       setCalled(true);
-                    } catch {
-                      // Preview fallback to simulate success
-                      await new Promise((r) => setTimeout(r, 700));
-                      setCalled(true);
+                    } catch (error) {
+                      console.error('Failed to initiate call:', error);
+                      setErr("Failed to initiate call. Please try again.");
                     } finally {
                       setCalling(false);
                     }
