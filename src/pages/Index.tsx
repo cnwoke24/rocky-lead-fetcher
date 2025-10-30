@@ -359,7 +359,7 @@ export default function Index() {
                 <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
                   For Nightlife
                 </a>
-                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                <a href="/physical-therapy" className="text-sm text-neutral-700 hover:text-primary transition-colors">
                   Physical Therapy Clinics
                 </a>
               </div>
