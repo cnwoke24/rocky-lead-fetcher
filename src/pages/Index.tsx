@@ -356,7 +356,7 @@ export default function Index() {
                 <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
                   For Gym Owners & Fitness Entrepreneurs
                 </a>
-                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                <a href="/nightlife" className="text-sm text-neutral-700 hover:text-primary transition-colors">
                   For Nightlife
                 </a>
                 <a href="/physical-therapy" className="text-sm text-neutral-700 hover:text-primary transition-colors">

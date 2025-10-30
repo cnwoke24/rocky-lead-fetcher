@@ -15,6 +15,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminSetup from "./pages/AdminSetup";
 import AdminUserDetails from "./pages/AdminUserDetails";
 import PhysicalTherapy from "./pages/PhysicalTherapy";
+import Nightlife from "./pages/Nightlife";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/admin/setup" element={<AdminSetup />} />
             <Route path="/admin/user/:userId" element={<AdminUserDetails />} />
             <Route path="/physical-therapy" element={<PhysicalTherapy />} />
+            <Route path="/nightlife" element={<Nightlife />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
