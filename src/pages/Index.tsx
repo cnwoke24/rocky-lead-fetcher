@@ -295,18 +295,44 @@ export default function Index() {
         </div>
       </section>
 
-      <footer className="border-t border-neutral-200 py-8 brand-font">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-600">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-              <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
+      <footer className="border-t border-neutral-200 py-12 brand-font">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* Top Section - Logo and Use Cases */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-8">
+            {/* Left - Brand */}
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-sm text-neutral-600">© 2025 Rocky AI. All rights reserved.</span>
             </div>
-            <span>© 2025 Rocky AI. All rights reserved.</span>
+            
+            {/* Right - Use Cases */}
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-4">Use Cases</h3>
+              <div className="flex flex-col gap-3">
+                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                  For Gym Owners & Fitness Entrepreneurs
+                </a>
+                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                  For Nightlife
+                </a>
+                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                  Physical Therapy Clinics
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-neutral-900">Privacy</a>
-            <a href="#" className="hover:text-neutral-900">Terms</a>
-            <a href="#" className="hover:text-neutral-900">Contact</a>
+          
+          {/* Bottom Links */}
+          <div className="pt-6 border-t border-neutral-200">
+            <div className="text-sm text-neutral-600">
+              <a href="#" className="hover:text-neutral-900 transition-colors">Privacy</a>
+              <span className="mx-2">|</span>
+              <a href="#" className="hover:text-neutral-900 transition-colors">Terms</a>
+              <span className="mx-2">|</span>
+              <a href="#" className="hover:text-neutral-900 transition-colors">Contact</a>
+            </div>
           </div>
         </div>
       </footer>
