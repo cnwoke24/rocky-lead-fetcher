@@ -4,13 +4,16 @@ export interface AirtableCall {
   id: string;
   fields: {
     clinic_id: string;
-    call_timestamp: string;
-    patient_type: "new" | "existing";
-    channel: "email" | "sms";
-    intake_link_sent?: string;
-    call_summary?: string;
-    caller_phone?: string;
-    caller_email?: string;
+    "Created time": string; // ISO 8601 format
+    "Caller Name"?: string;
+    "Phone Number"?: string;
+    "Email Address"?: string;
+    "Patient Type": "new" | "existing";
+    "Call Summary"?: string;
+    "Intake URL Sent"?: string;
+    "Call Status": "Completed" | "Open" | "No Response";
+    "Duration Seconds"?: number;
+    "Needs Callback"?: boolean;
   };
   createdTime: string;
 }
@@ -95,28 +98,24 @@ export function calculateCallStats(calls: AirtableCall[]) {
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
   const callsToday = calls.filter(call => 
-    new Date(call.fields.call_timestamp) >= todayStart
+    new Date(call.fields["Created time"]) >= todayStart
   );
 
   const newPatientsToday = callsToday.filter(
-    call => call.fields.patient_type === 'new'
+    call => call.fields["Patient Type"] === 'new'
   ).length;
 
   const existingPatientsToday = callsToday.filter(
-    call => call.fields.patient_type === 'existing'
+    call => call.fields["Patient Type"] === 'existing'
   ).length;
 
   const intakeLinksSent = callsToday.filter(
-    call => call.fields.intake_link_sent
+    call => call.fields["Intake URL Sent"]
   ).length;
 
-  const emailsSent = callsToday.filter(
-    call => call.fields.channel === 'email'
+  const callbacksNeeded = callsToday.filter(
+    call => call.fields["Needs Callback"] === true
   ).length;
-
-  const emailPercentage = callsToday.length > 0 
-    ? Math.round((emailsSent / callsToday.length) * 100)
-    : 0;
 
   // Weekly summary (last 7 days)
   const weeklyData: Record<string, number> = {};
@@ -128,7 +127,7 @@ export function calculateCallStats(calls: AirtableCall[]) {
   }
 
   calls.forEach(call => {
-    const callDate = new Date(call.fields.call_timestamp);
+    const callDate = new Date(call.fields["Created time"]);
     const dateKey = callDate.toISOString().split('T')[0];
     if (dateKey in weeklyData) {
       weeklyData[dateKey]++;
@@ -140,7 +139,7 @@ export function calculateCallStats(calls: AirtableCall[]) {
     newPatientsToday,
     existingPatientsToday,
     intakeLinksSent,
-    emailPercentage,
+    callbacksNeeded,
     weeklyData: Object.entries(weeklyData).map(([date, count]) => ({
       date,
       count,

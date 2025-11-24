@@ -65,7 +65,7 @@ serve(async (req) => {
           newPatientsToday: 0,
           existingPatientsToday: 0,
           intakeLinksSent: 0,
-          emailPercentage: 0,
+          callbacksNeeded: 0,
           weeklyData: [],
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

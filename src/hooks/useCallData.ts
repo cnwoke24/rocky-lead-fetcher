@@ -7,19 +7,24 @@ export interface CallStats {
   newPatientsToday: number;
   existingPatientsToday: number;
   intakeLinksSent: number;
-  emailPercentage: number;
+  callbacksNeeded: number;
   weeklyData: { date: string; count: number }[];
 }
 
 export interface RecentCall {
   id: string;
-  call_timestamp: string;
-  patient_type: "new" | "existing";
-  channel: "email" | "sms";
-  caller_phone?: string;
-  caller_email?: string;
-  intake_link_sent: string;
-  call_summary: string;
+  fields: {
+    "Created time": string;
+    "Caller Name"?: string;
+    "Phone Number"?: string;
+    "Email Address"?: string;
+    "Patient Type": "new" | "existing";
+    "Call Summary"?: string;
+    "Intake URL Sent"?: string;
+    "Call Status": "Completed" | "Open" | "No Response";
+    "Duration Seconds"?: number;
+    "Needs Callback"?: boolean;
+  };
 }
 
 export const useCallStats = () => {
@@ -52,7 +57,7 @@ export const useRecentCalls = (limit: number = 20) => {
   return useQuery({
     queryKey: ["recent-calls", limit],
     queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke<RecentCall[]>("get-recent-calls", {
+      const { data, error } = await supabase.functions.invoke<{ calls: RecentCall[] }>("get-recent-calls", {
         body: { limit },
       });
 
@@ -65,7 +70,7 @@ export const useRecentCalls = (limit: number = 20) => {
         throw error;
       }
 
-      return data;
+      return data?.calls || [];
     },
     retry: 2,
   });

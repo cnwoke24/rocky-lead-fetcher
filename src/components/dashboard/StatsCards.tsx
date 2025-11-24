@@ -49,11 +49,11 @@ const StatsCards = ({ data, isLoading }: StatsCardsProps) => {
       iconColor: "text-orange-600",
     },
     {
-      label: "Email Engagement",
-      value: `${data?.emailPercentage || 0}%`,
-      icon: Mail,
-      bgColor: "bg-teal-100",
-      iconColor: "text-teal-600",
+      label: "Callbacks Needed",
+      value: data?.callbacksNeeded || 0,
+      icon: Phone,
+      bgColor: "bg-red-100",
+      iconColor: "text-red-600",
     },
   ];
 
