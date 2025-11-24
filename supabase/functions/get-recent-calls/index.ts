@@ -82,7 +82,7 @@ serve(async (req) => {
       profile.clinic_id,
       {
         maxRecords: limit,
-        sort: [{ field: 'call_timestamp', direction: 'desc' }],
+        sort: [{ field: 'Created time', direction: 'desc' }],
       }
     );
 

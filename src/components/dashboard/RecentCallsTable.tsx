@@ -62,12 +62,13 @@ const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps)
           ) : (
             <div className="rounded-lg border">
               <div className="max-h-[400px] overflow-y-auto">
-                <Table>
+                  <Table>
                   <TableHeader className="sticky top-0 bg-card">
                     <TableRow>
                       <TableHead>Date/Time</TableHead>
+                      <TableHead>Caller</TableHead>
                       <TableHead>Patient Type</TableHead>
-                      <TableHead>Channel</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead>Contact</TableHead>
                       <TableHead>Intake Link</TableHead>
                       <TableHead>Summary</TableHead>
@@ -81,50 +82,55 @@ const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps)
                         onClick={() => setSelectedCall(call)}
                       >
                         <TableCell className="whitespace-nowrap">
-                          {format(new Date(call.call_timestamp), "MMM dd, h:mm a")}
+                          {format(new Date(call.fields["Created time"]), "MMM dd, h:mm a")}
+                        </TableCell>
+                        <TableCell className="max-w-[150px] truncate">
+                          {call.fields["Caller Name"] || "-"}
                         </TableCell>
                         <TableCell>
                           <Badge
-                            variant={call.patient_type === "new" ? "default" : "secondary"}
+                            variant={call.fields["Patient Type"] === "new" ? "default" : "secondary"}
                             className={
-                              call.patient_type === "new"
+                              call.fields["Patient Type"] === "new"
                                 ? "bg-green-100 text-green-700 hover:bg-green-100"
                                 : "bg-primary/10 text-primary"
                             }
                           >
-                            {call.patient_type === "new" ? "New" : "Existing"}
+                            {call.fields["Patient Type"] === "new" ? "New" : "Existing"}
                           </Badge>
                         </TableCell>
                         <TableCell>
                           <Badge
-                            variant="outline"
+                            variant={call.fields["Call Status"] === "Completed" ? "default" : "secondary"}
                             className={
-                              call.channel === "email"
-                                ? "border-purple-300 text-purple-700"
-                                : "border-orange-300 text-orange-700"
+                              call.fields["Call Status"] === "Completed"
+                                ? "bg-blue-100 text-blue-700 hover:bg-blue-100"
+                                : call.fields["Call Status"] === "Open"
+                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-100"
                             }
                           >
-                            {call.channel === "email" ? "Email" : "SMS"}
+                            {call.fields["Call Status"]}
                           </Badge>
                         </TableCell>
                         <TableCell className="max-w-[150px] truncate">
-                          {call.caller_email || call.caller_phone || "-"}
+                          {call.fields["Email Address"] || call.fields["Phone Number"] || "-"}
                         </TableCell>
                         <TableCell>
                           <Badge
-                            variant={call.intake_link_sent === "yes" ? "default" : "secondary"}
+                            variant={call.fields["Intake URL Sent"] ? "default" : "secondary"}
                             className={
-                              call.intake_link_sent === "yes"
+                              call.fields["Intake URL Sent"]
                                 ? "bg-green-100 text-green-700 hover:bg-green-100"
                                 : ""
                             }
                           >
-                            {call.intake_link_sent === "yes" ? "Sent" : "-"}
+                            {call.fields["Intake URL Sent"] ? "Sent" : "-"}
                           </Badge>
                         </TableCell>
                         <TableCell className="max-w-[200px] truncate">
-                          {call.call_summary.slice(0, 60)}
-                          {call.call_summary.length > 60 && "..."}
+                          {call.fields["Call Summary"]?.slice(0, 60) || "-"}
+                          {(call.fields["Call Summary"]?.length || 0) > 60 && "..."}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -142,66 +148,102 @@ const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps)
             <DialogTitle>Call Details</DialogTitle>
             <DialogDescription>
               {selectedCall &&
-                format(new Date(selectedCall.call_timestamp), "MMMM dd, yyyy 'at' h:mm a")}
+                format(new Date(selectedCall.fields["Created time"]), "MMMM dd, yyyy 'at' h:mm a")}
             </DialogDescription>
           </DialogHeader>
           {selectedCall && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Caller Name</p>
+                  <p className="text-sm font-semibold">{selectedCall.fields["Caller Name"] || "-"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Call Status</p>
+                  <Badge
+                    variant={selectedCall.fields["Call Status"] === "Completed" ? "default" : "secondary"}
+                    className={
+                      selectedCall.fields["Call Status"] === "Completed"
+                        ? "bg-blue-100 text-blue-700"
+                        : selectedCall.fields["Call Status"] === "Open"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-gray-100 text-gray-700"
+                    }
+                  >
+                    {selectedCall.fields["Call Status"]}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
                   <p className="text-sm font-medium text-muted-foreground mb-1">Patient Type</p>
                   <Badge
-                    variant={selectedCall.patient_type === "new" ? "default" : "secondary"}
+                    variant={selectedCall.fields["Patient Type"] === "new" ? "default" : "secondary"}
                     className={
-                      selectedCall.patient_type === "new"
+                      selectedCall.fields["Patient Type"] === "new"
                         ? "bg-green-100 text-green-700"
                         : "bg-primary/10 text-primary"
                     }
                   >
-                    {selectedCall.patient_type === "new" ? "New Patient" : "Existing Patient"}
+                    {selectedCall.fields["Patient Type"] === "new" ? "New Patient" : "Existing Patient"}
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Channel</p>
-                  <Badge
-                    variant="outline"
-                    className={
-                      selectedCall.channel === "email"
-                        ? "border-purple-300 text-purple-700"
-                        : "border-orange-300 text-orange-700"
-                    }
-                  >
-                    {selectedCall.channel === "email" ? "Email" : "SMS"}
-                  </Badge>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Duration</p>
+                  <p className="text-sm font-semibold">
+                    {selectedCall.fields["Duration Seconds"] 
+                      ? `${Math.floor(selectedCall.fields["Duration Seconds"] / 60)}m ${selectedCall.fields["Duration Seconds"] % 60}s`
+                      : "-"}
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-1">Contact Information</p>
-                <p className="text-sm">
-                  {selectedCall.caller_email || selectedCall.caller_phone || "Not provided"}
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Phone</p>
+                  <p className="text-sm">{selectedCall.fields["Phone Number"] || "-"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Email</p>
+                  <p className="text-sm">{selectedCall.fields["Email Address"] || "-"}</p>
+                </div>
               </div>
 
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-1">Intake Link</p>
-                <Badge
-                  variant={selectedCall.intake_link_sent === "yes" ? "default" : "secondary"}
-                  className={
-                    selectedCall.intake_link_sent === "yes"
-                      ? "bg-green-100 text-green-700"
-                      : ""
-                  }
-                >
-                  {selectedCall.intake_link_sent === "yes" ? "Sent" : "Not Sent"}
-                </Badge>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Intake Link</p>
+                  <Badge
+                    variant={selectedCall.fields["Intake URL Sent"] ? "default" : "secondary"}
+                    className={
+                      selectedCall.fields["Intake URL Sent"]
+                        ? "bg-green-100 text-green-700"
+                        : ""
+                    }
+                  >
+                    {selectedCall.fields["Intake URL Sent"] ? "Sent" : "Not Sent"}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Needs Callback</p>
+                  <Badge
+                    variant={selectedCall.fields["Needs Callback"] ? "destructive" : "secondary"}
+                    className={
+                      selectedCall.fields["Needs Callback"]
+                        ? "bg-red-100 text-red-700"
+                        : ""
+                    }
+                  >
+                    {selectedCall.fields["Needs Callback"] ? "Yes" : "No"}
+                  </Badge>
+                </div>
               </div>
 
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-2">Call Summary</p>
                 <div className="rounded-lg border bg-muted/20 p-4">
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {selectedCall.call_summary}
+                    {selectedCall.fields["Call Summary"] || "No summary available"}
                   </p>
                 </div>
               </div>
