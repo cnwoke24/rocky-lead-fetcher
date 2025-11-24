@@ -20,6 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import rockyLogo from "@/assets/rocky-logo.png";
+import StatsCards from "@/components/dashboard/StatsCards";
+import CallVolumeChart from "@/components/dashboard/CallVolumeChart";
+import RecentCallsTable from "@/components/dashboard/RecentCallsTable";
+import { useCallStats, useRecentCalls } from "@/hooks/useCallData";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -206,6 +210,10 @@ const Dashboard = () => {
   const setupFeePaid = agreement?.paid_at !== null;
   const allPrereqsDone = onboardingDone && agreementSigned && setupFeePaid;
 
+  // Fetch call data when agent is enabled
+  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useCallStats();
+  const { data: recentCalls, isLoading: callsLoading, refetch: refetchCalls } = useRecentCalls(20);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -354,16 +362,20 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
+              ) : !profile?.clinic_id ? (
+                <Card className="border-orange-200 bg-orange-50">
+                  <CardHeader>
+                    <CardTitle className="text-orange-900">No Clinic Assigned</CardTitle>
+                    <CardDescription className="text-orange-700">
+                      Contact support to get your clinic configured.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
               ) : (
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=RockyAgent" alt="Agent" />
-                    <AvatarFallback>AI</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="text-lg font-semibold">Rocky Voice Agent</div>
-                    <p className="text-sm text-muted-foreground">Automates customer outreach and qualification workflows.</p>
-                  </div>
+                <div className="space-y-6">
+                  <StatsCards data={stats} isLoading={statsLoading} />
+                  <CallVolumeChart data={stats} isLoading={statsLoading} />
+                  <RecentCallsTable data={recentCalls} isLoading={callsLoading} onRefresh={refetchCalls} />
                 </div>
               )}
             </CardContent>
