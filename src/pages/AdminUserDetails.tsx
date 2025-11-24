@@ -824,19 +824,23 @@ const AdminUserDetails = () => {
                   </p>
                   
                   {/* Test Call Button */}
-                  {clinic?.retell_agent_id && profile?.phone && (
+                  {clinic?.retell_agent_id && (
                     <div className="pt-3 mt-3 border-t">
                       <Button 
                         onClick={testCall}
                         variant="outline"
                         size="sm"
                         className="w-full"
+                        disabled={!profile?.phone}
                       >
                         <Phone className="h-4 w-4 mr-2" />
-                        Test Call to {profile.phone}
+                        {profile?.phone ? `Test Call to ${profile.phone}` : 'Test Call (Phone Required)'}
                       </Button>
                       <p className="text-xs text-muted-foreground mt-2">
-                        Initiates a test call using this user's clinic agent with metadata injection
+                        {profile?.phone 
+                          ? 'Initiates a test call using this user\'s clinic agent with metadata injection'
+                          : 'Add a phone number to the customer profile to enable test calls'
+                        }
                       </p>
                     </div>
                   )}
