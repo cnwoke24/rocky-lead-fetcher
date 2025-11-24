@@ -16,28 +16,40 @@ export type Database = {
     Tables: {
       agent_status: {
         Row: {
+          clinic_id: string | null
           id: string
           is_enabled: boolean
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          clinic_id?: string | null
           id?: string
           is_enabled?: boolean
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          clinic_id?: string | null
           id?: string
           is_enabled?: boolean
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agent_status_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       agreements: {
         Row: {
           amount_cents: number
+          clinic_id: string | null
           content: string
           created_at: string | null
           id: string
@@ -48,6 +60,7 @@ export type Database = {
         }
         Insert: {
           amount_cents: number
+          clinic_id?: string | null
           content: string
           created_at?: string | null
           id?: string
@@ -58,6 +71,7 @@ export type Database = {
         }
         Update: {
           amount_cents?: number
+          clinic_id?: string | null
           content?: string
           created_at?: string | null
           id?: string
@@ -66,11 +80,20 @@ export type Database = {
           status?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agreements_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       billing_history: {
         Row: {
           amount_cents: number
+          clinic_id: string | null
           created_at: string | null
           description: string | null
           id: string
@@ -80,6 +103,7 @@ export type Database = {
         }
         Insert: {
           amount_cents: number
+          clinic_id?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -89,6 +113,7 @@ export type Database = {
         }
         Update: {
           amount_cents?: number
+          clinic_id?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -96,10 +121,46 @@ export type Database = {
           stripe_payment_id?: string | null
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "billing_history_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinics: {
+        Row: {
+          airtable_base_id: string
+          airtable_table_name: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          airtable_base_id: string
+          airtable_table_name?: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          airtable_base_id?: string
+          airtable_table_name?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       daily_summaries: {
         Row: {
+          clinic_id: string | null
           content: string
           created_at: string | null
           id: string
@@ -107,6 +168,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          clinic_id?: string | null
           content: string
           created_at?: string | null
           id?: string
@@ -114,13 +176,22 @@ export type Database = {
           user_id: string
         }
         Update: {
+          clinic_id?: string | null
           content?: string
           created_at?: string | null
           id?: string
           summary_date?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "daily_summaries_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       onboarding_conversations: {
         Row: {
@@ -185,6 +256,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          clinic_id: string | null
           company_name: string | null
           created_at: string
           email: string | null
@@ -196,6 +268,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          clinic_id?: string | null
           company_name?: string | null
           created_at?: string
           email?: string | null
@@ -207,6 +280,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          clinic_id?: string | null
           company_name?: string | null
           created_at?: string
           email?: string | null
@@ -217,7 +291,15 @@ export type Database = {
           phone?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
