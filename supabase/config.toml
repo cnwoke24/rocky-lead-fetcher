@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.retell-demo-call]
 verify_jwt = false
+
+[functions.fetch-airtable-schema]
+verify_jwt = false
