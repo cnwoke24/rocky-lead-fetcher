@@ -98,7 +98,12 @@ serve(async (req) => {
     // Add metadata only if it was set (clinic-specific calls)
     if (metadata) {
       requestBody.metadata = metadata;
+      console.log('Metadata being sent to Retell:', JSON.stringify(metadata));
+    } else {
+      console.log('No metadata - using default demo agent');
     }
+
+    console.log('Full request body to Retell:', JSON.stringify(requestBody));
 
     // Call Retell AI API to create phone call
     const retellResponse = await fetch('https://api.retellai.com/v2/create-phone-call', {
