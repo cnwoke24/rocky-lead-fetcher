@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { phone } = await req.json();
+    const { phone, userId } = await req.json();
     
     // Validate phone number
     if (!phone || phone.length < 10) {
@@ -32,10 +32,73 @@ serve(async (req) => {
       );
     }
 
+    let agentId = 'agent_63426c2713064c5f302799ae36'; // Default demo agent
+    let metadata: any = undefined;
+
+    // If userId is provided, look up clinic-specific configuration
+    if (userId) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.74.0');
+      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      // Look up user's clinic and agent configuration
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('clinic_id, clinics(id, retell_agent_id)')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) {
+        console.error('Error loading user profile:', profileError);
+        return new Response(
+          JSON.stringify({ error: 'User profile not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (!profile.clinic_id) {
+        return new Response(
+          JSON.stringify({ error: 'No clinic assigned to user' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const clinic = Array.isArray(profile.clinics) ? profile.clinics[0] : profile.clinics;
+      
+      if (!clinic?.retell_agent_id) {
+        return new Response(
+          JSON.stringify({ error: 'No Retell agent ID configured for this clinic' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Use clinic-specific agent and inject metadata
+      agentId = clinic.retell_agent_id;
+      metadata = {
+        clinic_id: profile.clinic_id,
+        agent_type: 'receptionist'
+      };
+
+      console.log(`Using clinic agent: ${agentId} for clinic: ${profile.clinic_id}`);
+    }
+
     // Format phone number for Retell AI (ensure it starts with +)
     const formattedPhone = phone.startsWith('+') ? phone : `+1${phone}`;
 
-    console.log(`Initiating Retell AI call to: ${formattedPhone}`);
+    console.log(`Initiating Retell AI call to: ${formattedPhone} using agent: ${agentId}`);
+
+    // Build request body
+    const requestBody: any = {
+      from_number: '+15076687433',
+      to_number: formattedPhone,
+      agent_id: agentId,
+    };
+
+    // Add metadata only if it was set (clinic-specific calls)
+    if (metadata) {
+      requestBody.metadata = metadata;
+    }
 
     // Call Retell AI API to create phone call
     const retellResponse = await fetch('https://api.retellai.com/v2/create-phone-call', {
@@ -44,11 +107,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${RETELL_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from_number: '+15076687433',
-        to_number: formattedPhone,
-        agent_id: 'agent_63426c2713064c5f302799ae36',
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const retellData = await retellResponse.json();
