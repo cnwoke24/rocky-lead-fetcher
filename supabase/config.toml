@@ -24,5 +24,8 @@ verify_jwt = false
 [functions.retell-demo-call]
 verify_jwt = false
 
+[functions.create-clinic]
+verify_jwt = true
+
 [functions.fetch-airtable-schema]
 verify_jwt = false

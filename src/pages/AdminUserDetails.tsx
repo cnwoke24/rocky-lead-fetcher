@@ -26,6 +26,9 @@ const AdminUserDetails = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [isEditingAmount, setIsEditingAmount] = useState(false);
   const [editAmount, setEditAmount] = useState("");
+  const [clinic, setClinic] = useState<any>(null);
+  const [retellAgentId, setRetellAgentId] = useState("");
+  const [isEditingRetell, setIsEditingRetell] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -79,6 +82,22 @@ const AdminUserDetails = () => {
 
       if (summariesError) {
         console.error("Error loading summaries:", summariesError);
+      }
+
+      // Load clinic data if user has a clinic_id
+      if (profileData?.clinic_id) {
+        const { data: clinicData, error: clinicError } = await supabase
+          .from("clinics")
+          .select("*")
+          .eq("id", profileData.clinic_id)
+          .single();
+
+        if (clinicError) {
+          console.error("Error loading clinic:", clinicError);
+        } else {
+          setClinic(clinicData);
+          setRetellAgentId(clinicData?.retell_agent_id || "");
+        }
       }
 
       // Load onboarding conversation with detailed logging
@@ -222,6 +241,27 @@ const AdminUserDetails = () => {
   };
 
   const toggleAgent = async () => {
+    // If turning ON, validate requirements
+    if (!agentStatus) {
+      if (!profile?.clinic_id) {
+        toast({
+          title: "Cannot Enable Agent",
+          description: "Please assign a clinic first.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!clinic?.retell_agent_id) {
+        toast({
+          title: "Cannot Enable Agent",
+          description: "Please set a Retell Agent ID before enabling.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     const { error } = await supabase
       .from("agent_status")
       .update({ is_enabled: !agentStatus })
@@ -348,6 +388,73 @@ const AdminUserDetails = () => {
       description: "Setup fee marked as paid"
     });
 
+    loadUserData();
+  };
+
+  const createAndAssignClinic = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("create-clinic", {
+        body: { userId, clinicName: profile?.company_name || undefined },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Clinic created and assigned successfully",
+      });
+
+      loadUserData();
+    } catch (error) {
+      console.error("Error creating clinic:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create clinic",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const saveRetellAgentId = async () => {
+    if (!clinic) {
+      toast({
+        title: "Error",
+        description: "No clinic found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!retellAgentId.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a Retell Agent ID",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("clinics")
+      .update({ retell_agent_id: retellAgentId.trim() })
+      .eq("id", clinic.id);
+
+    if (error) {
+      console.error("Error updating Retell Agent ID:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save Retell Agent ID",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Retell Agent ID saved successfully",
+    });
+
+    setIsEditingRetell(false);
     loadUserData();
   };
 
@@ -578,8 +685,101 @@ const AdminUserDetails = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Agent is currently {agentStatus ? "enabled" : "disabled"}
+              Agent is currently {agentStatus ? "enabled ✓" : "disabled"}
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bot className="h-5 w-5" />
+              Clinic & Agent Settings
+            </CardTitle>
+            <CardDescription>
+              Manage clinic assignment and Retell voice agent configuration
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Clinic Information */}
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">Clinic Information</Label>
+              {!profile?.clinic_id ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">No clinic assigned</p>
+                  <Button onClick={createAndAssignClinic} size="sm">
+                    Create & Assign Clinic
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-2 rounded-lg border p-3 bg-muted/30">
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Clinic ID</Label>
+                    <p className="text-sm font-mono">{profile.clinic_id}</p>
+                  </div>
+                  {clinic && (
+                    <>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Clinic Name</Label>
+                        <p className="text-sm">{clinic.name}</p>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Airtable Base ID</Label>
+                        <p className="text-sm font-mono text-xs">{clinic.airtable_base_id}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Retell Agent Configuration */}
+            {clinic && (
+              <div className="space-y-3 pt-3 border-t">
+                <Label className="text-base font-semibold">Retell Agent Configuration</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="retell-agent-id">Retell Agent ID</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="retell-agent-id"
+                      value={retellAgentId}
+                      onChange={(e) => setRetellAgentId(e.target.value)}
+                      placeholder="agent_abc123..."
+                      disabled={!isEditingRetell}
+                      className="font-mono text-sm"
+                    />
+                    {isEditingRetell ? (
+                      <>
+                        <Button onClick={saveRetellAgentId} size="sm">
+                          Save
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setIsEditingRetell(false);
+                            setRetellAgentId(clinic?.retell_agent_id || "");
+                          }}
+                          size="sm"
+                          variant="outline"
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        onClick={() => setIsEditingRetell(true)}
+                        size="sm"
+                        variant="outline"
+                      >
+                        Edit
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    This agent ID will be used for outbound calls. The clinic ID will be automatically included in call metadata for n8n tracking.
+                  </p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
