@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Bot, CheckCircle, DollarSign, FileText, Power, XCircle } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle, DollarSign, FileText, Phone, Power, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
 
@@ -458,6 +458,51 @@ const AdminUserDetails = () => {
     loadUserData();
   };
 
+  const testCall = async () => {
+    if (!profile?.phone) {
+      toast({
+        title: "Error",
+        description: "No phone number on profile",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!clinic?.id || !clinic?.retell_agent_id) {
+      toast({
+        title: "Error",
+        description: "Clinic and Retell Agent ID must be configured first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('retell-demo-call', {
+        body: { 
+          phone: profile.phone,
+          userId: userId // This triggers clinic-specific agent + metadata injection
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Call Initiated",
+        description: `Test call started to ${profile.phone} using clinic agent ${clinic.retell_agent_id}`,
+      });
+
+      console.log('Test call response:', data);
+    } catch (error) {
+      console.error('Test call failed:', error);
+      toast({
+        title: "Error",
+        description: "Failed to initiate test call",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
@@ -777,6 +822,24 @@ const AdminUserDetails = () => {
                   <p className="text-xs text-muted-foreground">
                     This agent ID will be used for outbound calls. The clinic ID will be automatically included in call metadata for n8n tracking.
                   </p>
+                  
+                  {/* Test Call Button */}
+                  {clinic?.retell_agent_id && profile?.phone && (
+                    <div className="pt-3 mt-3 border-t">
+                      <Button 
+                        onClick={testCall}
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        Test Call to {profile.phone}
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Initiates a test call using this user's clinic agent with metadata injection
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
