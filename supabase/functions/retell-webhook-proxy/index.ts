@@ -59,6 +59,33 @@ serve(async (req) => {
       }
     }
 
+    // Fallback 1: Check if clinic_id is directly in the webhook payload
+    if (!clinicId) {
+      clinicId = payload.metadata?.clinic_id ?? 
+                 payload.call?.metadata?.clinic_id ?? 
+                 null;
+      if (clinicId) {
+        console.log('Found clinic_id in webhook payload:', clinicId);
+      }
+    }
+
+    // Fallback 2 (TEMPORARY for testing): Default to Rocky Demo Clinic 
+    // if the agent_id matches your clinic's agent
+    if (!clinicId) {
+      const agentId = payload.agent_id || payload.call?.agent_id;
+      if (agentId === 'agent_c0c778e41160a70636421bdbd4') {
+        clinicId = '749d7134-de6e-4f50-a829-a60f43bb0641'; // Rocky Demo Clinic
+        console.log('Using default clinic_id for Rocky Demo agent (TEMP):', clinicId);
+      }
+    }
+
+    // Log final clinic_id status
+    if (clinicId) {
+      console.log('Final clinic_id to be sent to n8n:', clinicId);
+    } else {
+      console.warn('No clinic_id found after all fallback attempts');
+    }
+
     // Enrich the payload with clinic_id
     const enrichedPayload = {
       ...payload,
