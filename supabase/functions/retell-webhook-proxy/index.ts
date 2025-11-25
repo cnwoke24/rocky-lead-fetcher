@@ -31,6 +31,7 @@ serve(async (req) => {
     console.log('Call ID:', callId);
 
     let clinicId = null;
+    let callDetails: any = null;
 
     // If we have a call_id, fetch the call details from Retell to get metadata
     if (callId) {
@@ -43,7 +44,7 @@ serve(async (req) => {
         });
 
         if (callDetailsResponse.ok) {
-          const callDetails = await callDetailsResponse.json();
+          callDetails = await callDetailsResponse.json();
           console.log('Call details from Retell:', JSON.stringify(callDetails));
           
           // Extract clinic_id from metadata
@@ -86,15 +87,38 @@ serve(async (req) => {
       console.warn('No clinic_id found after all fallback attempts');
     }
 
-    // Enrich the payload with clinic_id
-    const enrichedPayload = {
-      ...payload,
+    // Extract patient information from call details
+    const callAnalysis = callDetails?.call_analysis || payload.call_analysis || {};
+    const patientEmail = callAnalysis.patient_email || 
+                        callDetails?.metadata?.patient_email || 
+                        payload.metadata?.patient_email || 
+                        '';
+    
+    const patientType = (callAnalysis.patient_type || 
+                         callDetails?.metadata?.patient_type || 
+                         payload.metadata?.patient_type || 
+                         'new').toLowerCase();
+    
+    const isNewPatient = patientType === 'new';
+    
+    // Build intake URL
+    const basePortalUrl = 'https://www.myclinicportal.com';
+    const mcpParam = clinicId ? clinicId.substring(0, 8) : 'default';
+    const intakeUrl = `${basePortalUrl}/?mcp=${mcpParam}`;
+
+    // Build simplified n8n payload
+    const n8nPayload = {
+      channel: 'email',
+      name: isNewPatient ? 'send_link_new' : 'send_link_existing',
+      address: patientEmail,
+      url: intakeUrl,
+      patient_type: isNewPatient ? 'new' : 'existing',
       clinic_id: clinicId,
     };
 
-    console.log('Enriched payload:', JSON.stringify(enrichedPayload));
+    console.log('Transformed n8n payload:', JSON.stringify(n8nPayload));
 
-    // Forward to n8n webhook
+    // Forward simplified payload to n8n webhook
     const n8nWebhookUrl = 'https://rockyai.app.n8n.cloud/webhook/8b7d8918-f3c8-4edb-a9f6-8711604385ba';
     
     const n8nResponse = await fetch(n8nWebhookUrl, {
@@ -102,7 +126,7 @@ serve(async (req) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(enrichedPayload),
+      body: JSON.stringify(n8nPayload),
     });
 
     console.log('n8n response status:', n8nResponse.status);
