@@ -93,13 +93,32 @@ export async function fetchAirtableCalls(
 /**
  * Calculate statistics from call records
  */
+/**
+ * Safely parse a date string, returning null if invalid
+ */
+function safeParseDate(dateString: string | undefined): Date | null {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+/**
+ * Calculate statistics from call records
+ */
 export function calculateCallStats(calls: AirtableCall[]) {
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
-  const callsToday = calls.filter(call => 
-    new Date(call.fields["Created time"]) >= todayStart
-  );
+  // Filter to only calls with valid dates
+  const validCalls = calls.filter(call => {
+    const date = safeParseDate(call.fields["Created time"]);
+    return date !== null;
+  });
+
+  const callsToday = validCalls.filter(call => {
+    const date = safeParseDate(call.fields["Created time"]);
+    return date && date >= todayStart;
+  });
 
   const newPatientsToday = callsToday.filter(
     call => call.fields["Patient Type"] === 'new'
@@ -126,11 +145,13 @@ export function calculateCallStats(calls: AirtableCall[]) {
     weeklyData[dateKey] = 0;
   }
 
-  calls.forEach(call => {
-    const callDate = new Date(call.fields["Created time"]);
-    const dateKey = callDate.toISOString().split('T')[0];
-    if (dateKey in weeklyData) {
-      weeklyData[dateKey]++;
+  validCalls.forEach(call => {
+    const callDate = safeParseDate(call.fields["Created time"]);
+    if (callDate) {
+      const dateKey = callDate.toISOString().split('T')[0];
+      if (dateKey in weeklyData) {
+        weeklyData[dateKey]++;
+      }
     }
   });
 
