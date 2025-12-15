@@ -13,17 +13,19 @@ export interface CallStats {
 
 export interface RecentCall {
   id: string;
+  createdTime?: string;
   fields: {
-    "Created time": string;
+    "Created time"?: string;
     "Caller Name"?: string;
     "Phone Number"?: string;
     "Email Address"?: string;
-    "Patient Type": "new" | "existing";
+    "Patient Type"?: "new" | "existing";
     "Call Summary"?: string;
     "Intake URL Sent"?: string;
-    "Call Status": "Completed" | "Open" | "No Response";
+    "Call Status"?: "Completed" | "Open" | "No Response";
     "Duration Seconds"?: number;
     "Needs Callback"?: boolean;
+    [key: string]: unknown;
   };
 }
 
