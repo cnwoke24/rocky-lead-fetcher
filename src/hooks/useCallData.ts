@@ -57,7 +57,10 @@ export const useRecentCalls = (limit: number = 20) => {
   return useQuery({
     queryKey: ["recent-calls", limit],
     queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke<{ calls: RecentCall[] }>("get-recent-calls", {
+      const { data, error } = await supabase.functions.invoke<{ 
+        calls: RecentCall[]; 
+        displayFields?: string[];
+      }>("get-recent-calls", {
         body: { limit },
       });
 
@@ -70,7 +73,13 @@ export const useRecentCalls = (limit: number = 20) => {
         throw error;
       }
 
-      return data?.calls || [];
+      return {
+        calls: data?.calls || [],
+        displayFields: data?.displayFields || [
+          "Caller Name", "Phone Number", "Email Address", "Patient Type", 
+          "Call Status", "Call Summary", "Duration Seconds", "Needs Callback"
+        ],
+      };
     },
     retry: 2,
   });

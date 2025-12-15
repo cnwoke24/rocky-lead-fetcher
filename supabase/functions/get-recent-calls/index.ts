@@ -51,7 +51,7 @@ serve(async (req) => {
     // Fetch user's clinic_id from profiles
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
-      .select('clinic_id, clinics(airtable_base_id, airtable_table_name)')
+      .select('clinic_id, clinics(airtable_base_id, airtable_table_name, airtable_display_fields)')
       .eq('id', user.id)
       .single();
 
@@ -63,7 +63,7 @@ serve(async (req) => {
     if (!profile.clinic_id) {
       console.log('[GET-RECENT-CALLS] No clinic assigned to user');
       return new Response(
-        JSON.stringify({ calls: [], message: 'No clinic assigned' }),
+        JSON.stringify({ calls: [], displayFields: [], message: 'No clinic assigned' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -72,6 +72,12 @@ serve(async (req) => {
     if (!clinic?.airtable_base_id) {
       throw new Error('Clinic Airtable configuration missing');
     }
+
+    // Get display fields configuration
+    const displayFields = clinic.airtable_display_fields || [
+      "Caller Name", "Phone Number", "Email Address", "Patient Type", 
+      "Call Status", "Call Summary", "Duration Seconds", "Needs Callback"
+    ];
 
     console.log('[GET-RECENT-CALLS] Fetching recent calls for clinic:', profile.clinic_id);
 
@@ -87,7 +93,7 @@ serve(async (req) => {
     );
 
     return new Response(
-      JSON.stringify({ calls }),
+      JSON.stringify({ calls, displayFields }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }

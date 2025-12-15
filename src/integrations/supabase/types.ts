@@ -134,6 +134,7 @@ export type Database = {
       clinics: {
         Row: {
           airtable_base_id: string
+          airtable_display_fields: Json | null
           airtable_table_name: string
           created_at: string
           id: string
@@ -143,6 +144,7 @@ export type Database = {
         }
         Insert: {
           airtable_base_id: string
+          airtable_display_fields?: Json | null
           airtable_table_name?: string
           created_at?: string
           id?: string
@@ -152,6 +154,7 @@ export type Database = {
         }
         Update: {
           airtable_base_id?: string
+          airtable_display_fields?: Json | null
           airtable_table_name?: string
           created_at?: string
           id?: string

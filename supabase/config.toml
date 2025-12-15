@@ -28,7 +28,19 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.fetch-airtable-schema]
-verify_jwt = false
+verify_jwt = true
 
 [functions.retell-webhook-proxy]
 verify_jwt = false
+
+[functions.get-recent-calls]
+verify_jwt = true
+
+[functions.get-calls]
+verify_jwt = true
+
+[functions.get-call-stats]
+verify_jwt = true
+
+[functions.check-subscription]
+verify_jwt = true
