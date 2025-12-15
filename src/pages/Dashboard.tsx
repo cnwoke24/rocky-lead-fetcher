@@ -212,7 +212,9 @@ const Dashboard = () => {
 
   // Fetch call data when agent is enabled
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useCallStats();
-  const { data: recentCalls, isLoading: callsLoading, refetch: refetchCalls } = useRecentCalls(20);
+  const { data: callData, isLoading: callsLoading, refetch: refetchCalls } = useRecentCalls(20);
+  const recentCalls = callData?.calls;
+  const displayFields = callData?.displayFields;
 
   if (loading) {
     return (
@@ -375,7 +377,7 @@ const Dashboard = () => {
                 <div className="space-y-6">
                   <StatsCards data={stats} isLoading={statsLoading} />
                   <CallVolumeChart data={stats} isLoading={statsLoading} />
-                  <RecentCallsTable data={recentCalls} isLoading={callsLoading} onRefresh={refetchCalls} />
+                  <RecentCallsTable data={recentCalls} displayFields={displayFields} isLoading={callsLoading} onRefresh={refetchCalls} />
                 </div>
               )}
             </CardContent>

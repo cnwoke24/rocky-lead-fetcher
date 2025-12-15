@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Bot, CheckCircle, DollarSign, FileText, Phone, Power, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
+import { AirtableConfigCard } from "@/components/admin/AirtableConfigCard";
 
 const AdminUserDetails = () => {
   const { userId } = useParams();
@@ -849,6 +850,14 @@ const AdminUserDetails = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Airtable Configuration Card */}
+        {clinic && (
+          <AirtableConfigCard 
+            clinic={clinic} 
+            onUpdate={loadUserData}
+          />
+        )}
 
         <Card>
           <CardHeader>

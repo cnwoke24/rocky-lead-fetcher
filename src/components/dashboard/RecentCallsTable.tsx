@@ -11,12 +11,92 @@ import { RecentCall } from "@/hooks/useCallData";
 
 interface RecentCallsTableProps {
   data?: RecentCall[];
+  displayFields?: string[];
   isLoading: boolean;
   onRefresh?: () => void;
 }
 
-const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps) => {
+// Helper function to render field values with appropriate formatting
+const renderFieldValue = (call: RecentCall, fieldName: string) => {
+  const value = call.fields[fieldName as keyof typeof call.fields];
+  
+  if (value === undefined || value === null || value === "") {
+    return "-";
+  }
+  
+  // Handle special field types
+  if (fieldName === "Patient Type") {
+    return (
+      <Badge
+        variant={value === "new" ? "default" : "secondary"}
+        className={
+          value === "new"
+            ? "bg-green-100 text-green-700 hover:bg-green-100"
+            : "bg-primary/10 text-primary"
+        }
+      >
+        {value === "new" ? "New" : "Existing"}
+      </Badge>
+    );
+  }
+  
+  if (fieldName === "Call Status") {
+    return (
+      <Badge
+        variant={value === "Completed" ? "default" : "secondary"}
+        className={
+          value === "Completed"
+            ? "bg-blue-100 text-blue-700 hover:bg-blue-100"
+            : value === "Open"
+            ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-100"
+        }
+      >
+        {String(value)}
+      </Badge>
+    );
+  }
+  
+  if (fieldName === "Intake URL Sent") {
+    return (
+      <Badge
+        variant={value ? "default" : "secondary"}
+        className={value ? "bg-green-100 text-green-700 hover:bg-green-100" : ""}
+      >
+        {value ? "Sent" : "-"}
+      </Badge>
+    );
+  }
+  
+  if (fieldName === "Needs Callback") {
+    return (
+      <Badge
+        variant={value ? "destructive" : "secondary"}
+        className={value ? "bg-red-100 text-red-700 hover:bg-red-100" : ""}
+      >
+        {value ? "Yes" : "No"}
+      </Badge>
+    );
+  }
+  
+  if (fieldName === "Duration Seconds" && typeof value === "number") {
+    return `${Math.floor(value / 60)}m ${value % 60}s`;
+  }
+  
+  if (fieldName === "Call Summary" && typeof value === "string") {
+    return value.length > 60 ? `${value.slice(0, 60)}...` : value;
+  }
+  
+  return String(value);
+};
+
+const RecentCallsTable = ({ data, displayFields, isLoading, onRefresh }: RecentCallsTableProps) => {
   const [selectedCall, setSelectedCall] = useState<RecentCall | null>(null);
+  
+  // Default fields if none configured
+  const fieldsToDisplay = displayFields || [
+    "Caller Name", "Phone Number", "Patient Type", "Call Status", "Call Summary"
+  ];
 
   if (isLoading) {
     return (
@@ -66,12 +146,9 @@ const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps)
                   <TableHeader className="sticky top-0 bg-card">
                     <TableRow>
                       <TableHead>Date/Time</TableHead>
-                      <TableHead>Caller</TableHead>
-                      <TableHead>Patient Type</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Contact</TableHead>
-                      <TableHead>Intake Link</TableHead>
-                      <TableHead>Summary</TableHead>
+                      {fieldsToDisplay.map((field) => (
+                        <TableHead key={field}>{field}</TableHead>
+                      ))}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -84,54 +161,11 @@ const RecentCallsTable = ({ data, isLoading, onRefresh }: RecentCallsTableProps)
                         <TableCell className="whitespace-nowrap">
                           {format(new Date(call.fields["Created time"]), "MMM dd, h:mm a")}
                         </TableCell>
-                        <TableCell className="max-w-[150px] truncate">
-                          {call.fields["Caller Name"] || "-"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={call.fields["Patient Type"] === "new" ? "default" : "secondary"}
-                            className={
-                              call.fields["Patient Type"] === "new"
-                                ? "bg-green-100 text-green-700 hover:bg-green-100"
-                                : "bg-primary/10 text-primary"
-                            }
-                          >
-                            {call.fields["Patient Type"] === "new" ? "New" : "Existing"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={call.fields["Call Status"] === "Completed" ? "default" : "secondary"}
-                            className={
-                              call.fields["Call Status"] === "Completed"
-                                ? "bg-blue-100 text-blue-700 hover:bg-blue-100"
-                                : call.fields["Call Status"] === "Open"
-                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-100"
-                            }
-                          >
-                            {call.fields["Call Status"]}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="max-w-[150px] truncate">
-                          {call.fields["Email Address"] || call.fields["Phone Number"] || "-"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={call.fields["Intake URL Sent"] ? "default" : "secondary"}
-                            className={
-                              call.fields["Intake URL Sent"]
-                                ? "bg-green-100 text-green-700 hover:bg-green-100"
-                                : ""
-                            }
-                          >
-                            {call.fields["Intake URL Sent"] ? "Sent" : "-"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="max-w-[200px] truncate">
-                          {call.fields["Call Summary"]?.slice(0, 60) || "-"}
-                          {(call.fields["Call Summary"]?.length || 0) > 60 && "..."}
-                        </TableCell>
+                        {fieldsToDisplay.map((field) => (
+                          <TableCell key={field} className="max-w-[150px] truncate">
+                            {renderFieldValue(call, field)}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     ))}
                   </TableBody>
