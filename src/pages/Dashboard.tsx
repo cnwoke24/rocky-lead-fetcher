@@ -20,8 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import rockyLogo from "@/assets/rocky-logo.png";
-import StatsCards from "@/components/dashboard/StatsCards";
-import CallVolumeChart from "@/components/dashboard/CallVolumeChart";
 import RecentCallsTable from "@/components/dashboard/RecentCallsTable";
 import { useCallStats, useRecentCalls } from "@/hooks/useCallData";
 
@@ -211,7 +209,7 @@ const Dashboard = () => {
   const allPrereqsDone = onboardingDone && agreementSigned && setupFeePaid;
 
   // Fetch call data when agent is enabled
-  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useCallStats();
+  
   const { data: callData, isLoading: callsLoading, refetch: refetchCalls } = useRecentCalls(20);
   const recentCalls = callData?.calls;
   const displayFields = callData?.displayFields;
@@ -374,11 +372,7 @@ const Dashboard = () => {
                   </CardHeader>
                 </Card>
               ) : (
-                <div className="space-y-6">
-                  <StatsCards data={stats} isLoading={statsLoading} />
-                  <CallVolumeChart data={stats} isLoading={statsLoading} />
-                  <RecentCallsTable data={recentCalls} displayFields={displayFields} isLoading={callsLoading} onRefresh={refetchCalls} />
-                </div>
+                <RecentCallsTable data={recentCalls} displayFields={displayFields} isLoading={callsLoading} onRefresh={refetchCalls} />
               )}
             </CardContent>
           </Card>
