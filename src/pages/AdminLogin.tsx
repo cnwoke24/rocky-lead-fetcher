@@ -127,7 +127,12 @@ const AdminLogin = () => {
           </Button>
         </form>
 
-        <div className="text-center text-sm text-gray-600">
+        <div className="text-center text-sm text-gray-600 space-y-2">
+          <p>
+            <a href="/admin/forgot-password" className="text-blue-600 hover:underline">
+              Forgot Password?
+            </a>
+          </p>
           <p>Not an admin? <a href="/login" className="text-blue-600 hover:underline">Regular login</a></p>
         </div>
       </div>
