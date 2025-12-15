@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,18 @@ interface RecentCallsTableProps {
   isLoading: boolean;
   onRefresh?: () => void;
 }
+
+// Safe date formatting helper
+const formatCallDate = (dateValue: string | undefined, formatStr: string): string => {
+  if (!dateValue) return "-";
+  try {
+    const date = typeof dateValue === "string" ? parseISO(dateValue) : new Date(dateValue);
+    if (!isValid(date)) return "-";
+    return format(date, formatStr);
+  } catch {
+    return "-";
+  }
+};
 
 // Helper function to render field values with appropriate formatting
 const renderFieldValue = (call: RecentCall, fieldName: string) => {
@@ -159,7 +171,7 @@ const RecentCallsTable = ({ data, displayFields, isLoading, onRefresh }: RecentC
                         onClick={() => setSelectedCall(call)}
                       >
                         <TableCell className="whitespace-nowrap">
-                          {format(new Date(call.fields["Created time"]), "MMM dd, h:mm a")}
+                          {formatCallDate(call.fields["Created time"] || call.createdTime, "MMM dd, h:mm a")}
                         </TableCell>
                         {fieldsToDisplay.map((field) => (
                           <TableCell key={field} className="max-w-[150px] truncate">
@@ -181,8 +193,7 @@ const RecentCallsTable = ({ data, displayFields, isLoading, onRefresh }: RecentC
           <DialogHeader>
             <DialogTitle>Call Details</DialogTitle>
             <DialogDescription>
-              {selectedCall &&
-                format(new Date(selectedCall.fields["Created time"]), "MMMM dd, yyyy 'at' h:mm a")}
+              {selectedCall && formatCallDate(selectedCall.fields["Created time"] || selectedCall.createdTime, "MMMM dd, yyyy 'at' h:mm a")}
             </DialogDescription>
           </DialogHeader>
           {selectedCall && (
