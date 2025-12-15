@@ -12,6 +12,8 @@ import SubscriptionPayment from "./pages/SubscriptionPayment";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import AdminForgotPassword from "./pages/AdminForgotPassword";
+import AdminUpdatePassword from "./pages/AdminUpdatePassword";
 import AdminSetup from "./pages/AdminSetup";
 import AdminUserDetails from "./pages/AdminUserDetails";
 import PhysicalTherapy from "./pages/PhysicalTherapy";
@@ -36,6 +38,8 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+            <Route path="/admin/update-password" element={<AdminUpdatePassword />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
             <Route path="/admin/user/:userId" element={<AdminUserDetails />} />
             <Route path="/physical-therapy" element={<PhysicalTherapy />} />
