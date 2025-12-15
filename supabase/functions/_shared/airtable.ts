@@ -45,16 +45,14 @@ export async function fetchAirtableCalls(
     throw new Error('AIRTABLE_API_KEY not configured');
   }
 
-  // Build filter formula - ALWAYS filter by clinic_id
-  const clinicFilter = `{clinic_id} = '${clinicId}'`;
-  const filterByFormula = options?.filterByFormula
-    ? `AND(${clinicFilter}, ${options.filterByFormula})`
-    : clinicFilter;
-
   // Build URL with query params
-  const params = new URLSearchParams({
-    filterByFormula,
-  });
+  const params = new URLSearchParams();
+
+  // Only add filter if explicitly provided - don't filter by clinic_id since
+  // each clinic has their own Airtable base (data isolation is already handled)
+  if (options?.filterByFormula) {
+    params.append('filterByFormula', options.filterByFormula);
+  }
 
   if (options?.maxRecords) {
     params.append('maxRecords', options.maxRecords.toString());
@@ -69,7 +67,7 @@ export async function fetchAirtableCalls(
 
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?${params}`;
 
-  console.log('[AIRTABLE] Fetching calls for clinic:', clinicId);
+  console.log('[AIRTABLE] Fetching calls for clinic:', clinicId, 'from base:', baseId);
 
   const response = await fetch(url, {
     headers: {
