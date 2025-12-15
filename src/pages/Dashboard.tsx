@@ -377,26 +377,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold tracking-tight">Summary of the Day</h2>
-                  <p className="text-sm text-muted-foreground mt-1">See what your AI agent accomplished.</p>
-                </div>
-                <Input type="date" value={selectedDate} onChange={(e)=>setSelectedDate(e.target.value)} className="w-44" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              {!allPrereqsDone ? (
-                <BlockedOverlay title="Summary Locked" subtitle="Finish setup to start seeing daily summaries." />
-              ) : (
-                <div className="border rounded-xl p-4 bg-muted/20 min-h-[200px]">
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{summaryText}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </main>
       </div>
 
