@@ -1,0 +1,1 @@
+ALTER TABLE clinics DROP CONSTRAINT clinics_airtable_base_id_key;
