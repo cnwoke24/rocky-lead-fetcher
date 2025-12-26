@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
 import PricingSection from "@/components/PricingSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import rockyLogo from "@/assets/rocky-logo.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
@@ -269,6 +270,8 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      <TestimonialsSection />
 
       <div ref={pricingRef}>
         <PricingSection id="pricing" />
