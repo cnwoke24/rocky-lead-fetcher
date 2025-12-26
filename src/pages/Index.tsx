@@ -245,31 +245,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section ref={featuresRef} className="py-24 px-4 brand-font">
-        <div className="mx-auto max-w-7xl">
-          <h3 className="text-2xl font-semibold text-neutral-700 mb-2 reveal" style={{
-          transitionDelay: '0ms'
-        }}>Engineered for Impact</h3>
-          <h2 className="text-3xl md:text-5xl font-bold mb-10 brand-title reveal" style={{
-          transitionDelay: '100ms'
-        }}>Unlock Your Capabilities</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map(({
-            icon: Icon,
-            title,
-            desc
-          }, i) => <div key={title} className="p-8 rounded-2xl border border-neutral-200 bg-white hover:bg-neutral-50 transition reveal" style={{
-            transitionDelay: `${150 + i * 100}ms`
-          }}>
-                <div className="w-12 h-12 grid place-items-center rounded-lg brand-gradient mb-4 text-white">
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-1">{title}</h3>
-                <p className="text-neutral-600">{desc}</p>
-              </div>)}
-          </div>
-        </div>
-      </section>
+      
 
       <TestimonialsSection />
 
