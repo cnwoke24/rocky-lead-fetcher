@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Zap, Phone, Bell, BarChart3, Check, Shield, ChevronDown, ChevronRight } from "lucide-react";
+import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
+import PricingSection from "@/components/PricingSection";
 import rockyLogo from "@/assets/rocky-logo.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
@@ -269,52 +270,9 @@ export default function Index() {
         </div>
       </section>
 
-      <section ref={pricingRef} id="pricing" className="py-28 px-4 brand-font">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-5xl font-bold mb-3 brand-title reveal" style={{
-            transitionDelay: '0ms'
-          }}>Pricing</h2>
-            <p className="text-neutral-600 reveal" style={{
-            transitionDelay: '100ms'
-          }}>Start free. Cancel anytime.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-8 rounded-2xl border border-neutral-200 bg-white reveal" style={{
-            transitionDelay: '150ms'
-          }}>
-              <div className="text-xs font-semibold tracking-wider text-neutral-700 mb-2">SUBSCRIPTION</div>
-              <div className="flex items-end gap-2 mb-4">
-                <div className="text-5xl font-extrabold">$35</div>
-                <div className="text-neutral-500 mb-1">/mo</div>
-              </div>
-              <ul className="space-y-2 text-neutral-700 mb-6">
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> 14-day free trial</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> Calls & SMS follow-ups</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> Notifications + daily report</li>
-              </ul>
-              <form onSubmit={handleStartTrial} className="flex gap-2">
-                <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="Your email" required disabled={loading} className="h-12 flex-1 rounded-lg bg-white border border-neutral-300 px-3 placeholder:text-neutral-400 disabled:opacity-50" />
-                <button type="submit" disabled={loading} className="h-12 px-6 rounded-lg font-semibold bg-neutral-900 text-white hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)] disabled:opacity-50 disabled:hover:scale-100">
-                  {loading ? "Loading..." : "Sign up"}
-                </button>
-              </form>
-            </div>
-
-            <div className="p-8 rounded-2xl border border-neutral-200 bg-neutral-50 reveal" style={{
-            transitionDelay: '250ms'
-          }}>
-              <div className="text-xs font-semibold tracking-wider text-neutral-700 mb-2">SETUP FEE</div>
-              <p className="text-neutral-700 mb-4">Billed <b>after</b> onboarding + DocuSign. Amount agreed on the call (e.g., $500) charged to your card on file.</p>
-              <ul className="space-y-2 text-neutral-700 mb-6">
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> Custom voice agent configuration</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> Lead source hookup (Leadpages)</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4" /> Go-live checklist & QA</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div ref={pricingRef}>
+        <PricingSection id="pricing" />
+      </div>
 
       <section ref={faqRef} className="py-24 px-4 brand-font">
         <div className="mx-auto max-w-5xl">
