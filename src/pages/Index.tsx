@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
 import PricingSection from "@/components/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
@@ -14,6 +15,7 @@ export default function Index() {
   const [navSolid, setNavSolid] = useState(false);
   const [show, setShow] = useState(false);
   const [tryOpen, setTryOpen] = useState(false);
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
   const {
     toast
   } = useToast();
@@ -36,9 +38,18 @@ export default function Index() {
       threshold: 0.15
     });
     document.querySelectorAll<HTMLElement>(".reveal").forEach(el => io.observe(el));
+
+    // Lead magnet popup - show after 1 second delay if not shown recently
+    const leadTimer = setTimeout(() => {
+      if (shouldShowLeadPopup()) {
+        setLeadModalOpen(true);
+      }
+    }, 1000);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       io.disconnect();
+      clearTimeout(leadTimer);
     };
   }, []);
   function go(ref: React.RefObject<HTMLDivElement>) {
@@ -318,5 +329,8 @@ export default function Index() {
 
       {/* Try Me Modal */}
       <TryMeModal open={tryOpen} onClose={() => setTryOpen(false)} />
+
+      {/* Lead Magnet Modal */}
+      <LeadMagnetModal open={leadModalOpen} onClose={() => setLeadModalOpen(false)} />
     </div>;
 }
