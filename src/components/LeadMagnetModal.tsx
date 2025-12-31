@@ -245,9 +245,5 @@ export function LeadMagnetModal({ open, onClose }: Props) {
 
 // Helper to check if popup should be shown
 export function shouldShowLeadPopup(): boolean {
-  const lastShown = localStorage.getItem(STORAGE_KEY);
-  if (!lastShown) return true;
-  
-  const daysSinceShown = (Date.now() - parseInt(lastShown, 10)) / (1000 * 60 * 60 * 24);
-  return daysSinceShown >= POPUP_COOLDOWN_DAYS;
+  return true; // Show on every visit (change back to 7-day cooldown later)
 }
