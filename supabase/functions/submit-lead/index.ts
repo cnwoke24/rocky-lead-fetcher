@@ -46,13 +46,14 @@ interface LeadPayload {
   createdAt: string;
 }
 
-async function createAirtableRecord(payload: LeadPayload): Promise<void> {
+async function createAirtableRecord(payload: LeadPayload): Promise<boolean> {
   const apiKey = Deno.env.get('AIRTABLE_API_KEY');
   const baseId = Deno.env.get('AIRTABLE_BASE_ID');
   const tableName = Deno.env.get('AIRTABLE_TABLE_NAME') || 'Leads';
 
   if (!apiKey || !baseId) {
-    throw new Error('Airtable configuration missing');
+    console.warn('[AIRTABLE] Configuration missing (AIRTABLE_API_KEY or AIRTABLE_BASE_ID), skipping');
+    return false;
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
@@ -140,49 +141,56 @@ async function createAirtableRecord(payload: LeadPayload): Promise<void> {
   for (let attempt = 0; attempt < candidates.length; attempt++) {
     const mapping = candidates[attempt];
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        records: [
-          {
-            fields: buildFields(mapping),
-          },
-        ],
-      }),
-    });
-
-    if (response.ok) {
-      console.log('[AIRTABLE] Lead created successfully');
-      return;
-    }
-
-    lastErrorText = await response.text();
-    console.error('[AIRTABLE] Error:', lastErrorText);
-
-    // Retry on Airtable's "UNKNOWN_FIELD_NAME" (schema mismatch) with our next candidate mapping.
-    // Example: {"error":{"type":"UNKNOWN_FIELD_NAME","message":"Unknown field name: \"Email\""}}
-    let errorType: string | undefined;
     try {
-      const parsed = JSON.parse(lastErrorText);
-      errorType = parsed?.error?.type;
-    } catch {
-      // ignore
-    }
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          records: [
+            {
+              fields: buildFields(mapping),
+            },
+          ],
+        }),
+      });
 
-    const shouldRetry = response.status === 422 && errorType === 'UNKNOWN_FIELD_NAME' && attempt < candidates.length - 1;
-    if (shouldRetry) {
-      console.warn('[AIRTABLE] Field mismatch; retrying with alternate field names.');
-      continue;
-    }
+      if (response.ok) {
+        console.log('[AIRTABLE] Lead created successfully');
+        return true;
+      }
 
-    throw new Error(`Airtable error: ${response.status}`);
+      lastErrorText = await response.text();
+      console.error('[AIRTABLE] Error:', lastErrorText);
+
+      // Retry on Airtable's "UNKNOWN_FIELD_NAME" (schema mismatch) with our next candidate mapping.
+      let errorType: string | undefined;
+      try {
+        const parsed = JSON.parse(lastErrorText);
+        errorType = parsed?.error?.type;
+      } catch {
+        // ignore
+      }
+
+      const shouldRetry = response.status === 422 && errorType === 'UNKNOWN_FIELD_NAME' && attempt < candidates.length - 1;
+      if (shouldRetry) {
+        console.warn('[AIRTABLE] Field mismatch; retrying with alternate field names.');
+        continue;
+      }
+
+      // Non-retryable error
+      console.error('[AIRTABLE] Non-retryable error, giving up');
+      return false;
+    } catch (err) {
+      console.error('[AIRTABLE] Network/fetch error:', err);
+      return false;
+    }
   }
 
-  throw new Error(`Airtable error: ${lastErrorText || 'unknown'}`);
+  console.error('[AIRTABLE] All field mappings failed:', lastErrorText);
+  return false;
 }
 
 async function sendSlackNotification(payload: LeadPayload): Promise<void> {
@@ -319,17 +327,18 @@ serve(async (req) => {
 
     console.log('[SUBMIT_LEAD] Processing lead:', { name: payload.name, company: payload.company, email: payload.email });
 
-    // Create Airtable record (primary - must succeed)
-    await createAirtableRecord(payload);
+    // Attempt Airtable write (best-effort - doesn't block success)
+    const airtableSaved = await createAirtableRecord(payload);
 
-    // Send Slack and n8n notifications in parallel (non-blocking)
+    // Send Slack and n8n notifications in parallel (best-effort)
     await Promise.allSettled([
       sendSlackNotification(payload),
       triggerN8nWebhook(payload),
     ]);
 
+    // Always return success as long as we captured the lead info (Slack/n8n will have it)
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ success: true, airtableSaved }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
