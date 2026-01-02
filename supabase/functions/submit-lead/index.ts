@@ -56,34 +56,133 @@ async function createAirtableRecord(payload: LeadPayload): Promise<void> {
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
-  
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
+
+  type FieldNameMap = {
+    name: string;
+    company: string;
+    email: string;
+    phone: string;
+    source: string;
+    createdAt: string;
+  };
+
+  const envFieldMap: Partial<FieldNameMap> = {
+    name: Deno.env.get('AIRTABLE_LEADS_FIELD_NAME') || undefined,
+    company: Deno.env.get('AIRTABLE_LEADS_FIELD_COMPANY') || undefined,
+    email: Deno.env.get('AIRTABLE_LEADS_FIELD_EMAIL') || undefined,
+    phone: Deno.env.get('AIRTABLE_LEADS_FIELD_PHONE') || undefined,
+    source: Deno.env.get('AIRTABLE_LEADS_FIELD_SOURCE') || undefined,
+    createdAt: Deno.env.get('AIRTABLE_LEADS_FIELD_CREATED_AT') || undefined,
+  };
+
+  const hasEnvOverrides = Object.values(envFieldMap).some(Boolean);
+
+  const candidates: FieldNameMap[] = [
+    ...(hasEnvOverrides
+      ? [
+          {
+            name: envFieldMap.name || 'Name',
+            company: envFieldMap.company || 'Company',
+            email: envFieldMap.email || 'Email',
+            phone: envFieldMap.phone || 'Phone',
+            source: envFieldMap.source || 'Source',
+            createdAt: envFieldMap.createdAt || 'Created At',
+          },
+        ]
+      : []),
+    // Original mapping
+    {
+      name: 'Name',
+      company: 'Company',
+      email: 'Email',
+      phone: 'Phone',
+      source: 'Source',
+      createdAt: 'Created At',
     },
-    body: JSON.stringify({
-      records: [{
-        fields: {
-          'Name': payload.name,
-          'Company': payload.company,
-          'Email': payload.email,
-          'Phone': payload.phone,
-          'Source': payload.source,
-          'Created At': payload.createdAt,
-        }
-      }]
-    }),
+    // Common variants seen in other tables
+    {
+      name: 'Name',
+      company: 'Company',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      source: 'Source',
+      createdAt: 'Created At',
+    },
+    {
+      name: 'Full Name',
+      company: 'Company',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      source: 'Source',
+      createdAt: 'Created At',
+    },
+    {
+      name: 'Name',
+      company: 'Company Name',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      source: 'Source',
+      createdAt: 'Created At',
+    },
+  ];
+
+  const buildFields = (m: FieldNameMap) => ({
+    [m.name]: payload.name,
+    [m.company]: payload.company,
+    [m.email]: payload.email,
+    [m.phone]: payload.phone,
+    [m.source]: payload.source,
+    [m.createdAt]: payload.createdAt,
   });
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error('[AIRTABLE] Error:', error);
+  let lastErrorText = '';
+
+  for (let attempt = 0; attempt < candidates.length; attempt++) {
+    const mapping = candidates[attempt];
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        records: [
+          {
+            fields: buildFields(mapping),
+          },
+        ],
+      }),
+    });
+
+    if (response.ok) {
+      console.log('[AIRTABLE] Lead created successfully');
+      return;
+    }
+
+    lastErrorText = await response.text();
+    console.error('[AIRTABLE] Error:', lastErrorText);
+
+    // Retry on Airtable's "UNKNOWN_FIELD_NAME" (schema mismatch) with our next candidate mapping.
+    // Example: {"error":{"type":"UNKNOWN_FIELD_NAME","message":"Unknown field name: \"Email\""}}
+    let errorType: string | undefined;
+    try {
+      const parsed = JSON.parse(lastErrorText);
+      errorType = parsed?.error?.type;
+    } catch {
+      // ignore
+    }
+
+    const shouldRetry = response.status === 422 && errorType === 'UNKNOWN_FIELD_NAME' && attempt < candidates.length - 1;
+    if (shouldRetry) {
+      console.warn('[AIRTABLE] Field mismatch; retrying with alternate field names.');
+      continue;
+    }
+
     throw new Error(`Airtable error: ${response.status}`);
   }
 
-  console.log('[AIRTABLE] Lead created successfully');
+  throw new Error(`Airtable error: ${lastErrorText || 'unknown'}`);
 }
 
 async function sendSlackNotification(payload: LeadPayload): Promise<void> {
