@@ -53,8 +53,29 @@ export function LeadMagnetModal({ open, onClose }: Props) {
     }
   }, [open]);
 
-  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validatePhone = (phone: string) => phone.replace(/\D/g, '').length >= 10;
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    return emailRegex.test(email);
+  };
+  
+  const validatePhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, '');
+    return digits.length === 10;
+  };
+
+  // Format phone number for display as user types: (XXX) XXX-XXXX
+  const formatPhoneForDisplay = (value: string): string => {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    if (digits.length === 0) return '';
+    if (digits.length <= 3) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneForDisplay(e.target.value);
+    setPhone(formatted);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +91,7 @@ export function LeadMagnetModal({ open, onClose }: Props) {
       return;
     }
     if (!validatePhone(phone)) {
-      setError('Please enter a valid phone number (at least 10 digits).');
+      setError('Please enter a valid 10-digit US phone number.');
       return;
     }
 
@@ -199,9 +220,9 @@ export function LeadMagnetModal({ open, onClose }: Props) {
                     id="lead-phone"
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={handlePhoneChange}
                     className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="(555) 123-4567"
                     disabled={loading}
                   />
                 </div>

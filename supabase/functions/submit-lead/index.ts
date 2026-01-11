@@ -34,7 +34,18 @@ function validateEmail(email: string): boolean {
 
 function validatePhone(phone: string): boolean {
   const digits = phone.replace(/\D/g, '');
-  return digits.length >= 10;
+  return digits.length === 10;
+}
+
+// Format phone to E.164 US format: +1XXXXXXXXXX
+function formatToE164(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  // If already has country code (11 digits starting with 1), use it
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  // Otherwise prepend +1 for US
+  return `+1${digits}`;
 }
 
 interface LeadPayload {
@@ -292,7 +303,7 @@ serve(async (req) => {
     // Validate phone number
     if (!validatePhone(phone)) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Please enter a valid phone number (at least 10 digits).' }),
+        JSON.stringify({ success: false, error: 'Please enter a valid 10-digit US phone number.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -301,7 +312,7 @@ serve(async (req) => {
       name: name.trim(),
       company: company.trim(),
       email: email.trim().toLowerCase(),
-      phone: phone.trim(),
+      phone: formatToE164(phone.trim()),
       source: 'Homepage Popup',
       createdAt: new Date().toISOString(),
     };
