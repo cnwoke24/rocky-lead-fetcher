@@ -202,31 +202,12 @@ async function sendSlackNotification(payload: LeadPayload): Promise<void> {
   }
 
   const message = {
-    blocks: [
-      {
-        type: 'header',
-        text: {
-          type: 'plain_text',
-          text: '🚨 New Rocky Demo Request',
-          emoji: true,
-        }
-      },
-      {
-        type: 'section',
-        fields: [
-          { type: 'mrkdwn', text: `*Name:*\n${payload.name}` },
-          { type: 'mrkdwn', text: `*Company:*\n${payload.company}` },
-          { type: 'mrkdwn', text: `*Email:*\n${payload.email}` },
-          { type: 'mrkdwn', text: `*Phone:*\n${payload.phone}` },
-        ]
-      },
-      {
-        type: 'context',
-        elements: [
-          { type: 'mrkdwn', text: `Source: ${payload.source} | Time: ${payload.createdAt}` }
-        ]
-      }
-    ]
+    text: `NEW_ROCKY_DEMO_REQUEST
+name=${payload.name}
+company=${payload.company}
+email=${payload.email}
+phone=${payload.phone}
+source=${payload.source}`
   };
 
   try {
