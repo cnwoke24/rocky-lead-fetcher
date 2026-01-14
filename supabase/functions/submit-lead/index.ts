@@ -212,13 +212,16 @@ async function sendSlackNotification(payload: LeadPayload): Promise<void> {
     return;
   }
 
+  // Format phone as digits only (strip +1 prefix for display)
+  const phoneDigits = payload.phone.replace(/\D/g, '');
+  const displayPhone = phoneDigits.startsWith('1') ? phoneDigits.slice(1) : phoneDigits;
+
   const message = {
-    text: `NEW_ROCKY_DEMO_REQUEST
-name=${payload.name}
-company=${payload.company}
-email=${payload.email}
-phone=${payload.phone}
-source=${payload.source}`
+    text: `New Rocky Demo Requested
+Name: ${payload.name}
+Company: ${payload.company}
+Email: ${payload.email}
+Phone: ${displayPhone}`
   };
 
   try {
