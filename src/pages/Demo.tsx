@@ -262,7 +262,7 @@ const Demo = () => {
                     Submitting...
                   </>
                 ) : (
-                  "Request Demo"
+                  "Start Demo"
                 )}
               </Button>
             </form>
