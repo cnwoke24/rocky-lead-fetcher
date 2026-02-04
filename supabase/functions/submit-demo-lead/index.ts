@@ -47,6 +47,7 @@ interface DemoLeadPayload {
   date: string;
   budget: string;
   notes?: string;
+  barberPhone?: string;
   source: string;
   createdAt: string;
 }
@@ -59,6 +60,8 @@ async function sendSlackNotification(payload: DemoLeadPayload): Promise<void> {
     return;
   }
 
+  const barberPhoneDisplay = payload.barberPhone ? formatPhoneDisplay(payload.barberPhone) : 'N/A';
+  
   const message = {
     text: `New Rocky Demo Request
 Name: ${payload.name}
@@ -66,7 +69,8 @@ Phone: ${formatPhoneDisplay(payload.phone)}
 Service Type: ${payload.serviceType}
 Date: ${payload.date}
 Budget: ${payload.budget}
-Notes: ${payload.notes || 'N/A'}`
+Notes: ${payload.notes || 'N/A'}
+Barber Contact: ${barberPhoneDisplay}`
   };
 
   try {
@@ -103,7 +107,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { name, phone, serviceType, date, budget, notes } = body;
+    const { name, phone, serviceType, date, budget, notes, barberPhone } = body;
 
     // Validate required fields
     if (!name || !phone || !serviceType || !date || !budget) {
@@ -128,6 +132,7 @@ serve(async (req) => {
       date: date.trim(),
       budget: budget.trim(),
       notes: notes?.trim() || '',
+      barberPhone: barberPhone?.replace(/\D/g, '') || '',
       source: 'Demo Page',
       createdAt: new Date().toISOString(),
     };
