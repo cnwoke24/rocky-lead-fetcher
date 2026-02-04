@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, Loader2 } from "lucide-react";
 import rockyLogo from "@/assets/rocky-logo.png";
@@ -22,6 +23,11 @@ const formSchema = z.object({
   date: z.string().min(1, "Date is required"),
   budget: z.string().min(1, "Budget is required"),
   notes: z.string().max(1000).optional(),
+  barberPhone: z.string().refine((val) => {
+    if (!val) return true;
+    const digits = val.replace(/\D/g, "");
+    return digits.length === 10;
+  }, "Please enter a valid 10-digit phone number").optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -68,6 +74,7 @@ const Demo = () => {
       date: "",
       budget: "",
       notes: "",
+      barberPhone: "",
     },
   });
 
@@ -240,6 +247,29 @@ const Demo = () => {
                         className="resize-none"
                         rows={3}
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Separator className="my-4" />
+
+              <FormField
+                control={form.control}
+                name="barberPhone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Barber Contact Number (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="(555) 555-5555"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(formatPhoneNumber(e.target.value));
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
