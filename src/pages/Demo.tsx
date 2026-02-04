@@ -261,7 +261,7 @@ const Demo = () => {
                 name="barberPhone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Barber Contact Number (Optional)</FormLabel>
+                    <FormLabel>Barber Contact Number (to receive the demo call)</FormLabel>
                     <FormControl>
                       <Input
                         type="tel"
