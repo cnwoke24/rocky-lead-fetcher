@@ -5,6 +5,8 @@ import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, Loader2 } from "lucide-react";
@@ -12,12 +14,14 @@ import rockyLogo from "@/assets/rocky-logo.png";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
-  company: z.string().min(1, "Company is required").max(100),
-  email: z.string().email("Please enter a valid email").max(255),
   phone: z.string().refine((val) => {
     const digits = val.replace(/\D/g, "");
     return digits.length === 10;
   }, "Please enter a valid 10-digit phone number"),
+  serviceType: z.string().min(1, "Service type is required"),
+  date: z.string().min(1, "Date is required"),
+  budget: z.string().min(1, "Budget is required"),
+  notes: z.string().max(1000).optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -30,6 +34,26 @@ const formatPhoneNumber = (value: string): string => {
   return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
 };
 
+const serviceTypes = [
+  "DJ Services",
+  "Live Band",
+  "Event Planning",
+  "Sound Equipment",
+  "Lighting",
+  "Photography",
+  "Videography",
+  "Other",
+];
+
+const budgetRanges = [
+  "Under $500",
+  "$500 - $1,000",
+  "$1,000 - $2,500",
+  "$2,500 - $5,000",
+  "$5,000 - $10,000",
+  "$10,000+",
+];
+
 const Demo = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -39,9 +63,11 @@ const Demo = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      company: "",
-      email: "",
       phone: "",
+      serviceType: "",
+      date: "",
+      budget: "",
+      notes: "",
     },
   });
 
@@ -119,29 +145,18 @@ const Demo = () => {
 
               <FormField
                 control={form.control}
-                name="company"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Acme Inc." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
-                        placeholder="john@example.com"
+                        type="tel"
+                        placeholder="(555) 555-5555"
                         {...field}
+                        onChange={(e) => {
+                          field.onChange(formatPhoneNumber(e.target.value));
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -151,18 +166,80 @@ const Demo = () => {
 
               <FormField
                 control={form.control}
-                name="phone"
+                name="serviceType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone</FormLabel>
+                    <FormLabel>Service Type</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {serviceTypes.map((service) => (
+                          <SelectItem key={service} value={service}>
+                            {service}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
                     <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="(555) 555-5555"
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="budget"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Budget</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your budget" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {budgetRanges.map((range) => (
+                          <SelectItem key={range} value={range}>
+                            {range}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us more about your event..."
+                        className="resize-none"
+                        rows={3}
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(formatPhoneNumber(e.target.value));
-                        }}
                       />
                     </FormControl>
                     <FormMessage />

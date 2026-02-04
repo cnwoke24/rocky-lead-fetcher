@@ -27,179 +27,31 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
 function validatePhone(phone: string): boolean {
   const digits = phone.replace(/\D/g, '');
   return digits.length === 10;
 }
 
-// Format phone to E.164 US format: +1XXXXXXXXXX
-function formatToE164(phone: string): string {
+function formatPhoneDisplay(phone: string): string {
   const digits = phone.replace(/\D/g, '');
-  if (digits.length === 11 && digits.startsWith('1')) {
-    return `+${digits}`;
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
-  return `+1${digits}`;
+  return digits;
 }
 
-interface LeadPayload {
+interface DemoLeadPayload {
   name: string;
-  company: string;
-  email: string;
   phone: string;
+  serviceType: string;
+  date: string;
+  budget: string;
+  notes?: string;
   source: string;
   createdAt: string;
 }
 
-async function createAirtableRecord(payload: LeadPayload): Promise<boolean> {
-  const apiKey = Deno.env.get('AIRTABLE_API_KEY');
-  const baseId = Deno.env.get('AIRTABLE_BASE_ID');
-  const tableName = Deno.env.get('AIRTABLE_TABLE_NAME') || 'Leads';
-
-  if (!apiKey || !baseId) {
-    console.warn('[AIRTABLE] Configuration missing (AIRTABLE_API_KEY or AIRTABLE_BASE_ID), skipping');
-    return false;
-  }
-
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
-
-  type FieldNameMap = {
-    name: string;
-    company: string;
-    email: string;
-    phone: string;
-    source: string;
-    createdAt: string;
-  };
-
-  const envFieldMap: Partial<FieldNameMap> = {
-    name: Deno.env.get('AIRTABLE_LEADS_FIELD_NAME') || undefined,
-    company: Deno.env.get('AIRTABLE_LEADS_FIELD_COMPANY') || undefined,
-    email: Deno.env.get('AIRTABLE_LEADS_FIELD_EMAIL') || undefined,
-    phone: Deno.env.get('AIRTABLE_LEADS_FIELD_PHONE') || undefined,
-    source: Deno.env.get('AIRTABLE_LEADS_FIELD_SOURCE') || undefined,
-    createdAt: Deno.env.get('AIRTABLE_LEADS_FIELD_CREATED_AT') || undefined,
-  };
-
-  const hasEnvOverrides = Object.values(envFieldMap).some(Boolean);
-
-  const candidates: FieldNameMap[] = [
-    ...(hasEnvOverrides
-      ? [
-          {
-            name: envFieldMap.name || 'Name',
-            company: envFieldMap.company || 'Company',
-            email: envFieldMap.email || 'Email',
-            phone: envFieldMap.phone || 'Phone',
-            source: envFieldMap.source || 'Source',
-            createdAt: envFieldMap.createdAt || 'Created At',
-          },
-        ]
-      : []),
-    {
-      name: 'Name',
-      company: 'Company',
-      email: 'Email',
-      phone: 'Phone',
-      source: 'Source',
-      createdAt: 'Created At',
-    },
-    {
-      name: 'Name',
-      company: 'Company',
-      email: 'Email Address',
-      phone: 'Phone Number',
-      source: 'Source',
-      createdAt: 'Created At',
-    },
-    {
-      name: 'Full Name',
-      company: 'Company',
-      email: 'Email Address',
-      phone: 'Phone Number',
-      source: 'Source',
-      createdAt: 'Created At',
-    },
-    {
-      name: 'Name',
-      company: 'Company Name',
-      email: 'Email Address',
-      phone: 'Phone Number',
-      source: 'Source',
-      createdAt: 'Created At',
-    },
-  ];
-
-  const buildFields = (m: FieldNameMap) => ({
-    [m.name]: payload.name,
-    [m.company]: payload.company,
-    [m.email]: payload.email,
-    [m.phone]: payload.phone,
-    [m.source]: payload.source,
-    [m.createdAt]: payload.createdAt,
-  });
-
-  let lastErrorText = '';
-
-  for (let attempt = 0; attempt < candidates.length; attempt++) {
-    const mapping = candidates[attempt];
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          records: [
-            {
-              fields: buildFields(mapping),
-            },
-          ],
-        }),
-      });
-
-      if (response.ok) {
-        console.log('[AIRTABLE] Lead created successfully');
-        return true;
-      }
-
-      lastErrorText = await response.text();
-      console.error('[AIRTABLE] Error:', lastErrorText);
-
-      let errorType: string | undefined;
-      try {
-        const parsed = JSON.parse(lastErrorText);
-        errorType = parsed?.error?.type;
-      } catch {
-        // ignore
-      }
-
-      const shouldRetry = response.status === 422 && errorType === 'UNKNOWN_FIELD_NAME' && attempt < candidates.length - 1;
-      if (shouldRetry) {
-        console.warn('[AIRTABLE] Field mismatch; retrying with alternate field names.');
-        continue;
-      }
-
-      console.error('[AIRTABLE] Non-retryable error, giving up');
-      return false;
-    } catch (err) {
-      console.error('[AIRTABLE] Network/fetch error:', err);
-      return false;
-    }
-  }
-
-  console.error('[AIRTABLE] All field mappings failed:', lastErrorText);
-  return false;
-}
-
-async function sendSlackNotification(payload: LeadPayload): Promise<void> {
-  // Use DEMO_SLACK_WEBHOOK_URL for demo page submissions
+async function sendSlackNotification(payload: DemoLeadPayload): Promise<void> {
   const webhookUrl = Deno.env.get('DEMO_SLACK_WEBHOOK_URL');
   
   if (!webhookUrl) {
@@ -207,15 +59,14 @@ async function sendSlackNotification(payload: LeadPayload): Promise<void> {
     return;
   }
 
-  const phoneDigits = payload.phone.replace(/\D/g, '');
-  const displayPhone = phoneDigits.startsWith('1') ? phoneDigits.slice(1) : phoneDigits;
-
   const message = {
-    text: `New Rocky Demo Requested
+    text: `New Rocky Demo Request
 Name: ${payload.name}
-Company: ${payload.company}
-Email: ${payload.email}
-Phone: ${displayPhone}`
+Phone: ${formatPhoneDisplay(payload.phone)}
+Service Type: ${payload.serviceType}
+Date: ${payload.date}
+Budget: ${payload.budget}
+Notes: ${payload.notes || 'N/A'}`
   };
 
   try {
@@ -228,35 +79,10 @@ Phone: ${displayPhone}`
     if (!response.ok) {
       console.error('[SLACK] Error:', await response.text());
     } else {
-      console.log('[SLACK] Notification sent successfully');
+      console.log('[SLACK] Notification sent successfully to rocky demo channel');
     }
   } catch (error) {
     console.error('[SLACK] Failed to send notification:', error);
-  }
-}
-
-async function triggerN8nWebhook(payload: LeadPayload): Promise<void> {
-  const webhookUrl = Deno.env.get('N8N_WEBHOOK_URL');
-  
-  if (!webhookUrl) {
-    console.warn('[N8N] Webhook URL not configured, skipping');
-    return;
-  }
-
-  try {
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      console.error('[N8N] Error:', await response.text());
-    } else {
-      console.log('[N8N] Webhook triggered successfully');
-    }
-  } catch (error) {
-    console.error('[N8N] Failed to trigger webhook:', error);
   }
 }
 
@@ -277,22 +103,17 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { name, company, email, phone } = body;
+    const { name, phone, serviceType, date, budget, notes } = body;
 
-    if (!name || !company || !email || !phone) {
+    // Validate required fields
+    if (!name || !phone || !serviceType || !date || !budget) {
       return new Response(
-        JSON.stringify({ success: false, error: 'All fields are required.' }),
+        JSON.stringify({ success: false, error: 'All required fields must be filled.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!validateEmail(email)) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Please enter a valid email address.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
+    // Validate phone number
     if (!validatePhone(phone)) {
       return new Response(
         JSON.stringify({ success: false, error: 'Please enter a valid 10-digit US phone number.' }),
@@ -300,26 +121,28 @@ serve(async (req) => {
       );
     }
 
-    const payload: LeadPayload = {
+    const payload: DemoLeadPayload = {
       name: name.trim(),
-      company: company.trim(),
-      email: email.trim().toLowerCase(),
-      phone: formatToE164(phone.trim()),
+      phone: phone.replace(/\D/g, ''),
+      serviceType: serviceType.trim(),
+      date: date.trim(),
+      budget: budget.trim(),
+      notes: notes?.trim() || '',
       source: 'Demo Page',
       createdAt: new Date().toISOString(),
     };
 
-    console.log('[SUBMIT_DEMO_LEAD] Processing lead:', { name: payload.name, company: payload.company, email: payload.email });
+    console.log('[SUBMIT_DEMO_LEAD] Processing demo request:', { 
+      name: payload.name, 
+      serviceType: payload.serviceType,
+      date: payload.date 
+    });
 
-    const airtableSaved = await createAirtableRecord(payload);
-
-    await Promise.allSettled([
-      sendSlackNotification(payload),
-      triggerN8nWebhook(payload),
-    ]);
+    // Send to Slack
+    await sendSlackNotification(payload);
 
     return new Response(
-      JSON.stringify({ success: true, airtableSaved }),
+      JSON.stringify({ success: true }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
