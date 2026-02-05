@@ -1,22 +1,21 @@
 
+## Update Name Field Label to "VIP Client Name"
 
-## Change Barber Contact Number Label
-
-A quick update to change the helper text next to the "Barber Contact Number" field label.
+A simple update to change the label for the name field on the demo form.
 
 ### What will change
 
 **File: `src/pages/Demo.tsx`**
 
-Update the FormLabel text from:
+Update the FormLabel text for the name field from:
 ```
-Barber Contact Number (Optional)
+Name
 ```
 
 To:
 ```
-Barber Contact Number (to receive the demo call)
+VIP Client Name
 ```
 
-This is a single line change in the form field label.
+This is a single line change around line 154 where the name field label is rendered.
 
