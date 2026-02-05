@@ -178,7 +178,7 @@ const Demo = () => {
                   <FormItem>
                     <FormLabel>Service Type</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., DJ Services, Live Band" {...field} />
+                      <Input placeholder="e.g., Fade, Men's Cornrows" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
