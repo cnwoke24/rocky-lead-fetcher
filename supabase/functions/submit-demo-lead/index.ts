@@ -64,7 +64,7 @@ async function sendSlackNotification(payload: DemoLeadPayload): Promise<void> {
   
   const message = {
     text: `New Rocky Demo Request
-Name: ${payload.name}
+VIP Client Name: ${payload.name}
 Phone: ${formatPhoneDisplay(payload.phone)}
 Service Type: ${payload.serviceType}
 Date: ${payload.date}
