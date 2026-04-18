@@ -317,7 +317,7 @@ export default function Index() {
           {/* Bottom Links */}
           <div className="pt-6 border-t border-neutral-200">
             <div className="text-sm text-neutral-600">
-              <a href="#" className="hover:text-neutral-900 transition-colors">Privacy</a>
+              <a href="/privacy" className="hover:text-neutral-900 transition-colors">Privacy</a>
               <span className="mx-2">|</span>
               <a href="#" className="hover:text-neutral-900 transition-colors">Terms</a>
               <span className="mx-2">|</span>
