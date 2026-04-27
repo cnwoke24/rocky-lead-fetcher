@@ -229,14 +229,40 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Trusted by strip */}
-      <section className="relative z-10 border-y border-neutral-200 bg-white/80 backdrop-blur-sm py-12 brand-font">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
-          <span className="font-mono text-xs md:text-sm tracking-widest uppercase text-neutral-500 text-center">Custom Systems Built For:</span>
-          <div className="flex flex-wrap gap-6 md:gap-12 items-center justify-center font-bold text-base md:text-xl tracking-tight text-neutral-400">
-            <span>EXPERT DOCTORS PT</span>
-            <span>STRETCH EVOLUTION</span>
-            <span>EVOL BODY</span>
+      {/* Trusted by companies */}
+      <section className="relative z-10 py-16 md:py-20 px-6 brand-font">
+        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-slate-50 to-indigo-50/40 border border-slate-100 px-6 py-14 md:px-12 md:py-16">
+          <h2 className="text-center text-2xl md:text-3xl font-medium tracking-tight text-neutral-700">
+            Trusted by companies like...
+          </h2>
+          <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-12 md:gap-y-14 items-center justify-items-center">
+            <a href="https://expertdpt.com/" target="_blank" rel="noreferrer" className="flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
+              <img
+                src="https://i0.wp.com/expertdpt.com/wp-content/uploads/2024/03/86c1d-expertdptlogo-e1702679058925.png?fit=250%2C250&ssl=1"
+                alt="Expert Doctors of Physical Therapy"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="max-h-16 w-auto object-contain"
+              />
+            </a>
+            <a href="https://www.stretchew.com/" target="_blank" rel="noreferrer" className="flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
+              <img
+                src="https://static.wixstatic.com/media/7bdc64_ba27c7259ba04048a0298a654a81e610~mv2.png/v1/fill/w_156%2Ch_120%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/7bdc64_ba27c7259ba04048a0298a654a81e610~mv2.png"
+                alt="Stretch Evolution & Wellness"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="max-h-16 w-auto object-contain"
+              />
+            </a>
+            <a href="https://evolbodywellness.com/" target="_blank" rel="noreferrer" className="col-span-2 flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
+              <img
+                src="https://play-lh.googleusercontent.com/JdE8wzgTf0_GWhkaDvByt7Z06mZbjs8HWGqbZ_9rROQjY3Fwhs2uK90n8UHnqmZPgkjo%3Dw240-h480"
+                alt="EVOL Body & Wellness"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="max-h-16 w-auto object-contain"
+              />
+            </a>
           </div>
         </div>
       </section>
