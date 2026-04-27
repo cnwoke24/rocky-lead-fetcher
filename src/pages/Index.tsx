@@ -204,7 +204,7 @@ export default function Index() {
           </div>
         </div>
 
-        {/* System monitor preview card */}
+        {/* Workflow video preview card */}
         <div className="px-6 md:px-12 max-w-5xl mx-auto pb-24 brand-font">
           <div className="bg-white/60 backdrop-blur-2xl border border-neutral-200 rounded-2xl p-2 shadow-[0_8px_40px_rgba(0,0,0,0.04)] ring-1 ring-neutral-900/5 reveal" style={{ transitionDelay: '400ms' }}>
             <div className="bg-white rounded-xl border border-neutral-100 overflow-hidden">
@@ -214,39 +214,16 @@ export default function Index() {
                   <div className="size-2.5 rounded-full bg-neutral-300" />
                   <div className="size-2.5 rounded-full bg-neutral-300" />
                 </div>
-                <div className="ml-4 font-mono text-[10px] text-neutral-400 tracking-wider">ROCKY_SYSTEM_MONITOR</div>
+                <div className="ml-4 font-mono text-[10px] text-neutral-400 tracking-wider">ROCKY_WORKFLOW</div>
               </div>
-              <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <div className="flex flex-col gap-3">
-                  <div className="text-xs font-mono text-neutral-500 border-b border-neutral-100 pb-2">INPUT STREAM</div>
-                  <div className="bg-neutral-50 border border-neutral-100 rounded-lg p-4 text-sm font-medium">Client Intake Forms</div>
-                  <div className="bg-neutral-50 border border-neutral-100 rounded-lg p-4 text-sm font-medium">Inbound Calls</div>
-                </div>
-                <div className="flex flex-col gap-3 relative">
-                  <div className="hidden md:block absolute top-1/2 -left-6 w-4 border-t border-dashed border-neutral-300" />
-                  <div className="hidden md:block absolute top-1/2 -right-6 w-4 border-t border-dashed border-cyan-500" />
-                  <div className="text-xs font-mono text-cyan-600 border-b border-cyan-500/20 pb-2">AI PROCESSING NODE</div>
-                  <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4 text-sm font-medium text-cyan-700 flex justify-between items-center">
-                    <span>Lead Qualification</span>
-                    <span className="size-2 rounded-full bg-cyan-500 animate-pulse" />
-                  </div>
-                  <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4 text-sm font-medium text-cyan-700 flex justify-between items-center">
-                    <span>Intent Routing</span>
-                    <span className="size-2 rounded-full bg-cyan-500 animate-pulse" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div className="text-xs font-mono text-neutral-500 border-b border-neutral-100 pb-2">OUTPUT ACTIONS</div>
-                  <div className="bg-neutral-900 text-white rounded-lg p-4 text-sm font-medium flex justify-between items-center">
-                    <span>Booking Created</span>
-                    <span className="text-neutral-500 font-mono text-xs">SUCCESS</span>
-                  </div>
-                  <div className="bg-neutral-900 text-white rounded-lg p-4 text-sm font-medium flex justify-between items-center">
-                    <span>CRM Updated</span>
-                    <span className="text-neutral-500 font-mono text-xs">SUCCESS</span>
-                  </div>
-                </div>
-              </div>
+              <video
+                src="/workflow-demo.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-auto block"
+              />
             </div>
           </div>
         </div>
