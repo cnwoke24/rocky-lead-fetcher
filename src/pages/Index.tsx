@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight } from "lucide-react";
+import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
