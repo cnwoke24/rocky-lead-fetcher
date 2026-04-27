@@ -3,7 +3,6 @@ import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight } from "
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
-import PricingSection from "@/components/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
