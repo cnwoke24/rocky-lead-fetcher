@@ -288,20 +288,20 @@ export default function Index() {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
                 <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="text-sm text-neutral-600">© 2025 Rocky AI. All rights reserved.</span>
+              <span className="text-neutral-600 text-xs">© 2025 Rocky AI. All rights reserved.</span>
             </div>
             
             {/* Right - Use Cases */}
             <div className="md:text-right">
-              <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-4">Use Cases</h3>
+              <h3 className="font-semibold text-neutral-500 uppercase tracking-wide mb-4 text-xs">Use Cases</h3>
               <div className="flex flex-col gap-3">
-                <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                <a href="#" className="text-neutral-700 hover:text-primary transition-colors text-xs">
                   For Gym Owners & Fitness Entrepreneurs
                 </a>
-                <a href="/nightlife" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                <a href="/nightlife" className="text-neutral-700 hover:text-primary transition-colors text-xs">
                   For Nightlife
                 </a>
-                <a href="/physical-therapy" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+                <a href="/physical-therapy" className="text-neutral-700 hover:text-primary transition-colors text-xs">
                   Physical Therapy Clinics
                 </a>
               </div>
@@ -310,8 +310,8 @@ export default function Index() {
           
           {/* Bottom Links */}
           <div className="pt-6 border-t border-neutral-200">
-            <div className="text-sm text-neutral-600">
-              <a href="/privacy" className="hover:text-neutral-900 transition-colors">Privacy</a>
+            <div className="text-neutral-600 text-xs">
+              <a href="/privacy" className="hover:text-neutral-900 transition-colors text-xs">Privacy</a>
               <span className="mx-2">|</span>
               <a href="#" className="hover:text-neutral-900 transition-colors">Terms</a>
               <span className="mx-2">|</span>
