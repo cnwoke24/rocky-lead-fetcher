@@ -15,6 +15,7 @@ export default function Index() {
   const [show, setShow] = useState(false);
   const [tryOpen, setTryOpen] = useState(false);
   const [leadModalOpen, setLeadModalOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const {
     toast
   } = useToast();
