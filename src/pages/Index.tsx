@@ -223,26 +223,26 @@ export default function Index() {
         <div className="mx-auto max-w-7xl">
           <h3 className="text-2xl font-semibold text-neutral-700 mb-2 reveal" style={{
           transitionDelay: '0ms'
-        }}>Smart Agents Ready</h3>
+        }}>Our Approach</h3>
           <h2 className="text-3xl md:text-5xl font-bold mb-6 brand-title reveal" style={{
           transitionDelay: '100ms'
-        }}>Meet Your AI Task Force</h2>
+        }}>Consulting, Designing & Building Your AI Stack</h2>
           <p className="text-neutral-600 max-w-3xl reveal" style={{
           transitionDelay: '200ms'
-        }}>Discover a growing lineup of intelligent agents built to act. From task automation to complex workflows, they think, decide, and execute — so you can focus on what matters.</p>
+        }}>Every engagement starts with a conversation about your business — not a product pitch. We map the workflows that drain your time, design AI solutions around them, and stay hands-on through deployment and iteration.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             {[{
             n: 1,
-            title: "Connect lead form",
-            desc: "Hook up Leadpages or your CRM webhook."
+            title: "Discovery & strategy",
+            desc: "We dig into your operations to find where AI will create real leverage — not just where it sounds impressive."
           }, {
             n: 2,
-            title: "We call in ~3 minutes",
-            desc: "Agent qualifies, books, or schedules a callback."
+            title: "Custom build & integration",
+            desc: "We design and ship workflows tailored to your tools, your team, and your customers — voice agents, automations, dashboards."
           }, {
             n: 3,
-            title: "You get summaries",
-            desc: "Texts + dashboard log of outcomes & next steps."
+            title: "Ongoing partnership",
+            desc: "We stay engaged: monitoring, refining, and evolving the system as your business grows."
           }].map((s, i) => <div key={s.n} className="p-8 rounded-2xl border border-neutral-200 bg-white hover:bg-neutral-50 transition reveal" style={{
             transitionDelay: `${150 + i * 100}ms`
           }}>
