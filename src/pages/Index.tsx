@@ -232,7 +232,7 @@ export default function Index() {
       {/* Trusted by companies */}
       <section className="relative z-10 py-16 md:py-20 px-6 brand-font">
         <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-slate-50 to-indigo-50/40 border border-slate-100 px-6 py-14 md:px-12 md:py-16">
-          <h2 className="text-center text-2xl md:text-3xl font-medium tracking-tight text-neutral-700">
+          <h2 className="text-center md:text-3xl tracking-tight font-light text-base text-[#8b887e]">
             Trusted by companies like...
           </h2>
           <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-12 md:gap-y-14 items-center justify-items-center">
