@@ -147,16 +147,15 @@ export default function Index() {
                 top: 0,
                 behavior: 'smooth'
               })} className="hover:opacity-80 cursor-pointer">Home</button>
-                <button onClick={() => go(howRef)} className="hover:opacity-80 cursor-pointer">Agents</button>
-                <button onClick={() => go(featuresRef)} className="hover:opacity-80 cursor-pointer">Features</button>
+                <button onClick={() => go(howRef)} className="hover:opacity-80 cursor-pointer">Approach</button>
+                <button onClick={() => go(featuresRef)} className="hover:opacity-80 cursor-pointer">Case Studies</button>
                 <button onClick={() => go(faqRef)} className="hover:opacity-80 cursor-pointer">FAQ</button>
-                <button onClick={() => go(pricingRef)} className="hover:opacity-80 cursor-pointer">Pricing</button>
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
                 <a href="/login" className="px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-800 hover:bg-neutral-100 transition-all duration-200 ease-out hover:scale-[1.04] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Sign in</a>
                 <a href="/signup" className="px-4 h-10 inline-flex items-center gap-2 rounded-full font-semibold text-white bg-[#0B63D8] hover:bg-[#0A58C5] shadow-[0_6px_20px_rgba(11,99,216,.25)] transition-all duration-200 ease-out hover:scale-[1.06] hover:shadow-[0_14px_36px_rgba(11,99,216,.38)]">
-                  Sign up <ChevronRight className="w-4 h-4" />
+                  Book a Consultation <ChevronRight className="w-4 h-4" />
                 </a>
               </div>
             </div>
