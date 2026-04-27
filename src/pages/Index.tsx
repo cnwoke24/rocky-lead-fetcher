@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight } from "lucide-react";
+import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
@@ -15,6 +15,7 @@ export default function Index() {
   const [show, setShow] = useState(false);
   const [tryOpen, setTryOpen] = useState(false);
   const [leadModalOpen, setLeadModalOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const {
     toast
   } = useToast();
@@ -135,32 +136,45 @@ export default function Index() {
 
       <header className={`fixed ${navSolid ? 'top-4' : 'top-0'} inset-x-0 z-40`}>
         <div className="mx-auto max-w-6xl px-3">
-          <div className={`transition-all duration-300 backdrop-blur pointer-events-auto ${navSolid ? 'rounded-full bg-white/90 shadow-[0_10px_40px_rgba(2,6,23,0.06)] ring-1 ring-neutral-200' : 'bg-transparent'}`}>
-            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 md:gap-6 px-3 md:px-5 py-2 md:py-3 brand-font">
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center" aria-label="Rocky logo">
+          <div className={`transition-all duration-300 backdrop-blur pointer-events-auto ${navSolid ? 'rounded-2xl bg-white/95 shadow-[0_10px_40px_rgba(2,6,23,0.06)] ring-1 ring-neutral-200' : 'bg-white/80 ring-1 ring-neutral-200/60'}`}>
+            <div className="flex items-center justify-between gap-3 px-4 md:px-5 py-2.5 brand-font">
+              <a href="/" className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" aria-label="Rocky logo">
                   <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-base md:text-lg tracking-tight brand-title">Rocky AI <span className="text-neutral-600">Workflows</span></span>
-              </div>
+                <span className="text-base md:text-lg font-semibold tracking-tight text-neutral-900 truncate">Rocky AI</span>
+              </a>
 
-              <nav className="hidden md:flex items-center justify-center gap-8 font-semibold text-neutral-800 select-none">
-                <button onClick={() => window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-              })} className="hover:opacity-80 cursor-pointer">Home</button>
-                <button onClick={() => go(howRef)} className="hover:opacity-80 cursor-pointer">Approach</button>
-                <button onClick={() => go(featuresRef)} className="hover:opacity-80 cursor-pointer">Case Studies</button>
-                <button onClick={() => go(faqRef)} className="hover:opacity-80 cursor-pointer">FAQ</button>
+              <nav className="hidden md:flex items-center justify-center gap-8 font-medium text-neutral-700 select-none">
+                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-neutral-900">Home</button>
+                <button onClick={() => go(howRef)} className="hover:text-neutral-900">Approach</button>
+                <button onClick={() => go(featuresRef)} className="hover:text-neutral-900">Case Studies</button>
+                <button onClick={() => go(faqRef)} className="hover:text-neutral-900">FAQ</button>
               </nav>
 
-              <div className="hidden md:flex items-center gap-3">
-                <a href="/login" className="px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-800 hover:bg-neutral-100 transition-all duration-200 ease-out hover:scale-[1.04] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Sign in</a>
-                <a href="/signup" className="px-4 h-10 inline-flex items-center gap-2 rounded-full font-semibold text-white bg-[#0B63D8] hover:bg-[#0A58C5] shadow-[0_6px_20px_rgba(11,99,216,.25)] transition-all duration-200 ease-out hover:scale-[1.06] hover:shadow-[0_14px_36px_rgba(11,99,216,.38)]">
-                  Book a Consultation <ChevronRight className="w-4 h-4" />
+              <div className="flex items-center gap-2">
+                <a href="/signup" className="px-4 py-2 inline-flex items-center rounded-lg font-semibold text-sm text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-all duration-200 ease-out shadow-[0_4px_14px_rgba(37,99,235,.25)]">
+                  Try for free
                 </a>
+                <button
+                  onClick={() => setMobileOpen(v => !v)}
+                  aria-label="Toggle menu"
+                  className="md:hidden w-9 h-9 inline-flex items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50"
+                >
+                  {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
               </div>
             </div>
+
+            {mobileOpen && (
+              <div className="md:hidden border-t border-neutral-200/70 px-4 py-3 flex flex-col gap-1 text-neutral-800 font-medium">
+                <button onClick={() => { setMobileOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-left py-2">Home</button>
+                <button onClick={() => { setMobileOpen(false); go(howRef); }} className="text-left py-2">Approach</button>
+                <button onClick={() => { setMobileOpen(false); go(featuresRef); }} className="text-left py-2">Case Studies</button>
+                <button onClick={() => { setMobileOpen(false); go(faqRef); }} className="text-left py-2">FAQ</button>
+                <a href="/login" className="py-2">Sign in</a>
+              </div>
+            )}
           </div>
         </div>
       </header>
