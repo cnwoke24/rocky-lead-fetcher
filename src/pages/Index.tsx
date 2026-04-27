@@ -259,9 +259,6 @@ export default function Index() {
 
       <TestimonialsSection />
 
-      <div ref={pricingRef}>
-        <PricingSection id="pricing" />
-      </div>
 
       <section ref={faqRef} className="py-24 px-4 brand-font">
         <div className="mx-auto max-w-5xl">
