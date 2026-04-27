@@ -153,8 +153,8 @@ export default function Index() {
               </nav>
 
               <div className="flex items-center gap-2">
-                <a href="/signup" className="px-4 py-2 inline-flex items-center rounded-lg font-semibold text-sm text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-all duration-200 ease-out shadow-[0_4px_14px_rgba(37,99,235,.25)]">
-                  Try for free
+                <a href="/login" className="px-4 py-2 inline-flex items-center rounded-lg font-semibold text-sm text-white bg-[#2563EB] hover:bg-[#1D4ED8] transition-all duration-200 ease-out shadow-[0_4px_14px_rgba(37,99,235,.25)]">
+                  Partner Login
                 </a>
                 <button
                   onClick={() => setMobileOpen(v => !v)}
