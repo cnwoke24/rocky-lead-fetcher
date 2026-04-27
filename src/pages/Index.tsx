@@ -3,7 +3,6 @@ import { Zap, Phone, Bell, BarChart3, Shield, ChevronDown, ChevronRight } from "
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import TryMeModal from "@/components/TryMeModal";
-import PricingSection from "@/components/PricingSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
@@ -19,7 +18,7 @@ export default function Index() {
   const {
     toast
   } = useToast();
-  const pricingRef = useRef<HTMLDivElement | null>(null);
+  
   const howRef = useRef<HTMLDivElement | null>(null);
   const featuresRef = useRef<HTMLDivElement | null>(null);
   const faqRef = useRef<HTMLDivElement | null>(null);
@@ -148,16 +147,15 @@ export default function Index() {
                 top: 0,
                 behavior: 'smooth'
               })} className="hover:opacity-80 cursor-pointer">Home</button>
-                <button onClick={() => go(howRef)} className="hover:opacity-80 cursor-pointer">Agents</button>
-                <button onClick={() => go(featuresRef)} className="hover:opacity-80 cursor-pointer">Features</button>
+                <button onClick={() => go(howRef)} className="hover:opacity-80 cursor-pointer">Approach</button>
+                <button onClick={() => go(featuresRef)} className="hover:opacity-80 cursor-pointer">Case Studies</button>
                 <button onClick={() => go(faqRef)} className="hover:opacity-80 cursor-pointer">FAQ</button>
-                <button onClick={() => go(pricingRef)} className="hover:opacity-80 cursor-pointer">Pricing</button>
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
                 <a href="/login" className="px-3 py-1.5 rounded-full border border-neutral-200 text-neutral-800 hover:bg-neutral-100 transition-all duration-200 ease-out hover:scale-[1.04] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Sign in</a>
                 <a href="/signup" className="px-4 h-10 inline-flex items-center gap-2 rounded-full font-semibold text-white bg-[#0B63D8] hover:bg-[#0A58C5] shadow-[0_6px_20px_rgba(11,99,216,.25)] transition-all duration-200 ease-out hover:scale-[1.06] hover:shadow-[0_14px_36px_rgba(11,99,216,.38)]">
-                  Sign up <ChevronRight className="w-4 h-4" />
+                  Book a Consultation <ChevronRight className="w-4 h-4" />
                 </a>
               </div>
             </div>
@@ -183,18 +181,18 @@ export default function Index() {
             <h1 className="text-4xl md:text-6xl mb-6 brand-title h1-tuned mx-auto max-w-[22ch] reveal in" style={{
             transitionDelay: '100ms'
           }}>
-              Turn Every Lead Into Revenue With <span className="brand-text">AI-Powered Calls</span>
+              Custom <span className="brand-text">AI Workflows & Consulting</span> for Small Businesses
             </h1>
             <p className="text-base md:text-xl text-neutral-600 max-w-2xl mx-auto mb-10 reveal in" style={{
             transitionDelay: '200ms'
           }}>
-              AI-powered calling that converts gym & salon leads into paying customers through intelligent conversations and CRM integration.
+              We partner with small businesses to design, build, and deploy bespoke AI workflows — from intelligent voice agents to automated operations — tailored to how your business actually runs.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap reveal in" style={{
             transitionDelay: '300ms'
           }}>
-              <a href="/signup" className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Get Started</a>
-              <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Try me</button>
+              <a href="/signup" className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Book a Consultation</a>
+              <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Schedule a Call</button>
             </div>
           </div>
 
@@ -225,26 +223,26 @@ export default function Index() {
         <div className="mx-auto max-w-7xl">
           <h3 className="text-2xl font-semibold text-neutral-700 mb-2 reveal" style={{
           transitionDelay: '0ms'
-        }}>Smart Agents Ready</h3>
+        }}>Our Approach</h3>
           <h2 className="text-3xl md:text-5xl font-bold mb-6 brand-title reveal" style={{
           transitionDelay: '100ms'
-        }}>Meet Your AI Task Force</h2>
+        }}>Consulting, Designing & Building Your AI Stack</h2>
           <p className="text-neutral-600 max-w-3xl reveal" style={{
           transitionDelay: '200ms'
-        }}>Discover a growing lineup of intelligent agents built to act. From task automation to complex workflows, they think, decide, and execute — so you can focus on what matters.</p>
+        }}>Every engagement starts with a conversation about your business — not a product pitch. We map the workflows that drain your time, design AI solutions around them, and stay hands-on through deployment and iteration.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             {[{
             n: 1,
-            title: "Connect lead form",
-            desc: "Hook up Leadpages or your CRM webhook."
+            title: "Discovery & strategy",
+            desc: "We dig into your operations to find where AI will create real leverage — not just where it sounds impressive."
           }, {
             n: 2,
-            title: "We call in ~3 minutes",
-            desc: "Agent qualifies, books, or schedules a callback."
+            title: "Custom build & integration",
+            desc: "We design and ship workflows tailored to your tools, your team, and your customers — voice agents, automations, dashboards."
           }, {
             n: 3,
-            title: "You get summaries",
-            desc: "Texts + dashboard log of outcomes & next steps."
+            title: "Ongoing partnership",
+            desc: "We stay engaged: monitoring, refining, and evolving the system as your business grows."
           }].map((s, i) => <div key={s.n} className="p-8 rounded-2xl border border-neutral-200 bg-white hover:bg-neutral-50 transition reveal" style={{
             transitionDelay: `${150 + i * 100}ms`
           }}>
@@ -260,9 +258,6 @@ export default function Index() {
 
       <TestimonialsSection />
 
-      <div ref={pricingRef}>
-        <PricingSection id="pricing" />
-      </div>
 
       <section ref={faqRef} className="py-24 px-4 brand-font">
         <div className="mx-auto max-w-5xl">
