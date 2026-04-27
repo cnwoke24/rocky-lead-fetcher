@@ -38,17 +38,16 @@ export default function Index() {
     });
     document.querySelectorAll<HTMLElement>(".reveal").forEach(el => io.observe(el));
 
-    // Lead magnet popup - show after 1 second delay if not shown recently
-    const leadTimer = setTimeout(() => {
-      if (shouldShowLeadPopup()) {
-        setLeadModalOpen(true);
-      }
-    }, 1000);
+    // Lead magnet popup paused — keep functionality intact, just don't auto-open
+    // const leadTimer = setTimeout(() => {
+    //   if (shouldShowLeadPopup()) {
+    //     setLeadModalOpen(true);
+    //   }
+    // }, 1000);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       io.disconnect();
-      clearTimeout(leadTimer);
     };
   }, []);
   function go(ref: React.RefObject<HTMLDivElement>) {
