@@ -39,18 +39,15 @@ function LogoItem({ c }: { c: Client }) {
       target="_blank"
       rel="noreferrer"
       title={c.name}
-      className="group mx-10 flex shrink-0 items-center gap-3 opacity-70 transition hover:opacity-100"
+      className="mx-12 flex shrink-0 items-center opacity-70 transition hover:opacity-100"
     >
       <img
         src={c.logoUrl}
         alt={c.name + " logo"}
         loading="lazy"
         referrerPolicy="no-referrer"
-        className="h-10 w-10 object-contain grayscale"
+        className="h-16 w-auto max-w-[180px] object-contain grayscale"
       />
-      <span className="whitespace-nowrap text-sm font-semibold uppercase tracking-wider text-slate-500 group-hover:text-slate-700">
-        {c.name}
-      </span>
     </a>
   );
 }
