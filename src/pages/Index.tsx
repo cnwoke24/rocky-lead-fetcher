@@ -292,7 +292,7 @@ export default function Index() {
             </div>
             
             {/* Right - Use Cases */}
-            <div className="px-[59px] mx-[98px]">
+            <div className="md:text-right">
               <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-4">Use Cases</h3>
               <div className="flex flex-col gap-3">
                 <a href="#" className="text-sm text-neutral-700 hover:text-primary transition-colors">
