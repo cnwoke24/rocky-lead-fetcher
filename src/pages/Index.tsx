@@ -141,7 +141,7 @@ export default function Index() {
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" aria-label="Rocky logo">
                   <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-base md:text-lg tracking-tight brand-title">Rocky AI • <span className="text-neutral-600">Fetch Leads</span></span>
+                <span className="text-base md:text-lg tracking-tight brand-title">Rocky AI <span className="text-neutral-600">Workflows</span></span>
               </div>
 
               <nav className="hidden md:flex items-center justify-center gap-8 font-semibold text-neutral-800 select-none">
