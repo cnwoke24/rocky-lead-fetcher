@@ -18,7 +18,7 @@ export default function Index() {
   const {
     toast
   } = useToast();
-  const pricingRef = useRef<HTMLDivElement | null>(null);
+  
   const howRef = useRef<HTMLDivElement | null>(null);
   const featuresRef = useRef<HTMLDivElement | null>(null);
   const faqRef = useRef<HTMLDivElement | null>(null);
