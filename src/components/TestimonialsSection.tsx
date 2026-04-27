@@ -120,7 +120,7 @@ export function TestimonialsSection({
             </span>
           </h2>
           <p className="mt-3 text-sm text-slate-600 sm:text-base">
-            Three real implementations — inbound reception, booking automation, and retention outreach.
+            Each of these is a custom workflow we scoped, built, and now support — bespoke AI engagements tailored to how each business actually operates.
           </p>
           
         </div>
