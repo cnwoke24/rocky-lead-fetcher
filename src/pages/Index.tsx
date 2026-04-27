@@ -171,12 +171,6 @@ export default function Index() {
 
         <div className="mx-auto max-w-7xl px-4 pt-40 pb-20 relative brand-font text-center">
           <div className={`transition-all duration-700 ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-200 bg-white mb-6 text-neutral-700 reveal in" style={{
-            transitionDelay: '0ms'
-          }}>
-              <Zap className="w-4 h-4 text-cyan-500" />
-              <span className="text-xs tracking-wide">AI Assistants & Agents</span>
-            </div>
             <h1 className="text-4xl md:text-6xl mb-6 brand-title h1-tuned mx-auto max-w-[22ch] reveal in" style={{
             transitionDelay: '100ms'
           }}>
