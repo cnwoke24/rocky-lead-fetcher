@@ -173,10 +173,6 @@ export default function Index() {
 
       <section className="relative overflow-hidden z-10">
         <div className="mx-auto max-w-7xl px-6 md:px-12 pt-32 pb-16 flex flex-col items-center text-center brand-font">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-200 bg-white/80 backdrop-blur-sm text-xs font-mono text-neutral-500 mb-8 reveal in" style={{ transitionDelay: '0ms' }}>
-            <span className="tracking-wider">SYSTEM ARCHITECTURE v2.4</span>
-            <span className="size-1.5 rounded-full bg-cyan-500 animate-pulse" />
-          </div>
           <h1 className="text-5xl md:text-7xl font-medium tracking-tight text-balance max-w-4xl leading-[1.1] reveal in" style={{ transitionDelay: '100ms' }}>
             Complexity is a liability. <br />
             <span className="text-neutral-400">Automation is leverage.</span>
