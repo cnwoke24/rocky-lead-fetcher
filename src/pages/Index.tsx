@@ -130,6 +130,9 @@ export default function Index() {
         button, a, [role="button"], .clickable { cursor: pointer; }
       `}</style>
 
+      {/* Architectural blueprint grid background */}
+      <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] bg-[size:48px_48px] opacity-40 z-0" />
+
       <header className={`fixed ${navSolid ? 'top-4' : 'top-0'} inset-x-0 z-40`}>
         <div className="mx-auto max-w-6xl px-3">
           <div className={`transition-all duration-300 backdrop-blur pointer-events-auto ${navSolid ? 'rounded-full bg-white/90 shadow-[0_10px_40px_rgba(2,6,23,0.06)] ring-1 ring-neutral-200' : 'bg-transparent'}`}>
