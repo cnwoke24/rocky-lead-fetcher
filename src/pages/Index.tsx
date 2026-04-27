@@ -182,18 +182,18 @@ export default function Index() {
             <h1 className="text-4xl md:text-6xl mb-6 brand-title h1-tuned mx-auto max-w-[22ch] reveal in" style={{
             transitionDelay: '100ms'
           }}>
-              Turn Every Lead Into Revenue With <span className="brand-text">AI-Powered Calls</span>
+              Custom <span className="brand-text">AI Workflows & Consulting</span> for Small Businesses
             </h1>
             <p className="text-base md:text-xl text-neutral-600 max-w-2xl mx-auto mb-10 reveal in" style={{
             transitionDelay: '200ms'
           }}>
-              AI-powered calling that converts gym & salon leads into paying customers through intelligent conversations and CRM integration.
+              We partner with small businesses to design, build, and deploy bespoke AI workflows — from intelligent voice agents to automated operations — tailored to how your business actually runs.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap reveal in" style={{
             transitionDelay: '300ms'
           }}>
-              <a href="/signup" className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Get Started</a>
-              <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Try me</button>
+              <a href="/signup" className="px-5 h-11 inline-flex items-center rounded-lg bg-neutral-900 text-white font-semibold hover:bg-black transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(2,6,23,0.15)]">Book a Consultation</a>
+              <button onClick={() => setTryOpen(true)} className="px-5 h-11 inline-flex items-center rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-[0_8px_24px_rgba(2,6,23,0.08)]">Schedule a Call</button>
             </div>
           </div>
 
