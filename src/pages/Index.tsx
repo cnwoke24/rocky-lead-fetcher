@@ -259,7 +259,7 @@ export default function Index() {
                 ].map((logo) => (
                   <div
                     key={`${dup}-${logo.alt}`}
-                    className="mx-1 sm:mx-2 md:mx-3 flex h-28 sm:h-36 md:h-48 w-[220px] sm:w-[280px] md:w-[360px] items-center justify-center"
+                    className="mx-0 flex h-28 sm:h-36 md:h-48 w-[180px] sm:w-[220px] md:w-[280px] items-center justify-center"
                   >
                     <img
                       src={logo.src}
