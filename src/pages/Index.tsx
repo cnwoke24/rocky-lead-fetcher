@@ -154,7 +154,7 @@ export default function Index() {
                 <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-neutral-900">Home</button>
                 <button onClick={() => go(howRef)} className="hover:text-neutral-900">Approach</button>
                 <button onClick={() => go(featuresRef)} className="hover:text-neutral-900">Case Studies</button>
-                <button onClick={() => go(faqRef)} className="hover:text-neutral-900">FAQ</button>
+                
               </nav>
 
               <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function Index() {
                 <button onClick={() => { setMobileOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-left py-2">Home</button>
                 <button onClick={() => { setMobileOpen(false); go(howRef); }} className="text-left py-2">Approach</button>
                 <button onClick={() => { setMobileOpen(false); go(featuresRef); }} className="text-left py-2">Case Studies</button>
-                <button onClick={() => { setMobileOpen(false); go(faqRef); }} className="text-left py-2">FAQ</button>
+                
                 <a href="/login" className="py-2">Sign in</a>
               </div>
             )}
