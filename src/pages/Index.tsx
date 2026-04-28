@@ -450,27 +450,6 @@ export default function Index() {
 
 
 
-      <section ref={faqRef} className="py-24 px-4 brand-font">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl md:text-5xl font-bold mb-10 brand-title reveal" style={{
-          transitionDelay: '0ms'
-        }}>Frequently Asked Questions</h2>
-          <div className="divide-y divide-neutral-200 rounded-2xl border border-neutral-200 overflow-hidden reveal" style={{
-          transitionDelay: '100ms'
-        }}>
-            {faqs.map((f, i) => <details key={i} className="group open:bg-neutral-50 reveal" style={{
-            transitionDelay: `${150 + i * 50}ms`
-          }}>
-                <summary className="list-none cursor-pointer select-none px-5 py-4 flex items-center justify-between">
-                  <span className="font-medium text-neutral-800">{f.q}</span>
-                  <ChevronDown className="w-4 h-4 text-neutral-500 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-5 pb-5 text-neutral-600">{f.a}</div>
-              </details>)}
-          </div>
-        </div>
-      </section>
-
       <footer className="border-t border-neutral-200 py-12 brand-font">
         <div className="mx-auto max-w-7xl px-4">
           {/* Top Section - Logo and Use Cases */}
