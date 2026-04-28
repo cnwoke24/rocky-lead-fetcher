@@ -6,6 +6,11 @@ import TryMeModal from "@/components/TryMeModal";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
+import logoExpertDpt from "@/assets/partners/expert-dpt.png";
+import logoStretchEvolution from "@/assets/partners/stretch-evolution.png";
+import logoEvol from "@/assets/partners/evol.png";
+import logoTheCut from "@/assets/partners/thecut.png";
+import logoKlippit from "@/assets/partners/klippit.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
 export default function Index() {
@@ -231,38 +236,26 @@ export default function Index() {
 
       {/* Trusted by companies */}
       <section className="relative z-10 py-16 md:py-20 px-6 brand-font">
-        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-slate-50 to-indigo-50/40 border border-slate-100 px-6 py-14 md:px-12 md:py-16">
+        <div className="max-w-6xl mx-auto rounded-3xl bg-gradient-to-b from-slate-50 to-indigo-50/40 border border-slate-100 px-6 py-14 md:px-12 md:py-20">
           <h2 className="text-center md:text-3xl tracking-tight font-light text-base text-[#8b887e]">
             Trusted by companies like...
           </h2>
-          <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-12 md:gap-y-14 items-center justify-items-center">
-            <a href="https://expertdpt.com/" target="_blank" rel="noreferrer" className="flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
-              <img
-                src="https://i0.wp.com/expertdpt.com/wp-content/uploads/2024/03/86c1d-expertdptlogo-e1702679058925.png?fit=250%2C250&ssl=1"
-                alt="Expert Doctors of Physical Therapy"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="max-h-16 w-auto object-contain"
-              />
+          <div className="mt-14 md:mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-12 md:gap-x-10 md:gap-y-14 items-center justify-items-center">
+            <a href="https://expertdpt.com/" target="_blank" rel="noreferrer" title="Expert Doctors of Physical Therapy" className="flex items-center justify-center w-full h-14 md:h-16 transition hover:opacity-80">
+              <img src={logoExpertDpt} alt="Expert Doctors of Physical Therapy" loading="lazy" className="max-h-full w-auto object-contain" />
             </a>
-            <a href="https://www.stretchew.com/" target="_blank" rel="noreferrer" className="flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
-              <img
-                src="https://static.wixstatic.com/media/7bdc64_ba27c7259ba04048a0298a654a81e610~mv2.png/v1/fill/w_156%2Ch_120%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/7bdc64_ba27c7259ba04048a0298a654a81e610~mv2.png"
-                alt="Stretch Evolution & Wellness"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="max-h-16 w-auto object-contain"
-              />
+            <a href="https://www.stretchew.com/" target="_blank" rel="noreferrer" title="Stretch Evolution & Wellness" className="flex items-center justify-center w-full h-14 md:h-16 transition hover:opacity-80">
+              <img src={logoStretchEvolution} alt="Stretch Evolution & Wellness" loading="lazy" className="max-h-full w-auto object-contain" />
             </a>
-            <a href="https://evolbodywellness.com/" target="_blank" rel="noreferrer" className="col-span-2 flex items-center justify-center h-16 opacity-80 hover:opacity-100 transition">
-              <img
-                src="https://play-lh.googleusercontent.com/JdE8wzgTf0_GWhkaDvByt7Z06mZbjs8HWGqbZ_9rROQjY3Fwhs2uK90n8UHnqmZPgkjo%3Dw240-h480"
-                alt="EVOL Body & Wellness"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="max-h-16 w-auto object-contain"
-              />
+            <a href="https://evolbodywellness.com/" target="_blank" rel="noreferrer" title="EVOL Body & Wellness" className="flex items-center justify-center w-full h-14 md:h-16 transition hover:opacity-80">
+              <img src={logoEvol} alt="EVOL Body & Wellness" loading="lazy" className="max-h-full w-auto object-contain" />
             </a>
+            <div title="theCut" className="flex items-center justify-center w-full h-14 md:h-16">
+              <img src={logoTheCut} alt="theCut" loading="lazy" className="max-h-full w-auto object-contain" />
+            </div>
+            <div title="Klippit" className="flex items-center justify-center w-full h-14 md:h-16">
+              <img src={logoKlippit} alt="Klippit" loading="lazy" className="max-h-full w-auto object-contain" />
+            </div>
           </div>
         </div>
       </section>
