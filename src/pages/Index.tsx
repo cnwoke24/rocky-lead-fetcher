@@ -242,9 +242,9 @@ export default function Index() {
           className="mt-10 md:mt-14 relative"
           style={{
             maskImage:
-              "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
           }}
         >
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
@@ -259,7 +259,7 @@ export default function Index() {
                 ].map((logo) => (
                   <div
                     key={`${dup}-${logo.alt}`}
-                    className="mx-3 sm:mx-5 md:mx-6 flex h-24 sm:h-32 md:h-40 w-[180px] sm:w-[240px] md:w-[300px] items-center justify-center"
+                    className="mx-4 sm:mx-6 md:mx-8 flex h-28 sm:h-36 md:h-48 w-[220px] sm:w-[280px] md:w-[360px] items-center justify-center"
                   >
                     <img
                       src={logo.src}
