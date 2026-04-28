@@ -122,6 +122,10 @@ export default {
             boxShadow: "0 0 40px hsl(var(--primary-glow) / 0.5)",
           },
         },
+        "marquee": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -130,6 +134,7 @@ export default {
         "fade-in-up": "fade-in-up 0.6s ease-out",
         "scale-in": "scale-in 0.4s ease-out",
         "glow": "glow 3s ease-in-out infinite",
+        "marquee": "marquee 30s linear infinite",
       },
     },
   },

@@ -231,30 +231,44 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Trusted by companies */}
-      <section className="relative z-10 py-12 md:py-20 px-4 sm:px-6 brand-font">
-        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-[#f5f3ee] to-[#efece5] px-6 sm:px-10 py-14 sm:py-16 md:py-20">
-          <h2 className="text-center text-xl sm:text-2xl md:text-3xl tracking-tight font-light text-[#8b887e]">
+      {/* Trusted by companies - marquee carousel */}
+      <section className="relative z-10 py-12 md:py-20 brand-font overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <h2 className="text-center text-base md:text-3xl tracking-tight font-light text-[#8b887e]">
             Trusted by businesses like...
           </h2>
-          <div className="mt-10 sm:mt-14 md:mt-16 grid grid-cols-2 md:grid-cols-3 gap-x-8 sm:gap-x-12 gap-y-12 sm:gap-y-14 md:gap-y-16 items-center justify-items-center">
-            {[
-              { src: partnerEvol, alt: "EVOL Body & Wellness" },
-              { src: partnerStretch, alt: "Stretch Evolution & Wellness" },
-              { src: partnerKlippit, alt: "Klippit" },
-              { src: partnerTheCut, alt: "theCut" },
-              { src: partnerExpertDpt, alt: "Expert Doctors of Physical Therapy" },
-            ].map((logo) => (
-              <div
-                key={logo.alt}
-                className="w-full flex items-center justify-center h-20 sm:h-24 md:h-28"
-              >
-                <img
-                  src={logo.src}
-                  alt={logo.alt}
-                  loading="lazy"
-                  className="max-h-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] w-auto h-auto object-contain"
-                />
+        </div>
+        <div
+          className="mt-10 md:mt-14 relative"
+          style={{
+            maskImage:
+              "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          }}
+        >
+          <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+            {[...Array(2)].map((_, dup) => (
+              <div key={dup} className="flex shrink-0 items-center" aria-hidden={dup === 1}>
+                {[
+                  { src: partnerEvol, alt: "EVOL Body & Wellness" },
+                  { src: partnerStretch, alt: "Stretch Evolution & Wellness" },
+                  { src: partnerKlippit, alt: "Klippit" },
+                  { src: partnerTheCut, alt: "theCut" },
+                  { src: partnerExpertDpt, alt: "Expert Doctors of Physical Therapy" },
+                ].map((logo) => (
+                  <div
+                    key={`${dup}-${logo.alt}`}
+                    className="mx-8 sm:mx-12 md:mx-16 flex h-16 sm:h-20 md:h-24 w-[140px] sm:w-[180px] md:w-[220px] items-center justify-center"
+                  >
+                    <img
+                      src={logo.src}
+                      alt={logo.alt}
+                      loading="lazy"
+                      className="max-h-full max-w-full w-auto h-auto object-contain"
+                    />
+                  </div>
+                ))}
               </div>
             ))}
           </div>
