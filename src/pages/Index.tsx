@@ -201,7 +201,7 @@ export default function Index() {
               Contact Us
             </a>
             <button onClick={() => setTryOpen(true)} className="bg-white text-neutral-900 px-6 py-3 rounded-lg font-medium hover:bg-neutral-50 transition-colors border border-neutral-200 shadow-sm">
-              View Architecture
+              AI Voice Demo
             </button>
           </div>
         </div>
