@@ -6,11 +6,7 @@ import TryMeModal from "@/components/TryMeModal";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
-import logoExpertDpt from "@/assets/partners/expert-dpt.png";
-import logoStretchEvolution from "@/assets/partners/stretch-evolution.png";
-import logoEvol from "@/assets/partners/evol.png";
-import logoTheCut from "@/assets/partners/thecut.png";
-import logoKlippit from "@/assets/partners/klippit.png";
+import trustedByImage from "@/assets/partners/trusted-by.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
 export default function Index() {
