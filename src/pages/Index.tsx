@@ -275,6 +275,66 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Case Study: Reactivation Workflow */}
+      <section className="relative z-10 py-12 md:py-20 px-4 sm:px-6 brand-font">
+        <div className="max-w-md mx-auto">
+          <div className="rounded-3xl bg-white border border-black/5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] overflow-hidden">
+            {/* Visual */}
+            <div className="relative px-5 pt-5">
+              <div className="relative rounded-2xl overflow-hidden bg-[#0b0b0c] aspect-[16/10] flex items-center justify-center">
+                {/* Mock workflow visual */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1030] via-[#0b0b0c] to-[#0b0b0c]" />
+                <div className="relative z-10 w-full px-6 flex items-center justify-between gap-3 text-white/90 text-[10px] sm:text-xs font-medium">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+                    </div>
+                    <span>Dead Lead</span>
+                  </div>
+                  <div className="flex-1 h-px bg-gradient-to-r from-white/10 via-white/40 to-white/10 relative">
+                    <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-[#7C3AED] shadow-[0_0_12px_rgba(124,58,237,0.8)] animate-pulse" />
+                  </div>
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#22D3EE] flex items-center justify-center">
+                      <Phone className="h-4 w-4 text-white" />
+                    </div>
+                    <span>AI Call</span>
+                  </div>
+                  <div className="flex-1 h-px bg-gradient-to-r from-white/10 via-white/40 to-white/10" />
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" strokeWidth="2"><path d="M20 6 9 17l-5-5"/></svg>
+                    </div>
+                    <span>Booked</span>
+                  </div>
+                </div>
+              </div>
+              {/* Purple fade under visual */}
+              <div className="h-8 -mt-px bg-gradient-to-b from-[#E9D5FF] to-transparent rounded-b-2xl" />
+            </div>
+
+            {/* Text content */}
+            <div className="px-6 pb-8 pt-2 text-center">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0b0b0c]">
+                Reactivation Workflow Is Live <span className="inline-block">✨</span>
+              </h3>
+              <p className="mt-3 text-sm sm:text-base text-[#5b5b62] leading-relaxed max-w-xs mx-auto">
+                See how we re-engaged 1,200+ dead leads and booked appointments on autopilot.
+              </p>
+              <button
+                onClick={() => go(howRef)}
+                className="mt-6 inline-flex items-center gap-2 text-[#2563EB] font-semibold text-sm sm:text-base hover:gap-3 transition-all"
+              >
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#2563EB] text-white">
+                  <ChevronRight className="h-4 w-4" />
+                </span>
+                See the Reactivation Workflow
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Approach + Metrics */}
       <section ref={howRef} className="relative z-10 py-24 md:py-32 px-6 max-w-7xl mx-auto brand-font">
         <div className="max-w-3xl mb-16 reveal" style={{ transitionDelay: '0ms' }}>
