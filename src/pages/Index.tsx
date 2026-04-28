@@ -154,7 +154,7 @@ export default function Index() {
                 <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-neutral-900">Home</button>
                 <button onClick={() => go(howRef)} className="hover:text-neutral-900">Approach</button>
                 <button onClick={() => go(featuresRef)} className="hover:text-neutral-900">Case Studies</button>
-                <button onClick={() => go(faqRef)} className="hover:text-neutral-900">FAQ</button>
+                
               </nav>
 
               <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function Index() {
                 <button onClick={() => { setMobileOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-left py-2">Home</button>
                 <button onClick={() => { setMobileOpen(false); go(howRef); }} className="text-left py-2">Approach</button>
                 <button onClick={() => { setMobileOpen(false); go(featuresRef); }} className="text-left py-2">Case Studies</button>
-                <button onClick={() => { setMobileOpen(false); go(faqRef); }} className="text-left py-2">FAQ</button>
+                
                 <a href="/login" className="py-2">Sign in</a>
               </div>
             )}
@@ -449,27 +449,6 @@ export default function Index() {
       </section>
 
 
-
-      <section ref={faqRef} className="py-24 px-4 brand-font">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl md:text-5xl font-bold mb-10 brand-title reveal" style={{
-          transitionDelay: '0ms'
-        }}>Frequently Asked Questions</h2>
-          <div className="divide-y divide-neutral-200 rounded-2xl border border-neutral-200 overflow-hidden reveal" style={{
-          transitionDelay: '100ms'
-        }}>
-            {faqs.map((f, i) => <details key={i} className="group open:bg-neutral-50 reveal" style={{
-            transitionDelay: `${150 + i * 50}ms`
-          }}>
-                <summary className="list-none cursor-pointer select-none px-5 py-4 flex items-center justify-between">
-                  <span className="font-medium text-neutral-800">{f.q}</span>
-                  <ChevronDown className="w-4 h-4 text-neutral-500 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-5 pb-5 text-neutral-600">{f.a}</div>
-              </details>)}
-          </div>
-        </div>
-      </section>
 
       <footer className="border-t border-neutral-200 py-12 brand-font">
         <div className="mx-auto max-w-7xl px-4">
