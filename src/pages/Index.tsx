@@ -232,12 +232,12 @@ export default function Index() {
       </section>
 
       {/* Trusted by companies */}
-      <section className="relative z-10 py-16 md:py-24 px-6 brand-font">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-center md:text-3xl tracking-tight font-light text-base text-[#8b887e]">
+      <section className="relative z-10 py-12 md:py-20 px-4 sm:px-6 brand-font">
+        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-[#f5f3ee] to-[#efece5] px-6 sm:px-10 py-14 sm:py-16 md:py-20">
+          <h2 className="text-center text-xl sm:text-2xl md:text-3xl tracking-tight font-light text-[#8b887e]">
             Trusted by businesses like...
           </h2>
-          <div className="mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-6 gap-y-10 sm:gap-x-10 sm:gap-y-12 items-center justify-items-center">
+          <div className="mt-10 sm:mt-14 md:mt-16 grid grid-cols-2 md:grid-cols-3 gap-x-8 sm:gap-x-12 gap-y-12 sm:gap-y-14 md:gap-y-16 items-center justify-items-center">
             {[
               { src: partnerEvol, alt: "EVOL Body & Wellness" },
               { src: partnerStretch, alt: "Stretch Evolution & Wellness" },
@@ -247,13 +247,13 @@ export default function Index() {
             ].map((logo) => (
               <div
                 key={logo.alt}
-                className="w-full flex items-center justify-center h-16 sm:h-20 md:h-24"
+                className="w-full flex items-center justify-center h-20 sm:h-24 md:h-28"
               >
                 <img
                   src={logo.src}
                   alt={logo.alt}
                   loading="lazy"
-                  className="max-h-full max-w-[140px] sm:max-w-[160px] md:max-w-[180px] w-auto h-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                  className="max-h-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] w-auto h-auto object-contain"
                 />
               </div>
             ))}
