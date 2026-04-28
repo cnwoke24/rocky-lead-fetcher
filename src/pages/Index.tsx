@@ -412,9 +412,6 @@ export default function Index() {
         </div>
       </section>
 
-      <div className="relative z-10 bg-white">
-        <TestimonialsSection />
-      </div>
 
       {/* Deployment Protocol */}
       <section className="relative z-10 py-24 md:py-32 max-w-7xl mx-auto px-6 brand-font">
