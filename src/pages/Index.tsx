@@ -198,7 +198,7 @@ export default function Index() {
           </p>
           <div className="mt-10 flex gap-4 flex-wrap justify-center reveal in" style={{ transitionDelay: '300ms' }}>
             <a href="/signup" className="bg-neutral-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-neutral-800 transition-colors shadow-lg shadow-neutral-900/10 ring-1 ring-inset ring-white/10">
-              Map Your Workflow
+              Contact Us
             </a>
             <button onClick={() => setTryOpen(true)} className="bg-white text-neutral-900 px-6 py-3 rounded-lg font-medium hover:bg-neutral-50 transition-colors border border-neutral-200 shadow-sm">
               View Architecture
