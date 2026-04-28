@@ -232,7 +232,7 @@ export default function Index() {
 
       {/* Trusted by companies */}
       <section className="relative z-10 py-16 md:py-20 px-6 brand-font">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <img
             src={trustedByImage}
             alt="Trusted by businesses like EVOL Body & Wellness, Stretch Evolution & Wellness, Klippit, theCut, and Expert Doctors of Physical Therapy"
