@@ -6,7 +6,11 @@ import TryMeModal from "@/components/TryMeModal";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { LeadMagnetModal, shouldShowLeadPopup } from "@/components/LeadMagnetModal";
 import rockyLogo from "@/assets/rocky-logo.png";
-import trustedByImage from "@/assets/partners/trusted-by.png";
+import partnerEvol from "@/assets/partners/evol.png";
+import partnerStretch from "@/assets/partners/stretch-evolution.png";
+import partnerKlippit from "@/assets/partners/klippit.png";
+import partnerTheCut from "@/assets/partners/thecut.png";
+import partnerExpertDpt from "@/assets/partners/expert-dpt.png";
 const BRAND_START = "#7C3AED";
 const BRAND_END = "#22D3EE";
 export default function Index() {
@@ -228,14 +232,32 @@ export default function Index() {
       </section>
 
       {/* Trusted by companies */}
-      <section className="relative z-10 py-16 md:py-20 px-6 brand-font">
-        <div className="max-w-7xl mx-auto">
-          <img
-            src={trustedByImage}
-            alt="Trusted by businesses like EVOL Body & Wellness, Stretch Evolution & Wellness, Klippit, theCut, and Expert Doctors of Physical Therapy"
-            loading="lazy"
-            className="w-full h-auto block rounded-3xl"
-          />
+      <section className="relative z-10 py-16 md:py-24 px-6 brand-font">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-center md:text-3xl tracking-tight font-light text-base text-[#8b887e]">
+            Trusted by businesses like...
+          </h2>
+          <div className="mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-6 gap-y-10 sm:gap-x-10 sm:gap-y-12 items-center justify-items-center">
+            {[
+              { src: partnerEvol, alt: "EVOL Body & Wellness" },
+              { src: partnerStretch, alt: "Stretch Evolution & Wellness" },
+              { src: partnerKlippit, alt: "Klippit" },
+              { src: partnerTheCut, alt: "theCut" },
+              { src: partnerExpertDpt, alt: "Expert Doctors of Physical Therapy" },
+            ].map((logo) => (
+              <div
+                key={logo.alt}
+                className="w-full flex items-center justify-center h-16 sm:h-20 md:h-24"
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  loading="lazy"
+                  className="max-h-full max-w-[140px] sm:max-w-[160px] md:max-w-[180px] w-auto h-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
