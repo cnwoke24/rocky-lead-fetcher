@@ -233,11 +233,6 @@ export default function Index() {
 
       {/* Trusted by companies - marquee carousel */}
       <section className="relative z-10 py-12 md:py-20 brand-font overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-center text-base md:text-3xl tracking-tight font-light text-[#8b887e]">
-            Trusted by businesses like...
-          </h2>
-        </div>
         <div
           className="mt-10 md:mt-14 relative"
           style={{
