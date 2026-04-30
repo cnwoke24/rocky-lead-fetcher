@@ -74,13 +74,12 @@ const GymFunnel = () => {
       </header>
 
       {/* HERO */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 border-b-2" style={{ borderColor: ink }}>
+      <section className="border-b-2" style={{ borderColor: ink }}>
         <motion.div
           initial="hidden"
           animate="show"
           variants={fadeUp}
-          className="lg:col-span-8 p-6 sm:p-10 lg:p-16 border-b-2 lg:border-b-0 lg:border-r-2"
-          style={{ borderColor: ink }}
+          className="p-6 sm:p-10 lg:p-16"
         >
           <h1
             className="font-bold text-4xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
