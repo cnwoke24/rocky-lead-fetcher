@@ -87,64 +87,34 @@ const GymPage2 = () => {
 
       {/* WHAT TO DO NEXT */}
       <section className="border-b-2" style={{ borderColor: ink }}>
-        <div className="grid grid-cols-1 md:grid-cols-3">
-          {[
-            {
-              num: "01",
-              title: "Watch The Free Training",
-              copy: "Press play above. It's under 9 minutes — the reactivation script is in the back half.",
-              dark: false,
-            },
-            {
-              num: "02",
-              title: "Watch The Full Video",
-              copy: "It's under 9 minutes. Watch start to finish — the reactivation script is in the back half.",
-              dark: true,
-            },
-            {
-              num: "03",
-              title: "Book A Strategy Call",
-              copy: "If you want us to build it for you, grab a slot below. We only take on a few gyms a month.",
-              dark: false,
-            },
-          ].map((step) => (
-            <motion.div
-              key={step.num}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-              className="p-6 sm:p-8 border-b-2 md:border-b-0 md:border-r-2 last:border-r-0 flex flex-col gap-5"
-              style={{
-                borderColor: ink,
-                background: step.dark ? sprint : "transparent",
-                color: step.dark ? chalk : ink,
-              }}
-            >
-              <div
-                className="text-5xl"
-                style={{
-                  ...mono,
-                  WebkitTextStroke: `1px ${step.dark ? chalk : ink}`,
-                  color: "transparent",
-                }}
-              >
-                {step.num}
-              </div>
-              <div className="font-bold uppercase text-lg" style={display}>
-                {step.title}
-              </div>
-              <p
-                className="text-base sm:text-lg leading-tight mt-auto pt-4 border-t"
-                style={{
-                  borderColor: step.dark ? "rgba(250,249,245,0.3)" : "rgba(17,17,17,0.2)",
-                }}
-              >
-                {step.copy}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="p-6 sm:p-8 flex flex-col gap-5"
+          style={{ borderColor: ink, background: sprint, color: chalk }}
+        >
+          <div
+            className="text-5xl"
+            style={{
+              ...mono,
+              WebkitTextStroke: `1px ${chalk}`,
+              color: "transparent",
+            }}
+          >
+            01
+          </div>
+          <div className="font-bold uppercase text-lg" style={display}>
+            Book A Strategy Call
+          </div>
+          <p
+            className="text-base sm:text-lg leading-tight pt-4 border-t max-w-2xl"
+            style={{ borderColor: "rgba(250,249,245,0.3)" }}
+          >
+            If you want us to build it for you, grab a slot below. We only take on a few gyms a month.
+          </p>
+        </motion.div>
       </section>
 
       {/* CTA */}
