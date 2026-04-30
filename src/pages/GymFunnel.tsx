@@ -12,6 +12,7 @@ const fadeUp = {
 
 const GymFunnel = () => {
   const formRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", business: "" });
