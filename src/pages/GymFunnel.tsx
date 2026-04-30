@@ -213,6 +213,57 @@ const GymFunnel = () => {
         </motion.div>
       </section>
 
+      {/* CASE STUDY */}
+      <section className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 border-b-2" style={{ borderColor: ink }}>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="lg:col-span-5"
+        >
+          <div className="text-xs uppercase tracking-widest mb-4 flex items-center gap-2" style={mono}>
+            <span className="size-2 inline-block" style={{ background: sprint }} /> Field Report
+          </div>
+          <h2 className="text-4xl sm:text-5xl uppercase tracking-tight mb-6" style={display}>
+            EVOL Athletics
+          </h2>
+          <p className="text-lg sm:text-xl mb-6 leading-relaxed max-w-[40ch]">
+            "We had hundreds of numbers from an old promo sitting in a spreadsheet. We plugged Rocky in on a Tuesday. By Wednesday afternoon, my coaching staff was fully booked for the week. It's like a relentless front desk that never sleeps."
+          </p>
+          <div className="font-bold text-xs sm:text-sm uppercase" style={mono}>
+            — Marcus Vance, Head of Operations
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-7 border-2 p-6 sm:p-10 lg:p-12 grid grid-cols-2 gap-6 sm:gap-8"
+          style={{ background: court, borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
+        >
+          <div className="flex flex-col justify-end">
+            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={display}>
+              186
+            </div>
+            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
+              Stale Records Contacted
+            </div>
+          </div>
+          <div className="flex flex-col justify-end">
+            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={{ ...display, color: sprint }}>
+              9
+            </div>
+            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
+              Reactivations Booked
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
       {/* THE HANDOFF / MECHANISM */}
       <section className="flex flex-col lg:flex-row border-b-2" style={{ borderColor: ink }}>
         <div
@@ -295,56 +346,6 @@ const GymFunnel = () => {
         </div>
       </section>
 
-      {/* CASE STUDY */}
-      <section className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 border-b-2" style={{ borderColor: ink }}>
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          className="lg:col-span-5"
-        >
-          <div className="text-xs uppercase tracking-widest mb-4 flex items-center gap-2" style={mono}>
-            <span className="size-2 inline-block" style={{ background: sprint }} /> Field Report
-          </div>
-          <h2 className="text-4xl sm:text-5xl uppercase tracking-tight mb-6" style={display}>
-            EVOL Athletics
-          </h2>
-          <p className="text-lg sm:text-xl mb-6 leading-relaxed max-w-[40ch]">
-            "We had hundreds of numbers from an old promo sitting in a spreadsheet. We plugged Rocky in on a Tuesday. By Wednesday afternoon, my coaching staff was fully booked for the week. It's like a relentless front desk that never sleeps."
-          </p>
-          <div className="font-bold text-xs sm:text-sm uppercase" style={mono}>
-            — Marcus Vance, Head of Operations
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ delay: 0.1 }}
-          className="lg:col-span-7 border-2 p-6 sm:p-10 lg:p-12 grid grid-cols-2 gap-6 sm:gap-8"
-          style={{ background: court, borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
-        >
-          <div className="flex flex-col justify-end">
-            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={display}>
-              186
-            </div>
-            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
-              Stale Records Contacted
-            </div>
-          </div>
-          <div className="flex flex-col justify-end">
-            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={{ ...display, color: sprint }}>
-              9
-            </div>
-            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
-              Reactivations Booked
-            </div>
-          </div>
-        </motion.div>
-      </section>
 
 
       <footer className="px-6 py-6 border-t-2 flex flex-col sm:flex-row gap-2 justify-between items-center" style={{ borderColor: ink, background: ink, color: chalk }}>
