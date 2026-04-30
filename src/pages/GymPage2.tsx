@@ -85,38 +85,6 @@ const GymPage2 = () => {
         </motion.div>
       </section>
 
-      {/* WHAT TO DO NEXT */}
-      <section className="border-b-2" style={{ borderColor: ink }}>
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          className="p-6 sm:p-8 flex flex-col gap-5"
-          style={{ borderColor: ink, background: sprint, color: chalk }}
-        >
-          <div
-            className="text-5xl"
-            style={{
-              ...mono,
-              WebkitTextStroke: `1px ${chalk}`,
-              color: "transparent",
-            }}
-          >
-            01
-          </div>
-          <div className="font-bold uppercase text-lg" style={display}>
-            Book A Strategy Call
-          </div>
-          <p
-            className="text-base sm:text-lg leading-tight pt-4 border-t max-w-2xl"
-            style={{ borderColor: "rgba(250,249,245,0.3)" }}
-          >
-            If you want us to build it for you, grab a slot below. We only take on a few gyms a month.
-          </p>
-        </motion.div>
-      </section>
-
       {/* CTA */}
       <section className="p-6 sm:p-10 lg:p-16 border-b-2" style={{ borderColor: ink }}>
         <motion.div
