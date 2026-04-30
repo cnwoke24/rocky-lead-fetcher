@@ -98,7 +98,7 @@ const GymFunnel = () => {
             and get them back in your gym every month.
           </h1>
           <p className="text-lg sm:text-xl lg:text-2xl max-w-[45ch] leading-snug">
-            Stop letting expired trials gather dust. Rocky initiates relentless, high-fidelity voice outreach to your churned lists — booking consultations before your front desk finishes their first coffee.
+            Bring old members back without cold calling, chasing leads for hours, or asking your staff to do awkward sales follow-up.
           </p>
           <button
             onClick={scrollToForm}
