@@ -140,7 +140,7 @@ const GymPage2 = () => {
             Want us to build this <span style={{ color: sprint }}>for you?</span>
           </h2>
           <p className="text-base sm:text-lg mb-6 max-w-md mx-auto">
-            Book a free 15-minute strategy call. We'll map your reactivation campaign live.
+            If you want us to build it for you, grab a slot below. We only take on a few gyms a month.
           </p>
           <a
             href="https://calendly.com"
