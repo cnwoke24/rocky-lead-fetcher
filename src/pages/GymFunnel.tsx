@@ -220,6 +220,85 @@ const GymFunnel = () => {
         </motion.div>
       </section>
 
+      {/* SECONDARY LEAD FORM */}
+      <section className="p-6 sm:p-10 lg:p-16 border-b-2" style={{ borderColor: ink }}>
+        <div
+          className="max-w-md mx-auto border-2 p-5 sm:p-6"
+          style={{ background: court, borderColor: ink, boxShadow: `6px 6px 0px ${ink}` }}
+        >
+          <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight mb-2" style={display}>
+            Unlock The Strategy
+          </h2>
+          <div className="text-sm sm:text-base font-bold uppercase tracking-tight mb-4" style={mono}>
+            Where should we send the video?
+          </div>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!form.name || !form.email) return;
+              setSubmitting(true);
+              try {
+                await supabase.functions.invoke("submit-lead", {
+                  body: {
+                    name: form.name,
+                    email: form.email,
+                    businessName: form.business || "N/A",
+                    source: "gym-funnel-secondary",
+                  },
+                });
+                setSubmitted(true);
+                toast({ title: "Got it!", description: "Check your inbox shortly for the video." });
+              } catch (err) {
+                toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+            className="flex flex-col gap-3"
+          >
+            <input
+              type="text"
+              required
+              autoComplete="given-name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="First name"
+              className="border-2 px-4 py-3 text-base focus:outline-none rounded-none min-h-[48px]"
+              style={{ background: chalk, borderColor: ink, ...body }}
+            />
+            <input
+              type="email"
+              inputMode="email"
+              required
+              autoComplete="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="Email address"
+              className="border-2 px-4 py-3 text-base focus:outline-none rounded-none min-h-[48px]"
+              style={{ background: chalk, borderColor: ink, ...body }}
+            />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center justify-center gap-3 text-base sm:text-lg uppercase py-4 px-6 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-60 min-h-[52px]"
+              style={{
+                ...display,
+                background: sprint,
+                color: chalk,
+                borderColor: ink,
+                boxShadow: `6px 6px 0px ${ink}`,
+              }}
+            >
+              {submitting ? (
+                <><Loader2 className="h-5 w-5 animate-spin" /> Sending…</>
+              ) : (
+                <>Send Me The Video <ArrowRight className="h-5 w-5" /></>
+              )}
+            </button>
+          </form>
+        </div>
+      </section>
+
       {/* THE HANDOFF / MECHANISM */}
       <section className="flex flex-col lg:flex-row border-b-2" style={{ borderColor: ink }}>
         <div
