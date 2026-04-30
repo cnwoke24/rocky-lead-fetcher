@@ -87,9 +87,6 @@ const GymFunnel = () => {
           className="lg:col-span-8 p-6 sm:p-10 lg:p-16 border-b-2 lg:border-b-0 lg:border-r-2"
           style={{ borderColor: ink }}
         >
-          <div className="inline-block px-3 py-1 text-xs sm:text-sm uppercase tracking-tight mb-6 sm:mb-8 border" style={{ ...mono, background: court, borderColor: ink }}>
-            Phase 1 — Database Extraction
-          </div>
           <h1
             className="font-bold text-4xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
             style={display}
