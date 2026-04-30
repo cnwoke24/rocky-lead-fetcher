@@ -46,6 +46,7 @@ const GymFunnel = () => {
       });
       setSubmitted(true);
       toast({ title: "Sequence initialized", description: "We'll reach out shortly to schedule your live demo." });
+      navigate("/gym-page-2");
     } catch (err) {
       toast({ title: "Something went wrong", description: "Please try again in a moment.", variant: "destructive" });
     } finally {
