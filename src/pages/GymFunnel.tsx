@@ -95,19 +95,78 @@ const GymFunnel = () => {
           <p className="sm:text-xl lg:text-2xl max-w-[45ch] leading-snug text-base">
             Bring old members back without cold calling, chasing leads for hours, or asking your staff to do awkward sales follow-up.
           </p>
-          <button
-            onClick={scrollToForm}
-            className="mt-8 inline-flex items-center gap-3 text-chalk text-lg sm:text-xl uppercase py-4 px-7 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
-            style={{
-              ...display,
-              background: sprint,
-              color: chalk,
-              borderColor: ink,
-              boxShadow: `6px 6px 0px ${ink}`,
-            }}
+          <div
+            className="mt-8 max-w-md border-2 p-5 sm:p-6"
+            style={{ background: court, borderColor: ink, boxShadow: `6px 6px 0px ${ink}` }}
           >
-            Commence Dialing <ArrowRight className="h-5 w-5" />
-          </button>
+            <div className="text-sm sm:text-base font-bold uppercase tracking-tight mb-4" style={mono}>
+              Where should we send the video?
+            </div>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!form.name || !form.email) return;
+                setSubmitting(true);
+                try {
+                  await supabase.functions.invoke("submit-lead", {
+                    body: {
+                      name: form.name,
+                      email: form.email,
+                      businessName: form.business || "N/A",
+                      source: "gym-funnel-hero",
+                    },
+                  });
+                  setSubmitted(true);
+                  toast({ title: "Got it!", description: "Check your inbox shortly for the video." });
+                } catch (err) {
+                  toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
+                } finally {
+                  setSubmitting(false);
+                }
+              }}
+              className="flex flex-col gap-3"
+            >
+              <input
+                type="text"
+                required
+                autoComplete="given-name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="First name"
+                className="border-2 px-4 py-3 text-base focus:outline-none rounded-none min-h-[48px]"
+                style={{ background: chalk, borderColor: ink, ...body }}
+              />
+              <input
+                type="email"
+                inputMode="email"
+                required
+                autoComplete="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="Email address"
+                className="border-2 px-4 py-3 text-base focus:outline-none rounded-none min-h-[48px]"
+                style={{ background: chalk, borderColor: ink, ...body }}
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center justify-center gap-3 text-base sm:text-lg uppercase py-4 px-6 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-60 min-h-[52px]"
+                style={{
+                  ...display,
+                  background: sprint,
+                  color: chalk,
+                  borderColor: ink,
+                  boxShadow: `6px 6px 0px ${ink}`,
+                }}
+              >
+                {submitting ? (
+                  <><Loader2 className="h-5 w-5 animate-spin" /> Sending…</>
+                ) : (
+                  <>Send Me The Video <ArrowRight className="h-5 w-5" /></>
+                )}
+              </button>
+            </form>
+          </div>
         </motion.div>
 
         {/* Right: Action Form column (visual placeholder; real form below for mobile UX) */}
