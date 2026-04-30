@@ -252,6 +252,7 @@ const GymFunnel = () => {
                 });
                 setSubmitted(true);
                 toast({ title: "Got it!", description: "Check your inbox shortly for the video." });
+                navigate("/gym-page-2");
               } catch (err) {
                 toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
               } finally {
