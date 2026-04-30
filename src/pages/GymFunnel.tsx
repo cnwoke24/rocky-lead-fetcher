@@ -167,49 +167,6 @@ const GymFunnel = () => {
             </form>
           </div>
         </motion.div>
-
-        {/* Right: Action Form column (visual placeholder; real form below for mobile UX) */}
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={fadeUp}
-          transition={{ delay: 0.1 }}
-          className="lg:col-span-4 flex flex-col"
-          style={{ background: court }}
-        >
-          <div className="p-5 border-b-2 uppercase text-xs sm:text-sm font-bold" style={{ ...mono, borderColor: ink }}>
-            Live Sequence Log
-          </div>
-          <div className="p-6 sm:p-8 flex-grow flex flex-col gap-4 text-sm" style={mono}>
-            <div className="flex gap-3">
-              <span className="opacity-50 shrink-0">[09:42:01]</span>
-              <span>SYS_STANDBY...</span>
-            </div>
-            <div className="flex gap-3 font-bold" style={{ color: sprint }}>
-              <span className="opacity-80 shrink-0">[09:42:12]</span>
-              <span>{"> /rocky go dormant_list"}</span>
-            </div>
-            <div className="flex gap-3">
-              <span className="opacity-50 shrink-0">[09:42:13]</span>
-              <span>TRIGGER_RECEIVED</span>
-            </div>
-            <div className="flex gap-3">
-              <span className="opacity-50 shrink-0">[09:42:15]</span>
-              <span>PARSING: 247 RECORDS</span>
-            </div>
-            <div className="flex gap-3 pl-3 border-l-2 my-1 py-2" style={{ borderColor: sprint }}>
-              <span className="opacity-50 shrink-0">[09:43:01]</span>
-              <span>OUTBOUND_CALL → RINGING</span>
-            </div>
-            <div className="px-2 py-1 inline-block self-start font-bold" style={{ background: sprint, color: chalk }}>
-              [09:46:44] APPOINTMENT_CONFIRMED
-            </div>
-            <div className="flex gap-3 mt-2 animate-pulse">
-              <span className="opacity-50 shrink-0">[09:46:45]</span>
-              <span>AWAITING_NEXT █</span>
-            </div>
-          </div>
-        </motion.div>
       </section>
 
       {/* CASE STUDY */}
