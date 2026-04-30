@@ -63,9 +63,25 @@ const GymPage2 = () => {
               way.
             </span>
           </h1>
-          <p className="sm:text-xl lg:text-2xl max-w-[50ch] leading-snug text-base">
-            Check your inbox in the next few minutes. While you wait, here's exactly what to do next.
+          <p className="sm:text-xl lg:text-2xl max-w-[50ch] leading-snug text-base mb-8 sm:mb-10">
+            Watch the full training below — it's under 9 minutes and walks through the exact reactivation system.
           </p>
+
+          {/* VIDEO PLAYER */}
+          <div
+            className="border-2 overflow-hidden"
+            style={{ borderColor: ink, background: ink, boxShadow: `8px 8px 0px ${ink}` }}
+          >
+            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+              <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Free Training Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          </div>
         </motion.div>
       </section>
 
@@ -75,8 +91,8 @@ const GymPage2 = () => {
           {[
             {
               num: "01",
-              title: "Check Your Email",
-              copy: "The video is being delivered now. If you don't see it in 5 minutes, check spam or promotions.",
+              title: "Watch The Free Training",
+              copy: "Press play above. It's under 9 minutes — the reactivation script is in the back half.",
               dark: false,
             },
             {
