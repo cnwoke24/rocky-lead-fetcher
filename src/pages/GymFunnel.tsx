@@ -91,13 +91,14 @@ const GymFunnel = () => {
             Phase 1 — Database Extraction
           </div>
           <h1
-            className="font-bold text-5xl sm:text-7xl lg:text-[7rem] leading-[0.85] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
+            className="font-bold text-4xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
             style={display}
           >
-            Turn dead leads into{" "}
+            How to reactivate{" "}
             <span className="inline-block transform -skew-x-6" style={{ color: sprint }}>
-              active reps.
-            </span>
+              5–10 inactive members
+            </span>{" "}
+            and get them back in your gym every month.
           </h1>
           <p className="text-lg sm:text-xl lg:text-2xl max-w-[45ch] leading-snug">
             Stop letting expired trials gather dust. Rocky initiates relentless, high-fidelity voice outreach to your churned lists — booking consultations before your front desk finishes their first coffee.
