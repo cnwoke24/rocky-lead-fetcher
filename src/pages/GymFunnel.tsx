@@ -1,6 +1,6 @@
-import { useRef, useState, FormEvent } from "react";
+import { useRef, useState, FormEvent, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MessageSquare, PhoneCall, CalendarCheck, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -14,6 +14,18 @@ const GymFunnel = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", business: "" });
+
+  // Inject fonts once
+  useEffect(() => {
+    const id = "rocky-fonts-athletic";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Chivo:wght@400;700&family=Oswald:wght@500;700&family=Space+Mono:wght@400;700&display=swap";
+    document.head.appendChild(link);
+  }, []);
 
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -31,7 +43,7 @@ const GymFunnel = () => {
         },
       });
       setSubmitted(true);
-      toast({ title: "You're in!", description: "We'll reach out shortly to schedule your live demo." });
+      toast({ title: "Sequence initialized", description: "We'll reach out shortly to schedule your live demo." });
     } catch (err) {
       toast({ title: "Something went wrong", description: "Please try again in a moment.", variant: "destructive" });
     } finally {
@@ -39,274 +51,373 @@ const GymFunnel = () => {
     }
   };
 
-  const steps = [
-    { icon: MessageSquare, title: "You type 'Go' in your dedicated Slack channel.", num: "01" },
-    { icon: PhoneCall, title: "Our AI instantly dials your dormant or old customer list.", num: "02" },
-    { icon: CalendarCheck, title: "Customers are re-engaged and booked straight into your calendar.", num: "03" },
-  ];
+  // Color tokens (athletic brutalist palette)
+  const chalk = "#faf9f5";
+  const ink = "#111111";
+  const sprint = "#ff3e00";
+  const court = "#e8e6e1";
+
+  const display = { fontFamily: "'Oswald', sans-serif" };
+  const mono = { fontFamily: "'Space Mono', monospace" };
+  const body = { fontFamily: "'Chivo', sans-serif" };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 antialiased" style={{ fontSize: 16 }}>
-      {/* Accent gradient backdrop */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute top-1/3 -right-40 h-[500px] w-[500px] rounded-full bg-blue-500/10 blur-3xl" />
-      </div>
+    <div
+      className="min-h-dvh selection:bg-[#ff3e00] selection:text-[#faf9f5] overflow-x-hidden"
+      style={{ background: chalk, color: ink, ...body }}
+    >
+      {/* Top Bar */}
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 sm:px-6 py-4 border-b-2 gap-2" style={{ borderColor: ink }}>
+        <div className="font-bold tracking-tighter text-base sm:text-xl uppercase" style={mono}>
+          Rocky.AI <span style={{ color: sprint }}>//</span> Reactivation Engine
+        </div>
+        <div className="text-[11px] sm:text-sm tracking-widest uppercase flex items-center gap-2" style={mono}>
+          Status:
+          <span className="inline-block size-2 animate-pulse" style={{ background: sprint }} />
+          <span className="font-bold" style={{ color: sprint }}>Active</span>
+        </div>
+      </header>
 
-      <div className="relative">
-        {/* HERO */}
-        <section className="px-5 pt-16 pb-20 sm:pt-24 sm:pb-28 lg:pt-32 lg:pb-36">
-          <div className="mx-auto max-w-6xl grid gap-12 lg:grid-cols-2 lg:items-center">
-            <motion.div initial="hidden" animate="show" variants={fadeUp}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 px-3 py-1 text-xs font-medium text-cyan-300 mb-6">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                Rocky Voice AI for Gyms & Spas
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-                Turn Dormant Gym Members Into{" "}
-                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
-                  Active Revenue
-                </span>{" "}
-                with One Slack Message.
-              </h1>
-              <p className="mt-6 text-lg sm:text-xl text-slate-300 leading-relaxed max-w-xl">
-                Rocky Voice AI automatically calls your old CRM leads and books them back into your facility so you don't have to lift a finger.
-              </p>
-              <div className="mt-8">
-                <button
-                  onClick={scrollToForm}
-                  className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-cyan-400 px-8 py-5 text-base sm:text-lg font-semibold text-slate-950 shadow-[0_0_40px_-5px_rgba(34,211,238,0.5)] transition-all hover:bg-cyan-300 hover:shadow-[0_0_60px_-5px_rgba(34,211,238,0.7)] active:scale-[0.98] min-h-[56px]"
-                >
-                  Get Your Custom AI Agent
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </button>
-                <p className="mt-3 text-sm text-slate-400">No credit card. Live demo in minutes.</p>
-              </div>
-            </motion.div>
-
-            {/* Visual */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="relative"
-            >
-              <div className="relative rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm p-5 sm:p-6 shadow-2xl">
-                <div className="flex items-center gap-2 pb-4 border-b border-slate-800">
-                  <div className="h-3 w-3 rounded-full bg-red-400/70" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
-                  <div className="h-3 w-3 rounded-full bg-green-400/70" />
-                  <span className="ml-3 text-xs text-slate-400">#rocky-voice-ai</span>
-                </div>
-                <div className="space-y-4 pt-4">
-                  <div className="flex gap-3">
-                    <div className="h-8 w-8 rounded bg-cyan-400/20 flex items-center justify-center text-cyan-300 text-sm font-bold shrink-0">Y</div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-200">You <span className="text-slate-500 font-normal text-xs ml-2">9:42 AM</span></p>
-                      <p className="text-base text-slate-100 mt-0.5">go</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="h-8 w-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-300 text-sm font-bold shrink-0">R</div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-slate-200">Rocky AI <span className="text-slate-500 font-normal text-xs ml-2">9:42 AM</span></p>
-                      <p className="text-sm text-slate-300 mt-0.5">🚀 Calling 247 dormant leads now…</p>
-                      <div className="mt-3 rounded-lg bg-slate-800/60 border border-slate-700/50 p-3 space-y-1.5 text-sm">
-                        <div className="flex justify-between"><span className="text-slate-400">Conversations</span><span className="text-cyan-300 font-mono">186</span></div>
-                        <div className="flex justify-between"><span className="text-slate-400">Bookings</span><span className="text-cyan-300 font-mono">9</span></div>
-                        <div className="flex justify-between"><span className="text-slate-400">Status</span><span className="text-green-400">● Live</span></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+      {/* HERO */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 border-b-2" style={{ borderColor: ink }}>
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="lg:col-span-8 p-6 sm:p-10 lg:p-16 border-b-2 lg:border-b-0 lg:border-r-2"
+          style={{ borderColor: ink }}
+        >
+          <div className="inline-block px-3 py-1 text-xs sm:text-sm uppercase tracking-tight mb-6 sm:mb-8 border" style={{ ...mono, background: court, borderColor: ink }}>
+            Phase 1 — Database Extraction
           </div>
-        </section>
+          <h1
+            className="font-bold text-5xl sm:text-7xl lg:text-[7rem] leading-[0.85] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
+            style={display}
+          >
+            Turn dead leads into{" "}
+            <span className="inline-block transform -skew-x-6" style={{ color: sprint }}>
+              active reps.
+            </span>
+          </h1>
+          <p className="text-lg sm:text-xl lg:text-2xl max-w-[45ch] leading-snug">
+            Stop letting expired trials gather dust. Rocky initiates relentless, high-fidelity voice outreach to your churned lists — booking consultations before your front desk finishes their first coffee.
+          </p>
+          <button
+            onClick={scrollToForm}
+            className="mt-8 inline-flex items-center gap-3 text-chalk text-lg sm:text-xl uppercase py-4 px-7 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+            style={{
+              ...display,
+              background: sprint,
+              color: chalk,
+              borderColor: ink,
+              boxShadow: `6px 6px 0px ${ink}`,
+            }}
+          >
+            Commence Dialing <ArrowRight className="h-5 w-5" />
+          </button>
+        </motion.div>
 
-        {/* HOW IT WORKS */}
-        <section className="px-5 py-20 sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <motion.div
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-              className="text-center mb-14"
-            >
-              <p className="text-cyan-400 font-semibold text-sm uppercase tracking-wider mb-3">How It Works</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-                Three steps. Zero lifting.
-              </h2>
-            </motion.div>
-
-            <div className="grid gap-6 md:grid-cols-3 relative">
-              {/* Connector line on desktop */}
-              <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
-
-              {steps.map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.3 }}
-                  variants={fadeUp}
-                  transition={{ delay: i * 0.12 }}
-                  className="relative rounded-2xl border border-slate-800 bg-slate-900/40 backdrop-blur-sm p-6 sm:p-7 hover:border-cyan-400/30 transition-colors"
-                >
-                  <div className="relative flex items-center gap-4 mb-5">
-                    <div className="h-12 w-12 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center">
-                      <step.icon className="h-6 w-6 text-cyan-300" />
-                    </div>
-                    <span className="text-3xl font-bold text-slate-700 font-mono">{step.num}</span>
-                  </div>
-                  <p className="text-lg text-slate-200 leading-snug">{step.title}</p>
-                </motion.div>
-              ))}
+        {/* Right: Action Form column (visual placeholder; real form below for mobile UX) */}
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-4 flex flex-col"
+          style={{ background: court }}
+        >
+          <div className="p-5 border-b-2 uppercase text-xs sm:text-sm font-bold" style={{ ...mono, borderColor: ink }}>
+            Live Sequence Log
+          </div>
+          <div className="p-6 sm:p-8 flex-grow flex flex-col gap-4 text-sm" style={mono}>
+            <div className="flex gap-3">
+              <span className="opacity-50 shrink-0">[09:42:01]</span>
+              <span>SYS_STANDBY...</span>
+            </div>
+            <div className="flex gap-3 font-bold" style={{ color: sprint }}>
+              <span className="opacity-80 shrink-0">[09:42:12]</span>
+              <span>{"> /rocky go dormant_list"}</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="opacity-50 shrink-0">[09:42:13]</span>
+              <span>TRIGGER_RECEIVED</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="opacity-50 shrink-0">[09:42:15]</span>
+              <span>PARSING: 247 RECORDS</span>
+            </div>
+            <div className="flex gap-3 pl-3 border-l-2 my-1 py-2" style={{ borderColor: sprint }}>
+              <span className="opacity-50 shrink-0">[09:43:01]</span>
+              <span>OUTBOUND_CALL → RINGING</span>
+            </div>
+            <div className="px-2 py-1 inline-block self-start font-bold" style={{ background: sprint, color: chalk }}>
+              [09:46:44] APPOINTMENT_CONFIRMED
+            </div>
+            <div className="flex gap-3 mt-2 animate-pulse">
+              <span className="opacity-50 shrink-0">[09:46:45]</span>
+              <span>AWAITING_NEXT █</span>
             </div>
           </div>
-        </section>
+        </motion.div>
+      </section>
 
-        {/* PROOF / CASE STUDY */}
-        <section className="px-5 py-20 sm:py-24">
-          <div className="mx-auto max-w-5xl">
+      {/* THE HANDOFF / MECHANISM */}
+      <section className="flex flex-col lg:flex-row border-b-2" style={{ borderColor: ink }}>
+        <div
+          className="lg:w-48 p-6 border-b-2 lg:border-b-0 lg:border-r-2 flex items-center justify-center"
+          style={{ borderColor: ink, background: court }}
+        >
+          <h2
+            className="text-2xl sm:text-3xl uppercase tracking-widest lg:transform lg:-rotate-90 lg:whitespace-nowrap"
+            style={display}
+          >
+            The Handoff
+          </h2>
+        </div>
+
+        <div className="flex-grow grid grid-cols-1 md:grid-cols-3">
+          {[
+            {
+              num: "01",
+              title: "Webhook Received",
+              meta: "Target: Form_Abandon_48h",
+              copy: "Lead stalls out on your pricing page. Your CRM fires a signal.",
+              dark: false,
+            },
+            {
+              num: "02",
+              title: "> Executing: Voice_Protocol",
+              meta: "Latency: < 30s",
+              copy: "Rocky takes the baton. Outbound call initiated in under thirty seconds.",
+              dark: true,
+            },
+            {
+              num: "03",
+              title: "[CALENDAR_UPDATE]",
+              meta: "Event: Intro Assessment",
+              copy: "Conversation handled, objections cleared, appointment locked on your calendar.",
+              dark: false,
+            },
+          ].map((step, i) => (
             <motion.div
+              key={step.num}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.3 }}
               variants={fadeUp}
-              className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-8 sm:p-12 lg:p-16"
+              transition={{ delay: i * 0.1 }}
+              className="p-6 sm:p-8 border-b-2 md:border-b-0 md:border-r-2 last:border-r-0 flex flex-col gap-5"
+              style={{
+                borderColor: ink,
+                background: step.dark ? sprint : "transparent",
+                color: step.dark ? chalk : ink,
+              }}
             >
-              <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
-              <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
-
-              <div className="relative">
-                <p className="text-cyan-400 font-semibold text-sm uppercase tracking-wider mb-3">Case Study</p>
-                <h3 className="text-2xl sm:text-3xl font-bold mb-2">EVOL Body and Wellness</h3>
-                <p className="text-slate-400 mb-10">In just 30 days with Rocky Voice AI</p>
-
-                <div className="grid grid-cols-2 gap-6 sm:gap-12">
-                  <div>
-                    <div className="text-6xl sm:text-7xl lg:text-8xl font-bold bg-gradient-to-br from-cyan-300 to-blue-400 bg-clip-text text-transparent leading-none">
-                      186
-                    </div>
-                    <p className="mt-3 text-base sm:text-lg text-slate-300">Conversations had</p>
-                  </div>
-                  <div>
-                    <div className="text-6xl sm:text-7xl lg:text-8xl font-bold bg-gradient-to-br from-cyan-300 to-blue-400 bg-clip-text text-transparent leading-none">
-                      9
-                    </div>
-                    <p className="mt-3 text-base sm:text-lg text-slate-300">Members reactivated</p>
-                  </div>
-                </div>
+              <div
+                className="text-5xl"
+                style={{
+                  ...mono,
+                  WebkitTextStroke: `1px ${step.dark ? chalk : ink}`,
+                  color: "transparent",
+                }}
+              >
+                {step.num}
               </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* LEAD FORM */}
-        <section ref={formRef} className="px-5 py-20 sm:py-28 scroll-mt-8">
-          <div className="mx-auto max-w-xl">
-            <motion.div
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-              className="text-center mb-10"
-            >
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-                See it in action.
-              </h2>
-              <p className="mt-4 text-lg text-slate-300">
-                Get a live demo of your custom AI agent in under 5 minutes.
+              <div
+                className="border p-4 text-sm shadow-[3px_3px_0px_currentColor]"
+                style={{
+                  ...mono,
+                  background: step.dark ? ink : court,
+                  color: step.dark ? chalk : ink,
+                  borderColor: step.dark ? chalk : ink,
+                }}
+              >
+                <span className="font-bold uppercase block mb-1">{step.title}</span>
+                {step.meta}
+              </div>
+              <p className="text-base sm:text-lg leading-tight mt-auto pt-4 border-t" style={{ borderColor: step.dark ? "rgba(250,249,245,0.3)" : "rgba(17,17,17,0.2)" }}>
+                {step.copy}
               </p>
             </motion.div>
+          ))}
+        </div>
+      </section>
 
-            <motion.div
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm p-6 sm:p-8"
-            >
-              {submitted ? (
-                <div className="text-center py-8">
-                  <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center">
-                    <CalendarCheck className="h-7 w-7 text-cyan-300" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">You're on the list!</h3>
-                  <p className="text-slate-400">We'll be in touch shortly to set up your live demo.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">Name</label>
-                    <input
-                      id="name"
-                      type="text"
-                      autoComplete="name"
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full min-h-[52px] rounded-xl bg-slate-950 border border-slate-700 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:outline-none transition"
-                      placeholder="Jane Doe"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">Email</label>
-                    <input
-                      id="email"
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full min-h-[52px] rounded-xl bg-slate-950 border border-slate-700 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:outline-none transition"
-                      placeholder="jane@yourgym.com"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="business" className="block text-sm font-medium text-slate-300 mb-2">Business Name</label>
-                    <input
-                      id="business"
-                      type="text"
-                      autoComplete="organization"
-                      required
-                      value={form.business}
-                      onChange={(e) => setForm({ ...form, business: e.target.value })}
-                      className="w-full min-h-[52px] rounded-xl bg-slate-950 border border-slate-700 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:outline-none transition"
-                      placeholder="EVOL Body and Wellness"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-400 px-6 py-4 text-base sm:text-lg font-semibold text-slate-950 shadow-[0_0_40px_-5px_rgba(34,211,238,0.5)] transition-all hover:bg-cyan-300 hover:shadow-[0_0_60px_-5px_rgba(34,211,238,0.7)] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed min-h-[56px]"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
-                      </>
-                    ) : (
-                      <>
-                        See A Live Demo <ArrowRight className="h-5 w-5" />
-                      </>
-                    )}
-                  </button>
-                  <p className="text-center text-xs text-slate-500 pt-2">
-                    By submitting, you agree to be contacted about Rocky Voice AI.
-                  </p>
-                </form>
-              )}
-            </motion.div>
+      {/* CASE STUDY */}
+      <section className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 border-b-2" style={{ borderColor: ink }}>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="lg:col-span-5"
+        >
+          <div className="text-xs uppercase tracking-widest mb-4 flex items-center gap-2" style={mono}>
+            <span className="size-2 inline-block" style={{ background: sprint }} /> Field Report
           </div>
-        </section>
+          <h2 className="text-4xl sm:text-5xl uppercase tracking-tight mb-6" style={display}>
+            EVOL Athletics
+          </h2>
+          <p className="text-lg sm:text-xl mb-6 leading-relaxed max-w-[40ch]">
+            "We had hundreds of numbers from an old promo sitting in a spreadsheet. We plugged Rocky in on a Tuesday. By Wednesday afternoon, my coaching staff was fully booked for the week. It's like a relentless front desk that never sleeps."
+          </p>
+          <div className="font-bold text-xs sm:text-sm uppercase" style={mono}>
+            — Marcus Vance, Head of Operations
+          </div>
+        </motion.div>
 
-        <footer className="px-5 py-10 text-center text-sm text-slate-500 border-t border-slate-900">
-          © {new Date().getFullYear()} Rocky Voice AI. All rights reserved.
-        </footer>
-      </div>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-7 border-2 p-6 sm:p-10 lg:p-12 grid grid-cols-2 gap-6 sm:gap-8"
+          style={{ background: court, borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
+        >
+          <div className="flex flex-col justify-end">
+            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={display}>
+              186
+            </div>
+            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
+              Stale Records Contacted
+            </div>
+          </div>
+          <div className="flex flex-col justify-end">
+            <div className="text-[5rem] sm:text-[7rem] lg:text-[8rem] leading-none tracking-tighter" style={{ ...display, color: sprint }}>
+              9
+            </div>
+            <div className="text-xs sm:text-sm uppercase tracking-wider font-bold border-t-2 pt-2 mt-2" style={{ ...mono, borderColor: ink }}>
+              Reactivations Booked
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* LEAD FORM */}
+      <section ref={formRef} className="p-6 sm:p-10 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-10 scroll-mt-8">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="lg:col-span-6"
+        >
+          <div className="inline-block px-3 py-1 text-xs sm:text-sm uppercase tracking-tight mb-6 border" style={{ ...mono, background: court, borderColor: ink }}>
+            Initialize Sequence
+          </div>
+          <h2 className="text-5xl sm:text-6xl lg:text-7xl uppercase tracking-tighter leading-[0.9] mb-6" style={display}>
+            Plug Rocky In.<br />
+            <span style={{ color: sprint }}>Watch the calendar fill.</span>
+          </h2>
+          <p className="text-lg sm:text-xl max-w-[40ch]">
+            Drop your details. We'll provision a custom AI agent for your facility and put it on a live demo call within 24 hours.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ delay: 0.1 }}
+          className="lg:col-span-6 border-2 p-6 sm:p-8 lg:p-10"
+          style={{ background: court, borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
+        >
+          {submitted ? (
+            <div className="py-10 text-center">
+              <div className="inline-block px-4 py-2 mb-6 font-bold uppercase" style={{ ...mono, background: sprint, color: chalk }}>
+                Sequence Confirmed
+              </div>
+              <h3 className="text-3xl uppercase mb-3" style={display}>You're in the queue.</h3>
+              <p className="text-base sm:text-lg max-w-md mx-auto">
+                We'll be in touch shortly to set up your live demo call.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-bold" style={mono}>
+                  Operator Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="J. Thompson"
+                  className="border-2 px-4 py-3 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all rounded-none min-h-[52px]"
+                  style={{ background: chalk, borderColor: ink, ...body }}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-bold" style={mono}>
+                  Comm Link (Email)
+                </label>
+                <input
+                  type="email"
+                  inputMode="email"
+                  required
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="hq@facility.com"
+                  className="border-2 px-4 py-3 text-base sm:text-lg focus:outline-none transition-all rounded-none min-h-[52px]"
+                  style={{ background: chalk, borderColor: ink, ...body }}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-bold" style={mono}>
+                  Facility Designation
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoComplete="organization"
+                  value={form.business}
+                  onChange={(e) => setForm({ ...form, business: e.target.value })}
+                  placeholder="Apex Conditioning"
+                  className="border-2 px-4 py-3 text-base sm:text-lg focus:outline-none transition-all rounded-none min-h-[52px]"
+                  style={{ background: chalk, borderColor: ink, ...body }}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="mt-2 inline-flex items-center justify-center gap-3 text-2xl uppercase tracking-wider py-4 sm:py-5 border-2 transition-all hover:translate-x-[3px] hover:translate-y-[3px] active:translate-x-[6px] active:translate-y-[6px] active:shadow-none disabled:opacity-60 min-h-[60px]"
+                style={{
+                  ...display,
+                  background: sprint,
+                  color: chalk,
+                  borderColor: ink,
+                  boxShadow: `6px 6px 0px ${ink}`,
+                }}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
+                  </>
+                ) : (
+                  <>Commence Dialing <ArrowRight className="h-5 w-5" /></>
+                )}
+              </button>
+              <p className="text-[11px] uppercase tracking-widest text-center pt-2 opacity-70" style={mono}>
+                No credit card. Live demo within 24h.
+              </p>
+            </form>
+          )}
+        </motion.div>
+      </section>
+
+      <footer className="px-6 py-6 border-t-2 flex flex-col sm:flex-row gap-2 justify-between items-center" style={{ borderColor: ink, background: ink, color: chalk }}>
+        <div className="uppercase text-xs tracking-widest" style={mono}>
+          © {new Date().getFullYear()} Rocky Voice AI
+        </div>
+        <div className="uppercase text-xs tracking-widest opacity-70" style={mono}>
+          Reactivation Engine v.4.2
+        </div>
+      </footer>
     </div>
   );
 };
