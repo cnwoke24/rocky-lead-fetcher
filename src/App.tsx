@@ -20,6 +20,7 @@ import AdminUserDetails from "./pages/AdminUserDetails";
 import PhysicalTherapy from "./pages/PhysicalTherapy";
 import Nightlife from "./pages/Nightlife";
 import GymFunnel from "./pages/GymFunnel";
+import GymPage1 from "./pages/GymPage1";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="/physical-therapy" element={<PhysicalTherapy />} />
             <Route path="/nightlife" element={<Nightlife />} />
             <Route path="/gym" element={<GymFunnel />} />
+            <Route path="/gym-page-1" element={<GymPage1 />} />
             <Route path="/privacy" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
