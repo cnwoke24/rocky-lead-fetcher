@@ -69,12 +69,7 @@ const GymFunnel = () => {
       {/* Top Bar */}
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 sm:px-6 py-4 border-b-2 gap-2" style={{ borderColor: ink }}>
         <div className="font-bold tracking-tighter text-base sm:text-xl uppercase" style={mono}>
-          Rocky.AI <span style={{ color: sprint }}>//</span> Reactivation Engine
-        </div>
-        <div className="text-[11px] sm:text-sm tracking-widest uppercase flex items-center gap-2" style={mono}>
-          Status:
-          <span className="inline-block size-2 animate-pulse" style={{ background: sprint }} />
-          <span className="font-bold" style={{ color: sprint }}>Active</span>
+          Free Strategy Video Reveals:
         </div>
       </header>
 
