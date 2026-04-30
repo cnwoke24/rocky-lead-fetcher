@@ -91,8 +91,8 @@ const GymPage2 = () => {
           {[
             {
               num: "01",
-              title: "Check Your Email",
-              copy: "The video is being delivered now. If you don't see it in 5 minutes, check spam or promotions.",
+              title: "Watch The Free Training",
+              copy: "Press play above. It's under 9 minutes — the reactivation script is in the back half.",
               dark: false,
             },
             {
