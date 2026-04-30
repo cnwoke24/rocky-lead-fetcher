@@ -1,0 +1,192 @@
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { CheckCircle2, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const GymPage2 = () => {
+  useEffect(() => {
+    const id = "rocky-fonts-athletic";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Chivo:wght@400;700&family=Oswald:wght@500;700&family=Space+Mono:wght@400;700&display=swap";
+    document.head.appendChild(link);
+  }, []);
+
+  // Athletic brutalist palette
+  const chalk = "#faf9f5";
+  const ink = "#111111";
+  const sprint = "#ff3e00";
+  const court = "#e8e6e1";
+
+  const display = { fontFamily: "'Oswald', sans-serif" };
+  const mono = { fontFamily: "'Space Mono', monospace" };
+  const body = { fontFamily: "'Chivo', sans-serif" };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
+  };
+
+  return (
+    <div
+      className="min-h-dvh selection:bg-[#ff3e00] selection:text-[#faf9f5] overflow-x-hidden"
+      style={{ background: chalk, color: ink, ...body }}
+    >
+      {/* Top Bar */}
+      <header
+        className="flex items-center justify-between px-5 sm:px-6 py-4 border-b-2"
+        style={{ borderColor: ink }}
+      >
+        <div className="font-bold tracking-tighter text-base sm:text-xl uppercase" style={mono}>
+          You're In <span style={{ color: sprint }}>//</span> Next Steps
+        </div>
+      </header>
+
+      {/* HERO CONFIRMATION */}
+      <section className="p-6 sm:p-10 lg:p-16 border-b-2" style={{ borderColor: ink }}>
+        <motion.div initial="hidden" animate="show" variants={fadeUp} className="max-w-3xl">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 text-xs sm:text-sm uppercase tracking-tight mb-6 border font-bold"
+            style={{ ...mono, background: sprint, color: chalk, borderColor: ink }}
+          >
+            <CheckCircle2 className="h-4 w-4" /> Confirmed
+          </div>
+          <h1
+            className="font-bold text-4xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
+            style={display}
+          >
+            Your strategy video is on the{" "}
+            <span className="inline-block transform -skew-x-6" style={{ color: sprint }}>
+              way.
+            </span>
+          </h1>
+          <p className="sm:text-xl lg:text-2xl max-w-[50ch] leading-snug text-base">
+            Check your inbox in the next few minutes. While you wait, here's exactly what to do next.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* WHAT TO DO NEXT */}
+      <section className="border-b-2" style={{ borderColor: ink }}>
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {[
+            {
+              num: "01",
+              title: "Check Your Email",
+              copy: "The video is being delivered now. If you don't see it in 5 minutes, check spam or promotions.",
+              dark: false,
+            },
+            {
+              num: "02",
+              title: "Watch The Full Video",
+              copy: "It's under 9 minutes. Watch start to finish — the reactivation script is in the back half.",
+              dark: true,
+            },
+            {
+              num: "03",
+              title: "Book A Strategy Call",
+              copy: "If you want us to build it for you, grab a slot below. We only take on a few gyms a month.",
+              dark: false,
+            },
+          ].map((step) => (
+            <motion.div
+              key={step.num}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={fadeUp}
+              className="p-6 sm:p-8 border-b-2 md:border-b-0 md:border-r-2 last:border-r-0 flex flex-col gap-5"
+              style={{
+                borderColor: ink,
+                background: step.dark ? sprint : "transparent",
+                color: step.dark ? chalk : ink,
+              }}
+            >
+              <div
+                className="text-5xl"
+                style={{
+                  ...mono,
+                  WebkitTextStroke: `1px ${step.dark ? chalk : ink}`,
+                  color: "transparent",
+                }}
+              >
+                {step.num}
+              </div>
+              <div className="font-bold uppercase text-lg" style={display}>
+                {step.title}
+              </div>
+              <p
+                className="text-base sm:text-lg leading-tight mt-auto pt-4 border-t"
+                style={{
+                  borderColor: step.dark ? "rgba(250,249,245,0.3)" : "rgba(17,17,17,0.2)",
+                }}
+              >
+                {step.copy}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="p-6 sm:p-10 lg:p-16 border-b-2" style={{ borderColor: ink }}>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          className="max-w-2xl mx-auto border-2 p-6 sm:p-10 text-center"
+          style={{ background: court, borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
+        >
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 text-xs uppercase tracking-tight mb-5 border font-bold"
+            style={{ ...mono, background: chalk, borderColor: ink }}
+          >
+            <Mail className="h-3.5 w-3.5" /> Limited Slots
+          </div>
+          <h2
+            className="text-3xl sm:text-5xl uppercase tracking-tighter leading-[0.9] mb-4"
+            style={display}
+          >
+            Want us to build this <span style={{ color: sprint }}>for you?</span>
+          </h2>
+          <p className="text-base sm:text-lg mb-6 max-w-md mx-auto">
+            Book a free 15-minute strategy call. We'll map your reactivation campaign live.
+          </p>
+          <a
+            href="https://calendly.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 text-base sm:text-lg uppercase py-4 px-7 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+            style={{
+              ...display,
+              background: sprint,
+              color: chalk,
+              borderColor: ink,
+              boxShadow: `6px 6px 0px ${ink}`,
+            }}
+          >
+            Book My Strategy Call
+          </a>
+        </motion.div>
+      </section>
+
+      <footer
+        className="px-6 py-6 border-t-2 flex flex-col sm:flex-row gap-2 justify-between items-center"
+        style={{ borderColor: ink, background: ink, color: chalk }}
+      >
+        <div className="uppercase text-xs tracking-widest" style={mono}>
+          © {new Date().getFullYear()} Rocky Voice AI
+        </div>
+        <Link to="/gym" className="uppercase text-xs tracking-widest opacity-70 hover:opacity-100" style={mono}>
+          ← Back to Gym
+        </Link>
+      </footer>
+    </div>
+  );
+};
+
+export default GymPage2;

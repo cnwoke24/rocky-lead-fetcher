@@ -1,4 +1,5 @@
 import { useRef, useState, FormEvent, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +12,7 @@ const fadeUp = {
 
 const GymFunnel = () => {
   const formRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", business: "" });
@@ -44,6 +46,7 @@ const GymFunnel = () => {
       });
       setSubmitted(true);
       toast({ title: "Sequence initialized", description: "We'll reach out shortly to schedule your live demo." });
+      navigate("/gym-page-2");
     } catch (err) {
       toast({ title: "Something went wrong", description: "Please try again in a moment.", variant: "destructive" });
     } finally {
@@ -117,6 +120,7 @@ const GymFunnel = () => {
                   });
                   setSubmitted(true);
                   toast({ title: "Got it!", description: "Check your inbox shortly for the video." });
+                  navigate("/gym-page-2");
                 } catch (err) {
                   toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
                 } finally {
@@ -248,6 +252,7 @@ const GymFunnel = () => {
                 });
                 setSubmitted(true);
                 toast({ title: "Got it!", description: "Check your inbox shortly for the video." });
+                navigate("/gym-page-2");
               } catch (err) {
                 toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
               } finally {
