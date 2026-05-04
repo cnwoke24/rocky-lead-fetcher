@@ -88,11 +88,11 @@ const GymFunnel = () => {
             className="font-bold text-4xl sm:text-6xl lg:text-[5.5rem] leading-[0.9] uppercase tracking-tighter text-balance mb-6 sm:mb-8"
             style={display}
           >
-            How to reactivate{" "}
+            How To Win Back{" "}
             <span className="inline-block transform -skew-x-6" style={{ color: sprint }}>
-              5–10 inactive members
+              5–10 Inactive Members
             </span>{" "}
-            and get them back in your gym every month.
+            Every Month
           </h1>
           <p className="sm:text-xl lg:text-2xl max-w-[45ch] leading-snug text-base">
             Bring old members back without cold calling, chasing leads for hours, or asking your staff to do awkward sales follow-up.
