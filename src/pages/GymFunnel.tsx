@@ -112,6 +112,8 @@ const GymFunnel = () => {
           </div>
 
           <p className="sm:text-xl lg:text-2xl max-w-[45ch] leading-snug text-base">
+            Bring old members back without cold calling, chasing leads for hours, or asking your staff to do awkward sales follow-up.
+          </p>
           <div
             className="mt-8 max-w-md border-2 p-5 sm:p-6"
             style={{ background: court, borderColor: ink, boxShadow: `6px 6px 0px ${ink}` }}
