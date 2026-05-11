@@ -94,9 +94,24 @@ const GymFunnel = () => {
             </span>{" "}
             Every Month
           </h1>
+
+          {/* VIDEO PLAYER */}
+          <div
+            className="border-2 overflow-hidden mb-6 sm:mb-8"
+            style={{ borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
+          >
+            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+              <iframe
+                src="https://www.youtube.com/embed/k9rTU6DN9AA?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&disablekb=1&iv_load_policy=3&fs=0&loop=1&playlist=k9rTU6DN9AA"
+                title="Free Training Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          </div>
+
           <p className="sm:text-xl lg:text-2xl max-w-[45ch] leading-snug text-base">
-            Bring old members back without cold calling, chasing leads for hours, or asking your staff to do awkward sales follow-up.
-          </p>
           <div
             className="mt-8 max-w-md border-2 p-5 sm:p-6"
             style={{ background: court, borderColor: ink, boxShadow: `6px 6px 0px ${ink}` }}
