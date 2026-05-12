@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Users, Eye, Clock, RefreshCw } from "lucide-react";
+import { Users, Eye, Clock, RefreshCw, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Lead {
@@ -31,73 +31,76 @@ const formatDuration = (totalSeconds: number) => {
 };
 
 const GymLeads = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(true);
+  const [pin, setPin] = useState("");
+  const [unlocked, setUnlocked] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [stats, setStats] = useState<VisitStats>({ uniqueVisitors: 0, totalSeconds: 0, avgSeconds: 0 });
 
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      navigate("/admin/login");
-      return;
-    }
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", session.user.id)
-      .eq("role", "admin");
-    if (!roles || roles.length === 0) {
-      toast({ title: "Access Denied", description: "Admin access required", variant: "destructive" });
-      navigate("/dashboard");
-      return;
-    }
-    await loadAll();
-  };
-
-  const loadAll = async () => {
+  const loadAll = async (pinValue: string) => {
     setLoading(true);
     try {
-      const [{ data: leadsData, error: leadsErr }, { data: visits, error: visitsErr }] = await Promise.all([
-        supabase.from("gym_leads").select("*").order("created_at", { ascending: false }),
-        supabase.from("page_visits").select("visitor_id,total_time_seconds").eq("page_path", "/gym"),
-      ]);
-      if (leadsErr) throw leadsErr;
-      if (visitsErr) throw visitsErr;
-
-      setLeads((leadsData as Lead[]) || []);
-
-      const v = visits || [];
-      const unique = v.length;
-      const total = v.reduce((sum, row: any) => sum + (row.total_time_seconds || 0), 0);
-      setStats({
-        uniqueVisitors: unique,
-        totalSeconds: total,
-        avgSeconds: unique ? Math.round(total / unique) : 0,
+      const { data, error } = await supabase.functions.invoke("get-gym-leads", {
+        body: { pin: pinValue },
       });
+      if (error || !data || data.error) {
+        throw new Error(data?.error || error?.message || "Failed");
+      }
+      setLeads(data.leads || []);
+      setStats(data.stats || { uniqueVisitors: 0, totalSeconds: 0, avgSeconds: 0 });
+      setUnlocked(true);
     } catch (err: any) {
-      toast({ title: "Failed to load", description: err.message, variant: "destructive" });
+      toast({ title: "Access denied", description: "Incorrect PIN", variant: "destructive" });
+      setUnlocked(false);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!pin) return;
+    loadAll(pin);
+  };
+
+  if (!unlocked) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-sm">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-2">
+              <Lock className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <CardTitle>Enter PIN</CardTitle>
+            <CardDescription>This page is protected.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <Input
+                type="password"
+                inputMode="numeric"
+                autoFocus
+                placeholder="••••"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+              />
+              <Button type="submit" className="w-full" disabled={loading || !pin}>
+                {loading ? "Checking..." : "Unlock"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/admin"><ArrowLeft className="w-4 h-4 mr-1" /> Admin</Link>
-            </Button>
-            <h1 className="text-2xl font-bold">Gym Funnel Leads</h1>
-          </div>
-          <Button variant="outline" size="sm" onClick={loadAll} disabled={loading}>
+          <h1 className="text-2xl font-bold">Gym Funnel Leads</h1>
+          <Button variant="outline" size="sm" onClick={() => loadAll(pin)} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
         </div>
@@ -141,9 +144,7 @@ const GymLeads = () => {
             <CardDescription>Most recent first</CardDescription>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <p className="text-muted-foreground text-sm">Loading...</p>
-            ) : leads.length === 0 ? (
+            {leads.length === 0 ? (
               <p className="text-muted-foreground text-sm">No leads yet.</p>
             ) : (
               <div className="overflow-x-auto">
