@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.track-page-visit]
 verify_jwt = false
+
+[functions.get-gym-leads]
+verify_jwt = false
