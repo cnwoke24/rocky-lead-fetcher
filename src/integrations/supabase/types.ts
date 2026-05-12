@@ -199,6 +199,33 @@ export type Database = {
           },
         ]
       }
+      gym_leads: {
+        Row: {
+          business_name: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          source: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          source?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       onboarding_conversations: {
         Row: {
           created_at: string
@@ -259,6 +286,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      page_visits: {
+        Row: {
+          first_visit_at: string
+          id: string
+          last_seen_at: string
+          page_path: string
+          total_time_seconds: number
+          visitor_id: string
+        }
+        Insert: {
+          first_visit_at?: string
+          id?: string
+          last_seen_at?: string
+          page_path: string
+          total_time_seconds?: number
+          visitor_id: string
+        }
+        Update: {
+          first_visit_at?: string
+          id?: string
+          last_seen_at?: string
+          page_path?: string
+          total_time_seconds?: number
+          visitor_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

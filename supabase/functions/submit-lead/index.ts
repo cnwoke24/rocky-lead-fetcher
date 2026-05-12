@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -285,9 +286,53 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { name, company, email, phone } = body;
+    const { name, company, email, phone, businessName, source } = body;
+    const isGymFunnel = typeof source === 'string' && source.toLowerCase().includes('gym');
+    const resolvedCompany = (company || businessName || '').toString();
 
-    // Validate required fields
+    // Persist gym-funnel leads to Supabase (best-effort, doesn't block)
+    if (isGymFunnel && name && email) {
+      try {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL');
+        const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+        if (supabaseUrl && serviceKey) {
+          const adminClient = createClient(supabaseUrl, serviceKey);
+          const { error: insertError } = await adminClient.from('gym_leads').insert({
+            name: String(name).trim(),
+            email: String(email).trim().toLowerCase(),
+            business_name: resolvedCompany.trim() || null,
+            source: source || 'gym-funnel',
+          });
+          if (insertError) console.error('[GYM_LEADS] Insert error:', insertError);
+          else console.log('[GYM_LEADS] Lead saved');
+        }
+      } catch (err) {
+        console.error('[GYM_LEADS] Failed:', err);
+      }
+
+      // Send Slack notification (best-effort) using minimal payload
+      const slackUrl = Deno.env.get('SLACK_WEBHOOK_URL');
+      if (slackUrl) {
+        try {
+          await fetch(slackUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: `New Gym Funnel Lead\nName: ${name}\nEmail: ${email}\nBusiness: ${resolvedCompany || 'N/A'}\nSource: ${source}`
+            }),
+          });
+        } catch (err) {
+          console.error('[SLACK] gym lead notify failed:', err);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, saved: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate required fields (legacy homepage popup flow)
     if (!name || !company || !email || !phone) {
       return new Response(
         JSON.stringify({ success: false, error: 'All fields are required.' }),
