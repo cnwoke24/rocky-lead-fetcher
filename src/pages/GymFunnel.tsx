@@ -102,7 +102,7 @@ const GymFunnel = () => {
           >
             <div className="relative w-full" style={{ aspectRatio: "9 / 16" }}>
               <iframe
-                src="https://www.youtube.com/embed/lBZp4eqlx1k?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&disablekb=1&iv_load_policy=3&fs=0&loop=1&playlist=lBZp4eqlx1k&cc_load_policy=0"
+                src="https://www.youtube.com/embed/CpT33tkgOpU?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&disablekb=1&iv_load_policy=3&fs=0&loop=1&playlist=CpT33tkgOpU&cc_load_policy=0"
                 title="Free Training Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
