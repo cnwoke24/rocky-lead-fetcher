@@ -54,7 +54,7 @@ const App = () => {
             <Route path="/gym" element={<GymFunnel />} />
             <Route path="/gym-page-1" element={<GymPage1 />} />
             <Route path="/gym-page-2" element={<GymPage2 />} />
-            <Route path="/admin/gym-leads" element={<GymLeads />} />
+            <Route path="/gym-leads" element={<GymLeads />} />
             <Route path="/privacy" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
