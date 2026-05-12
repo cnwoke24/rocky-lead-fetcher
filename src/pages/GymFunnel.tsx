@@ -97,12 +97,12 @@ const GymFunnel = () => {
 
           {/* VIDEO PLAYER */}
           <div
-            className="border-2 overflow-hidden mb-6 sm:mb-8"
+            className="border-2 overflow-hidden mb-6 sm:mb-8 max-w-sm mx-auto"
             style={{ borderColor: ink, boxShadow: `8px 8px 0px ${ink}` }}
           >
-            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+            <div className="relative w-full" style={{ aspectRatio: "9 / 16" }}>
               <iframe
-                src="https://www.youtube.com/embed/k9rTU6DN9AA?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&disablekb=1&iv_load_policy=3&fs=0&loop=1&playlist=k9rTU6DN9AA"
+                src="https://www.youtube.com/embed/lBZp4eqlx1k?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&disablekb=1&iv_load_policy=3&fs=0&loop=1&playlist=lBZp4eqlx1k&cc_load_policy=0"
                 title="Free Training Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
