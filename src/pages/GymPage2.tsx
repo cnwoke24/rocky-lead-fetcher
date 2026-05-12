@@ -111,7 +111,7 @@ const GymPage2 = () => {
             If you want us to build it for you, grab a slot below. We only take on a few gyms a month.
           </p>
           <a
-            href="https://calendly.com"
+            href="https://cal.com/chike-nwoke-lpv8ik/rocky-ai-voice-demo"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-3 text-base sm:text-lg uppercase py-4 px-7 border-2 transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
