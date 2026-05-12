@@ -29,6 +29,48 @@ const GymFunnel = () => {
     document.head.appendChild(link);
   }, []);
 
+  // Track unique visitor + time spent on /gym
+  useEffect(() => {
+    const STORAGE_KEY = "rocky_visitor_id";
+    let visitorId = localStorage.getItem(STORAGE_KEY);
+    if (!visitorId) {
+      visitorId = (crypto.randomUUID?.() ?? `v_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+      localStorage.setItem(STORAGE_KEY, visitorId);
+    }
+    const pagePath = "/gym";
+    const startedAt = Date.now();
+    let lastPing = startedAt;
+
+    // Initial visit (0 seconds, just to register unique visitor)
+    supabase.functions.invoke("track-page-visit", {
+      body: { visitorId, pagePath, addSeconds: 0 },
+    }).catch(() => {});
+
+    const sendDelta = () => {
+      const now = Date.now();
+      const delta = Math.round((now - lastPing) / 1000);
+      if (delta <= 0) return;
+      lastPing = now;
+      supabase.functions.invoke("track-page-visit", {
+        body: { visitorId, pagePath, addSeconds: delta },
+      }).catch(() => {});
+    };
+
+    const interval = window.setInterval(sendDelta, 15000);
+    const onHide = () => {
+      if (document.visibilityState === "hidden") sendDelta();
+    };
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", sendDelta);
+
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", sendDelta);
+      sendDelta();
+    };
+  }, []);
+
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const handleSubmit = async (e: FormEvent) => {
