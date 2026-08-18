@@ -207,7 +207,7 @@ export default function Index() {
         </div>
 
         {/* Workflow video preview card */}
-        <div className="px-6 md:px-12 max-w-5xl mx-auto pb-24 brand-font">
+        <div className="px-6 md:px-12 max-w-3xl md:max-w-4xl lg:max-w-4xl mx-auto pb-12 md:pb-16 brand-font">
           <div className="bg-white/60 backdrop-blur-2xl border border-neutral-200 rounded-2xl p-2 shadow-[0_8px_40px_rgba(0,0,0,0.04)] ring-1 ring-neutral-900/5 reveal" style={{ transitionDelay: '400ms' }}>
             <div className="bg-white rounded-xl border border-neutral-100 overflow-hidden">
               <div className="flex items-center border-b border-neutral-100 px-4 py-3 gap-2 bg-neutral-50/50">
@@ -224,7 +224,7 @@ export default function Index() {
                 loop
                 muted
                 playsInline
-                className="w-full h-auto block"
+                className="w-full h-auto max-h-[360px] lg:max-h-[320px] object-contain block"
               />
             </div>
           </div>
