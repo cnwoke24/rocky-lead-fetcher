@@ -352,6 +352,10 @@ const AutoDemo = () => {
             </div>
           </div>
 
+          {view === "dashboard" && (
+          <>
+
+
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpis.map((kpi) => (
               <Card key={kpi.label} className="hover:shadow-md transition-shadow">
