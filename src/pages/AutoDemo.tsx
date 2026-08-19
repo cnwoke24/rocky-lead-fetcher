@@ -585,6 +585,10 @@ const AutoDemo = () => {
             </div>
           )}
 
+          {view === "workflows" && <DemoWorkflowStudio />}
+
+
+
         </main>
       </div>
 
