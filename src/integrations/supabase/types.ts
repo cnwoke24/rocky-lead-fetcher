@@ -415,6 +415,39 @@ export type Database = {
         }
         Relationships: []
       }
+      workflows: {
+        Row: {
+          agent_config: Json
+          created_at: string
+          graph: Json
+          id: string
+          name: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_config?: Json
+          created_at?: string
+          graph?: Json
+          id?: string
+          name?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_config?: Json
+          created_at?: string
+          graph?: Json
+          id?: string
+          name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
