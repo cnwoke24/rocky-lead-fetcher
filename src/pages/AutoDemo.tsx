@@ -271,7 +271,7 @@ const SidebarLink = ({
 
 const AutoDemo = () => {
   const [selected, setSelected] = useState<Conversation | null>(null);
-  const [view, setView] = useState<"dashboard" | "calendar">("dashboard");
+  const [view, setView] = useState<"dashboard" | "calendar" | "workflows">("dashboard");
   const [toggles, setToggles] = useState({
     afterHours: true,
     reactivation: true,
