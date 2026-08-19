@@ -29,7 +29,7 @@ const nodeTypes = {
   wait: StepNode, voicemail: StepNode, notify: StepNode, book: StepNode, stop: StepNode,
 };
 
-const workflowEdgeStyle = { stroke: "var(--primary)", strokeWidth: 2 };
+const workflowEdgeStyle = { stroke: "hsl(var(--primary))", strokeWidth: 2 };
 
 function getClientPoint(event: MouseEvent | TouchEvent) {
   if ("changedTouches" in event && event.changedTouches.length > 0) {
