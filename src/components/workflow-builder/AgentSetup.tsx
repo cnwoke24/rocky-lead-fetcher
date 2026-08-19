@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { VOICES } from "@/lib/voices";
+import { VoicePicker } from "@/components/wizard/voice-picker";
 
 export type SimpleAgentConfig = {
   business_name: string;
