@@ -25,6 +25,7 @@ import GymPage2 from "./pages/GymPage2";
 import GymPage3 from "./pages/GymPage3";
 import GymLeads from "./pages/GymLeads";
 import Privacy from "./pages/Privacy";
+import AutoDemo from "./pages/AutoDemo";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
