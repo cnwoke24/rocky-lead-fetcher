@@ -59,6 +59,8 @@ const App = () => {
             <Route path="/gym-page-3" element={<GymPage3 />} />
             <Route path="/gym-leads" element={<GymLeads />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/auto-demo" element={<AutoDemo />} />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
