@@ -472,104 +472,89 @@ const AutoDemo = () => {
 
           {view === "calendar" && (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Card>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {[
+                  { label: "Total Bookings", value: bookings.length, sub: "Booked by Rocky AI" },
+                  {
+                    label: "Confirmed",
+                    value: bookings.filter((b) => b.status === "Confirmed").length,
+                    sub: "SMS confirmation sent",
+                  },
+                  {
+                    label: "Needs Follow-Up",
+                    value: bookings.filter((b) => b.status === "Pending Confirmation").length,
+                    sub: "Awaiting customer reply",
+                  },
+                  {
+                    label: "This Week",
+                    value: upcomingBookings.length,
+                    sub: "Upcoming appointments",
+                  },
+                ].map((s) => (
+                  <Card key={s.label}>
+                    <CardContent className="p-4 sm:p-5">
+                      <p className="text-2xl sm:text-3xl font-bold">{s.value}</p>
+                      <p className="text-sm font-medium mt-1">{s.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{s.sub}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-3">
+                <Card className="lg:col-span-2">
                   <CardContent className="p-5">
-                    <p className="text-3xl font-bold">{bookings.length}</p>
-                    <p className="text-sm font-medium mt-1">Upcoming Bookings</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Booked by Rocky AI</p>
+                    <BookingsCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
                   </CardContent>
                 </Card>
+
                 <Card>
-                  <CardContent className="p-5">
-                    <p className="text-3xl font-bold">
-                      {bookings.filter((b) => b.status === "Confirmed").length}
-                    </p>
-                    <p className="text-sm font-medium mt-1">Confirmed</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">SMS confirmation sent</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-5">
-                    <p className="text-3xl font-bold">
-                      {bookings.filter((b) => b.status === "Pending Confirmation").length}
-                    </p>
-                    <p className="text-sm font-medium mt-1">Needs Follow-Up</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Awaiting customer reply</p>
+                  <CardHeader>
+                    <CardTitle className="text-base">
+                      {selectedDate ? formatDate(selectedDate) : "Upcoming appointments"}
+                    </CardTitle>
+                    <CardDescription>
+                      {selectedDate
+                        ? `${visibleBookings.length} appointment${visibleBookings.length === 1 ? "" : "s"}`
+                        : "Next bookings your AI agent secured"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {visibleBookings.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No appointments on this day.</p>
+                    )}
+                    {visibleBookings.map((b) => (
+                      <button
+                        key={b.id}
+                        type="button"
+                        onClick={() => setSelectedDate(b.date)}
+                        className="w-full text-left rounded-xl border p-3 hover:border-primary/50 transition"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold truncate">{b.customer}</p>
+                            <p className="text-xs text-muted-foreground truncate">{b.service}</p>
+                          </div>
+                          <span className="text-xs font-medium whitespace-nowrap">{b.time}</span>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-1">
+                          {formatDay(b.date)} · {formatDate(b.date)}
+                        </p>
+                      </button>
+                    ))}
                   </CardContent>
                 </Card>
               </div>
 
-              {bookings.map((b) => (
-                <Card key={b.id} className="overflow-hidden">
-                  <CardContent className="p-0 grid grid-cols-1 md:grid-cols-[160px_1fr]">
-                    <div className="bg-muted/50 border-b md:border-b-0 md:border-r p-5 flex md:flex-col items-center md:items-start gap-3 md:gap-1">
-                      <CalendarDays className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="text-sm font-semibold">{b.day}</p>
-                        <p className="text-xs text-muted-foreground">{b.date}</p>
-                        <p className="text-sm font-medium mt-1 flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                          {b.time}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="p-5 space-y-4">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <p className="text-base font-semibold">{b.service}</p>
-                          <p className="text-sm text-muted-foreground">{b.customer}</p>
-                        </div>
-                        <Badge className={bookingStatusClass(b.status)} variant="secondary">
-                          {b.status}
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Phone className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{b.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Mail className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{b.email}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Car className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{b.vehicle}</span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="rounded-lg border bg-muted/30 p-3">
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
-                            Call Summary
-                          </p>
-                          <p className="text-sm leading-relaxed">{b.summary}</p>
-                        </div>
-                        <div className="rounded-lg border bg-muted/30 p-3">
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
-                            Next Steps
-                          </p>
-                          <ul className="space-y-1.5">
-                            {b.nextSteps.map((step) => (
-                              <li key={step} className="text-sm flex items-start gap-2">
-                                <CalendarCheck className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-                                <span>{step}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <div className="space-y-6">
+                {visibleBookings.map((b) => (
+                  <BookingCard key={b.id} b={b} />
+                ))}
+              </div>
             </div>
           )}
 
-          {view === "workflows" && <DemoWorkflowStudio />}
+          {view === "workflows" && <WorkflowRequestCenter />}
 
 
 
