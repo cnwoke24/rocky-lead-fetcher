@@ -347,7 +347,9 @@ const AutoDemo = () => {
               <p className="text-muted-foreground text-sm mt-1">
                 {view === "dashboard"
                   ? "Here's how your AI voice agent performed this week."
-                  : "Appointments your AI agent booked, with call context and next steps."}
+                  : view === "calendar"
+                    ? "Appointments your AI agent booked, with call context and next steps."
+                    : "Design the call, text, and follow-up sequences your AI agent runs."}
               </p>
             </div>
 
