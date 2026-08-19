@@ -62,8 +62,8 @@ export default function WorkflowBuilder() {
     const payload = {
       user_id: session.user.id,
       name,
-      agent_config: agent as unknown as Record<string, unknown>,
-      graph: graph as unknown as Record<string, unknown>,
+      agent_config: agent as unknown as never,
+      graph: graph as unknown as never,
       ...extra,
     };
     if (workflowId) {
