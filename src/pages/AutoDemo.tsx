@@ -323,6 +323,12 @@ const AutoDemo = () => {
                 active={view === "calendar"}
                 onClick={() => setView("calendar")}
               />
+              <SidebarLink
+                icon={<Workflow className="h-4 w-4" />}
+                label="Workflows"
+                active={view === "workflows"}
+                onClick={() => setView("workflows")}
+              />
               <SidebarLink icon={<Play className="h-4 w-4" />} label="Agent" />
               <SidebarLink icon={<User className="h-4 w-4" />} label="Profile" />
               <SidebarLink icon={<Settings className="h-4 w-4" />} label="Settings" />
