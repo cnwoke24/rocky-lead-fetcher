@@ -655,28 +655,65 @@ const AutoDemo = () => {
       </div>
 
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{selected?.name} · Call Transcript</DialogTitle>
+            <DialogTitle className="flex flex-wrap items-center gap-2">
+              {selected?.name}
+              {selected && (
+                <Badge className={outcomeClass(selected.tone)} variant="secondary">
+                  {selected.outcome}
+                </Badge>
+              )}
+            </DialogTitle>
             <DialogDescription>
-              {selected?.datetime} · {selected?.intent}
+              {selected?.datetime} · {selected?.duration} · {selected?.intent}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-            {selected?.transcript.map((line, i) => (
-              <div
-                key={i}
-                className={`rounded-lg p-3 text-sm ${
-                  line.speaker === "Rocky AI" ? "bg-primary/5 border border-primary/10" : "bg-muted/50"
-                }`}
-              >
-                <p className="text-xs font-semibold text-muted-foreground mb-1">{line.speaker}</p>
-                <p className="leading-relaxed">{line.text}</p>
+
+          <div className="space-y-5 max-h-[65vh] overflow-y-auto pr-1">
+            <div className="rounded-xl border bg-muted/40 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
+                Call summary
+              </p>
+              <p className="text-sm leading-relaxed">{selected?.summary}</p>
+            </div>
+
+            <div className="rounded-xl border p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                Suggested next actions
+              </p>
+              <ul className="space-y-2">
+                {selected?.nextActions.map((action) => (
+                  <li key={action} className="flex items-start gap-2 text-sm">
+                    <CalendarCheck className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+                    <span>{action}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                What was said
+              </p>
+              <div className="space-y-3">
+                {selected?.transcript.map((line, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-lg p-3 text-sm ${
+                      line.speaker === "Rocky AI" ? "bg-primary/5 border border-primary/10" : "bg-muted/50"
+                    }`}
+                  >
+                    <p className="text-xs font-semibold text-muted-foreground mb-1">{line.speaker}</p>
+                    <p className="leading-relaxed">{line.text}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };
