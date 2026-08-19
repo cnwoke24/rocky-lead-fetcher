@@ -3,12 +3,17 @@ import {
   Bell,
   Bot,
   CalendarCheck,
+  CalendarDays,
+  Car,
   ChevronDown,
   ClipboardCheck,
+  Clock,
   Database,
+  Mail,
   MessageSquare,
   PhoneCall,
   PhoneMissed,
+  Phone,
   Play,
   Search,
   Settings,
@@ -22,6 +27,7 @@ import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import rockyLogo from "@/assets/rocky-logo.png";
+
 
 type Conversation = {
   id: string;
@@ -134,6 +140,105 @@ const workflowNodes = [
   { icon: MessageSquare, title: "Automated SMS Confirmation", desc: "Reminder sent 24 hours before the appointment" },
 ];
 
+type Booking = {
+  id: string;
+  day: string;
+  date: string;
+  time: string;
+  service: string;
+  customer: string;
+  phone: string;
+  email: string;
+  vehicle: string;
+  status: "Confirmed" | "Pending Confirmation";
+  nextSteps: string[];
+  summary: string;
+};
+
+const bookings: Booking[] = [
+  {
+    id: "b1",
+    day: "Thursday",
+    date: "Aug 20, 2026",
+    time: "9:00 AM",
+    service: "PA State Inspection + Emissions",
+    customer: "John Smith",
+    phone: "(717) 555-0142",
+    email: "j.smith@email.com",
+    vehicle: "2019 Ford F-150 · 84,300 mi",
+    status: "Confirmed",
+    nextSteps: [
+      "Pull inspection sticker inventory before 8 AM",
+      "Confirm emissions bay availability",
+      "SMS reminder auto-sends tonight at 6 PM",
+    ],
+    summary:
+      "Rocky called John about his expiring PA inspection. He forgot the deadline, accepted the first available slot and asked how long the visit takes (~45 min). Booked for Thursday 9 AM and confirmation text sent.",
+  },
+  {
+    id: "b2",
+    day: "Friday",
+    date: "Aug 21, 2026",
+    time: "2:00 PM",
+    service: "Full Synthetic Oil Change",
+    customer: "Sarah Davis",
+    phone: "(717) 555-0193",
+    email: "sarah.davis@email.com",
+    vehicle: "2021 Honda CR-V · 41,120 mi",
+    status: "Confirmed",
+    nextSteps: [
+      "Quote tire rotation add-on at check-in",
+      "Flag 7-month service gap in customer record",
+    ],
+    summary:
+      "Reactivation call for an overdue oil change (last visit 7 months ago). Sarah admitted she'd been putting it off; Rocky offered a 30-minute in-and-out slot and booked Friday at 2 PM.",
+  },
+  {
+    id: "b3",
+    day: "Saturday",
+    date: "Aug 22, 2026",
+    time: "11:00 AM",
+    service: "Test Drive · Used 2018 Subaru Outback",
+    customer: "Mike Johnson",
+    phone: "(717) 555-0288",
+    email: "mjohnson@email.com",
+    vehicle: "Interested in 2018 Subaru Outback · $17,900",
+    status: "Confirmed",
+    nextSteps: [
+      "Have the Outback detailed and pulled up front",
+      "Print the clean history report",
+      "Sales rep to prep financing options",
+    ],
+    summary:
+      "Inbound inquiry on the used 2018 Outback. Rocky confirmed availability, mileage (62k) and price, then scheduled a Saturday 11 AM test drive.",
+  },
+  {
+    id: "b4",
+    day: "Monday",
+    date: "Aug 24, 2026",
+    time: "8:30 AM",
+    service: "Post-Tow Diagnostic Inspection",
+    customer: "Amanda Lee",
+    phone: "(717) 555-0311",
+    email: "amanda.lee@email.com",
+    vehicle: "2016 Toyota Camry · Towed from Route 30",
+    status: "Pending Confirmation",
+    nextSteps: [
+      "Service manager to call Amanda first thing Monday",
+      "Confirm the tow partner delivered the vehicle",
+      "Send diagnostic estimate before starting work",
+    ],
+    summary:
+      "After-hours breakdown call. Rocky routed her to the 24/7 towing partner and logged a follow-up diagnostic appointment for Monday morning pending vehicle drop-off.",
+  },
+];
+
+const bookingStatusClass = (status: Booking["status"]) =>
+  status === "Confirmed"
+    ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+    : "bg-amber-100 text-amber-800 hover:bg-amber-100";
+
+
 const outcomeClass = (tone: Conversation["tone"]) =>
   tone === "success"
     ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
@@ -145,13 +250,16 @@ const SidebarLink = ({
   icon,
   label,
   active,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }) => (
   <button
     type="button"
+    onClick={onClick}
     className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
       active ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:bg-muted/60"
     }`}
@@ -163,11 +271,13 @@ const SidebarLink = ({
 
 const AutoDemo = () => {
   const [selected, setSelected] = useState<Conversation | null>(null);
+  const [view, setView] = useState<"dashboard" | "calendar">("dashboard");
   const [toggles, setToggles] = useState({
     afterHours: true,
     reactivation: true,
     statusTexts: false,
   });
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
@@ -201,7 +311,18 @@ const AutoDemo = () => {
               <CardDescription>Manage your account and agent</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <SidebarLink icon={<Bot className="h-4 w-4" />} label="Dashboard" active />
+              <SidebarLink
+                icon={<Bot className="h-4 w-4" />}
+                label="Dashboard"
+                active={view === "dashboard"}
+                onClick={() => setView("dashboard")}
+              />
+              <SidebarLink
+                icon={<CalendarDays className="h-4 w-4" />}
+                label="Calendar"
+                active={view === "calendar"}
+                onClick={() => setView("calendar")}
+              />
               <SidebarLink icon={<Play className="h-4 w-4" />} label="Agent" />
               <SidebarLink icon={<User className="h-4 w-4" />} label="Profile" />
               <SidebarLink icon={<Settings className="h-4 w-4" />} label="Settings" />
@@ -216,9 +337,12 @@ const AutoDemo = () => {
                 Welcome back, Mike's Motor Zone
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                Here's how your AI voice agent performed this week.
+                {view === "dashboard"
+                  ? "Here's how your AI voice agent performed this week."
+                  : "Appointments your AI agent booked, with call context and next steps."}
               </p>
             </div>
+
             <div className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
@@ -227,6 +351,10 @@ const AutoDemo = () => {
               AI Agent Status: Active &amp; Taking Calls
             </div>
           </div>
+
+          {view === "dashboard" && (
+          <>
+
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpis.map((kpi) => (
@@ -345,6 +473,108 @@ const AutoDemo = () => {
               </Card>
             </div>
           </div>
+          </>
+          )}
+
+          {view === "calendar" && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="p-5">
+                    <p className="text-3xl font-bold">{bookings.length}</p>
+                    <p className="text-sm font-medium mt-1">Upcoming Bookings</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Booked by Rocky AI</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-5">
+                    <p className="text-3xl font-bold">
+                      {bookings.filter((b) => b.status === "Confirmed").length}
+                    </p>
+                    <p className="text-sm font-medium mt-1">Confirmed</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">SMS confirmation sent</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-5">
+                    <p className="text-3xl font-bold">
+                      {bookings.filter((b) => b.status === "Pending Confirmation").length}
+                    </p>
+                    <p className="text-sm font-medium mt-1">Needs Follow-Up</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Awaiting customer reply</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {bookings.map((b) => (
+                <Card key={b.id} className="overflow-hidden">
+                  <CardContent className="p-0 grid grid-cols-1 md:grid-cols-[160px_1fr]">
+                    <div className="bg-muted/50 border-b md:border-b-0 md:border-r p-5 flex md:flex-col items-center md:items-start gap-3 md:gap-1">
+                      <CalendarDays className="h-5 w-5 text-primary" />
+                      <div>
+                        <p className="text-sm font-semibold">{b.day}</p>
+                        <p className="text-xs text-muted-foreground">{b.date}</p>
+                        <p className="text-sm font-medium mt-1 flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                          {b.time}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-5 space-y-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-base font-semibold">{b.service}</p>
+                          <p className="text-sm text-muted-foreground">{b.customer}</p>
+                        </div>
+                        <Badge className={bookingStatusClass(b.status)} variant="secondary">
+                          {b.status}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Phone className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{b.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Mail className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{b.email}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Car className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{b.vehicle}</span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="rounded-lg border bg-muted/30 p-3">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
+                            Call Summary
+                          </p>
+                          <p className="text-sm leading-relaxed">{b.summary}</p>
+                        </div>
+                        <div className="rounded-lg border bg-muted/30 p-3">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
+                            Next Steps
+                          </p>
+                          <ul className="space-y-1.5">
+                            {b.nextSteps.map((step) => (
+                              <li key={step} className="text-sm flex items-start gap-2">
+                                <CalendarCheck className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+                                <span>{step}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
         </main>
       </div>
 
