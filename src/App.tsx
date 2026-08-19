@@ -48,6 +48,10 @@ const App = () => {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/subscription-payment" element={<SubscriptionPayment />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/workflows/new" element={<WorkflowBuilder />} />
+            <Route path="/workflows/:id" element={<WorkflowBuilder />} />
+            <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
