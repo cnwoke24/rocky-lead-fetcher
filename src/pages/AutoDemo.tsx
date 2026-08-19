@@ -311,7 +311,18 @@ const AutoDemo = () => {
               <CardDescription>Manage your account and agent</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <SidebarLink icon={<Bot className="h-4 w-4" />} label="Dashboard" active />
+              <SidebarLink
+                icon={<Bot className="h-4 w-4" />}
+                label="Dashboard"
+                active={view === "dashboard"}
+                onClick={() => setView("dashboard")}
+              />
+              <SidebarLink
+                icon={<CalendarDays className="h-4 w-4" />}
+                label="Calendar"
+                active={view === "calendar"}
+                onClick={() => setView("calendar")}
+              />
               <SidebarLink icon={<Play className="h-4 w-4" />} label="Agent" />
               <SidebarLink icon={<User className="h-4 w-4" />} label="Profile" />
               <SidebarLink icon={<Settings className="h-4 w-4" />} label="Settings" />
@@ -326,9 +337,12 @@ const AutoDemo = () => {
                 Welcome back, Mike's Motor Zone
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                Here's how your AI voice agent performed this week.
+                {view === "dashboard"
+                  ? "Here's how your AI voice agent performed this week."
+                  : "Appointments your AI agent booked, with call context and next steps."}
               </p>
             </div>
+
             <div className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
