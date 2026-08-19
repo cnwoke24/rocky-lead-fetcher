@@ -22,6 +22,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import rockyLogo from "@/assets/rocky-logo.png";
 import RecentCallsTable from "@/components/dashboard/RecentCallsTable";
 import { useCallStats, useRecentCalls } from "@/hooks/useCallData";
+import { AppShell } from "@/components/app-shell";
+import { StatCard, StatusBadge } from "@/components/stat-card";
 
 const Dashboard = () => {
   const navigate = useNavigate();
