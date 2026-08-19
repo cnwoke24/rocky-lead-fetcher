@@ -35,6 +35,20 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        app: {
+          DEFAULT: "hsl(var(--app-background))",
+          border: "hsl(var(--app-border))",
+          accent: "hsl(var(--app-accent))",
+          "accent-foreground": "hsl(var(--app-accent-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -61,6 +75,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      boxShadow: {
+        card: "0 1px 2px 0 hsl(217 40% 40% / 0.05), 0 4px 16px -2px hsl(217 40% 40% / 0.07)",
+        elevated: "0 8px 32px -8px hsl(var(--primary) / 0.18)",
+        "glow-sm": "0 0 0 1px hsl(var(--primary) / 0.12), 0 8px 24px -4px hsl(var(--primary) / 0.25)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -122,6 +141,14 @@ export default {
             boxShadow: "0 0 40px hsl(var(--primary-glow) / 0.5)",
           },
         },
+        "slide-up-fade": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "pulse-dot": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.45", transform: "scale(1.35)" },
+        },
         "marquee": {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
@@ -135,6 +162,8 @@ export default {
         "scale-in": "scale-in 0.4s ease-out",
         "glow": "glow 3s ease-in-out infinite",
         "marquee": "marquee 30s linear infinite",
+        "slide-up-fade": "slide-up-fade 0.35s ease-out",
+        "pulse-dot": "pulse-dot 1.8s ease-in-out infinite",
       },
     },
   },

@@ -36,20 +36,32 @@ All colors MUST be HSL.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
+    --success: 152 55% 43%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 30 40% 15%;
+
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 142 76% 36%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 45.1%;
-    --sidebar-primary: 142 76% 36%;
+    /* App (dashboard) surfaces — soft near-white workspace */
+    --app-background: 220 33% 98%;
+    --app-border: 218 20% 91%;
+    --app-accent: 217 91% 96%;
+    --app-accent-foreground: 217 70% 32%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 218 12% 38%;
+    --sidebar-primary: 217 91% 45%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 96.1%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 89.8%;
-    --sidebar-ring: 142 76% 36%;
+    --sidebar-accent: 217 91% 96%;
+    --sidebar-accent-foreground: 217 70% 32%;
+    --sidebar-border: 218 20% 91%;
+    --sidebar-ring: 217 91% 45%;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
     --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
@@ -66,3 +78,10 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+}
+

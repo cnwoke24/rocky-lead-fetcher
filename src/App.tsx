@@ -26,6 +26,9 @@ import GymPage3 from "./pages/GymPage3";
 import GymLeads from "./pages/GymLeads";
 import Privacy from "./pages/Privacy";
 import AutoDemo from "./pages/AutoDemo";
+import Workflows from "./pages/Workflows";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
+import CalendarPage from "./pages/CalendarPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -45,6 +48,10 @@ const App = () => {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/subscription-payment" element={<SubscriptionPayment />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/workflows/new" element={<WorkflowBuilder />} />
+            <Route path="/workflows/:id" element={<WorkflowBuilder />} />
+            <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
