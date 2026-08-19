@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { VOICES } from "@/lib/voices";
+import { VoicePicker } from "@/components/wizard/voice-picker";
 
 export type SimpleAgentConfig = {
   business_name: string;
@@ -89,16 +89,7 @@ export function AgentSetup({
 
       <Section title="Voice & script" description="How the AI sounds and what it says.">
         <Field label="Voice">
-          <Select value={value.voice_id} onValueChange={(v) => onChange({ voice_id: v })}>
-            <SelectTrigger><SelectValue placeholder="Pick a voice" /></SelectTrigger>
-            <SelectContent>
-              {VOICES.map((v) => (
-                <SelectItem key={v.id} value={v.id}>
-                  {v.name} — {v.style}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <VoicePicker value={value.voice_id} onChange={(v) => onChange({ voice_id: v })} />
         </Field>
         <Field label="Tone">
           <Select value={value.tone} onValueChange={(v) => onChange({ tone: v })}>
