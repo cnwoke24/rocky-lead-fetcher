@@ -46,6 +46,9 @@ type Conversation = {
   intent: string;
   outcome: string;
   tone: "success" | "info" | "warning";
+  duration: string;
+  summary: string;
+  nextActions: string[];
   transcript: { speaker: "Rocky AI" | "Customer"; text: string }[];
 };
 
@@ -57,6 +60,14 @@ const conversations: Conversation[] = [
     intent: "PA State Inspection Renewal",
     outcome: "Booked (Tomorrow, 9 AM)",
     tone: "success",
+    duration: "2m 14s",
+    summary:
+      "John's PA state inspection expires at the end of the month and he had forgotten. Rocky offered two openings and he took the first one. Booking confirmed and a text confirmation was sent.",
+    nextActions: [
+      "Pull inspection sticker inventory before the 9 AM slot",
+      "Confirm the emissions bay is free tomorrow morning",
+      "Send the SMS reminder tonight at 6 PM",
+    ],
     transcript: [
       { speaker: "Rocky AI", text: "Hi John, this is Rocky calling from Mike's Motor Zone. Our records show your PA state inspection expires at the end of this month." },
       { speaker: "Customer", text: "Oh wow, I completely forgot about that." },
@@ -72,6 +83,14 @@ const conversations: Conversation[] = [
     intent: "Overdue Oil Change Reactivation",
     outcome: "Booked (Friday, 2 PM)",
     tone: "success",
+    duration: "1m 48s",
+    summary:
+      "Reactivation call for a customer seven months overdue on an oil change. Sarah admitted she had been putting it off and accepted a Friday afternoon slot once she heard it takes about 30 minutes.",
+    nextActions: [
+      "Quote the tire rotation add-on at check-in",
+      "Flag the 7-month service gap in her customer record",
+      "Offer the multi-point inspection while the car is on the lift",
+    ],
     transcript: [
       { speaker: "Rocky AI", text: "Hi Sarah, it's Rocky from Mike's Motor Zone. It's been about seven months since your last oil change." },
       { speaker: "Customer", text: "Yeah, I've been putting it off." },
@@ -87,6 +106,14 @@ const conversations: Conversation[] = [
     intent: "Inquiry on Used 2018 Subaru",
     outcome: "Test Drive Scheduled",
     tone: "info",
+    duration: "3m 02s",
+    summary:
+      "Inbound after-hours inquiry on the used 2018 Subaru Outback. Rocky confirmed mileage, history and price, then locked in a Saturday 11 AM test drive.",
+    nextActions: [
+      "Detail and fuel the Outback before Saturday",
+      "Have financing pre-qual paperwork ready",
+      "Sales rep to call Friday to confirm attendance",
+    ],
     transcript: [
       { speaker: "Customer", text: "Hi, is the 2018 Subaru Outback still available?" },
       { speaker: "Rocky AI", text: "It is — 62,000 miles, clean history report, listed at $17,900." },
@@ -102,6 +129,14 @@ const conversations: Conversation[] = [
     intent: "After-hours Towing Question",
     outcome: "Routed to Emergency Line",
     tone: "warning",
+    duration: "1m 05s",
+    summary:
+      "Breakdown on Route 30 well after closing. Rocky handed the caller to the 24/7 towing partner and logged the incident for the service team to pick up in the morning.",
+    nextActions: [
+      "Service advisor to call Amanda first thing in the morning",
+      "Reserve a diagnostic bay for a possible tow-in",
+      "Confirm the tow partner completed the pickup",
+    ],
     transcript: [
       { speaker: "Customer", text: "My car broke down on Route 30, do you guys tow?" },
       { speaker: "Rocky AI", text: "I'm sorry to hear that. The shop is closed, but I can connect you to our 24/7 emergency towing partner right now." },
@@ -110,6 +145,7 @@ const conversations: Conversation[] = [
     ],
   },
 ];
+
 
 const kpis = [
   {
