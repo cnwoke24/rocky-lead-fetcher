@@ -326,63 +326,54 @@ const Dashboard = () => {
               />
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold tracking-tight">Your AI Voice Agent</h2>
-                  <p className="text-sm text-muted-foreground mt-1">View your agent's workflow and performance.</p>
+        <Card className="border-app-border shadow-card rounded-2xl">
+          <CardHeader>
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-semibold tracking-tight">Your AI Voice Agent</h2>
+                <p className="text-sm text-muted-foreground mt-1">View your agent's workflow and performance.</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {!allPrereqsDone ? (
+              <BlockedOverlay title="Agent Locked" subtitle="Complete onboarding and sign the agreement to unlock your agent." />
+            ) : !agentEnabled ? (
+              <div className="relative">
+                <div className="flex items-center gap-4 opacity-50">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=RockyAgent" alt="Agent" />
+                    <AvatarFallback>AI</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="text-lg font-semibold">Rocky Voice Agent</div>
+                    <p className="text-sm text-muted-foreground">Automates customer outreach and qualification workflows.</p>
+                  </div>
+                </div>
+                <div className="mt-4 rounded-xl border-2 border-dashed border-app-border bg-secondary/40 p-4">
+                  <div className="flex items-center gap-3">
+                    <Bot className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="font-medium text-sm">Coming Soon</div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Your voice agent is being set up by our team. You'll be notified when it's ready!
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              {!allPrereqsDone ? (
-                <BlockedOverlay title="Agent Locked" subtitle="Complete onboarding and sign the agreement to unlock your agent." />
-              ) : !agentEnabled ? (
-                <div className="relative">
-                  <div className="flex items-center gap-4 opacity-50">
-                    <Avatar className="h-16 w-16">
-                      <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=RockyAgent" alt="Agent" />
-                      <AvatarFallback>AI</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="text-lg font-semibold">Rocky Voice Agent</div>
-                      <p className="text-sm text-muted-foreground">Automates customer outreach and qualification workflows.</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-4">
-                    <div className="flex items-center gap-3">
-                      <Bot className="h-5 w-5 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium text-sm">Coming Soon</div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Your voice agent is being set up by our team. You'll be notified when it's ready!
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : !profile?.clinic_id ? (
-                <Card className="border-orange-200 bg-orange-50">
-                  <CardHeader>
-                    <CardTitle className="text-orange-900">No Clinic Assigned</CardTitle>
-                    <CardDescription className="text-orange-700">
-                      Contact support to get your clinic configured.
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ) : (
-                <RecentCallsTable data={recentCalls} displayFields={displayFields} isLoading={callsLoading} onRefresh={refetchCalls} />
-              )}
-            </CardContent>
-          </Card>
-
-        </main>
+            ) : !profile?.clinic_id ? (
+              <div className="rounded-xl border border-warning/40 bg-warning/10 p-5">
+                <h3 className="font-semibold">No Clinic Assigned</h3>
+                <p className="text-sm text-muted-foreground mt-1">Contact support to get your clinic configured.</p>
+              </div>
+            ) : (
+              <RecentCallsTable data={recentCalls} displayFields={displayFields} isLoading={callsLoading} onRefresh={refetchCalls} />
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      <footer className="py-8 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Rocky AI. All rights reserved.</footer>
-      
       <Dialog open={showAgreementModal} onOpenChange={setShowAgreementModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -401,7 +392,8 @@ const Dashboard = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </AppShell>
+
   );
 };
 
