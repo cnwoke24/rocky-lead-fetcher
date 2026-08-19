@@ -250,13 +250,16 @@ const SidebarLink = ({
   icon,
   label,
   active,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }) => (
   <button
     type="button"
+    onClick={onClick}
     className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
       active ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:bg-muted/60"
     }`}
@@ -268,11 +271,13 @@ const SidebarLink = ({
 
 const AutoDemo = () => {
   const [selected, setSelected] = useState<Conversation | null>(null);
+  const [view, setView] = useState<"dashboard" | "calendar">("dashboard");
   const [toggles, setToggles] = useState({
     afterHours: true,
     reactivation: true,
     statusTexts: false,
   });
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
