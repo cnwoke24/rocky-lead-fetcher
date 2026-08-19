@@ -263,6 +263,19 @@ const AutoDemo = () => {
     reactivation: true,
     statusTexts: false,
   });
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const upcomingBookings = bookings
+    .filter((b) => b.date >= startOfToday)
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  const visibleBookings = selectedDate
+    ? bookings.filter((b) => isSameDay(b.date, selectedDate))
+    : upcomingBookings;
+
 
 
   return (
