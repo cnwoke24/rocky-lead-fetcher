@@ -292,8 +292,8 @@ const Dashboard = () => {
           </div>
         )}
 
-          
-          <Card>
+        <Card className="border-app-border shadow-card rounded-2xl">
+
             <CardHeader>
               <CardTitle>Getting Started</CardTitle>
               <CardDescription>Complete these steps to activate your AI voice agent.</CardDescription>
