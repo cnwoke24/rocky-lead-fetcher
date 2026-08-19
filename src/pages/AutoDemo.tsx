@@ -7,6 +7,7 @@ import {
   Workflow,
   Car,
   ChevronDown,
+  ChevronRight,
   ClipboardCheck,
   Clock,
   Database,
@@ -25,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { WorkflowRequestCenter } from "@/components/workflow-builder/WorkflowRequestCenter";
 import { BookingsCalendar } from "@/components/auto-demo/BookingsCalendar";
@@ -46,6 +47,9 @@ type Conversation = {
   intent: string;
   outcome: string;
   tone: "success" | "info" | "warning";
+  duration: string;
+  summary: string;
+  nextActions: string[];
   transcript: { speaker: "Rocky AI" | "Customer"; text: string }[];
 };
 
@@ -57,6 +61,14 @@ const conversations: Conversation[] = [
     intent: "PA State Inspection Renewal",
     outcome: "Booked (Tomorrow, 9 AM)",
     tone: "success",
+    duration: "2m 14s",
+    summary:
+      "John's PA state inspection expires at the end of the month and he had forgotten. Rocky offered two openings and he took the first one. Booking confirmed and a text confirmation was sent.",
+    nextActions: [
+      "Pull inspection sticker inventory before the 9 AM slot",
+      "Confirm the emissions bay is free tomorrow morning",
+      "Send the SMS reminder tonight at 6 PM",
+    ],
     transcript: [
       { speaker: "Rocky AI", text: "Hi John, this is Rocky calling from Mike's Motor Zone. Our records show your PA state inspection expires at the end of this month." },
       { speaker: "Customer", text: "Oh wow, I completely forgot about that." },
@@ -72,6 +84,14 @@ const conversations: Conversation[] = [
     intent: "Overdue Oil Change Reactivation",
     outcome: "Booked (Friday, 2 PM)",
     tone: "success",
+    duration: "1m 48s",
+    summary:
+      "Reactivation call for a customer seven months overdue on an oil change. Sarah admitted she had been putting it off and accepted a Friday afternoon slot once she heard it takes about 30 minutes.",
+    nextActions: [
+      "Quote the tire rotation add-on at check-in",
+      "Flag the 7-month service gap in her customer record",
+      "Offer the multi-point inspection while the car is on the lift",
+    ],
     transcript: [
       { speaker: "Rocky AI", text: "Hi Sarah, it's Rocky from Mike's Motor Zone. It's been about seven months since your last oil change." },
       { speaker: "Customer", text: "Yeah, I've been putting it off." },
@@ -87,6 +107,14 @@ const conversations: Conversation[] = [
     intent: "Inquiry on Used 2018 Subaru",
     outcome: "Test Drive Scheduled",
     tone: "info",
+    duration: "3m 02s",
+    summary:
+      "Inbound after-hours inquiry on the used 2018 Subaru Outback. Rocky confirmed mileage, history and price, then locked in a Saturday 11 AM test drive.",
+    nextActions: [
+      "Detail and fuel the Outback before Saturday",
+      "Have financing pre-qual paperwork ready",
+      "Sales rep to call Friday to confirm attendance",
+    ],
     transcript: [
       { speaker: "Customer", text: "Hi, is the 2018 Subaru Outback still available?" },
       { speaker: "Rocky AI", text: "It is — 62,000 miles, clean history report, listed at $17,900." },
@@ -102,6 +130,14 @@ const conversations: Conversation[] = [
     intent: "After-hours Towing Question",
     outcome: "Routed to Emergency Line",
     tone: "warning",
+    duration: "1m 05s",
+    summary:
+      "Breakdown on Route 30 well after closing. Rocky handed the caller to the 24/7 towing partner and logged the incident for the service team to pick up in the morning.",
+    nextActions: [
+      "Service advisor to call Amanda first thing in the morning",
+      "Reserve a diagnostic bay for a possible tow-in",
+      "Confirm the tow partner completed the pickup",
+    ],
     transcript: [
       { speaker: "Customer", text: "My car broke down on Route 30, do you guys tow?" },
       { speaker: "Rocky AI", text: "I'm sorry to hear that. The shop is closed, but I can connect you to our 24/7 emergency towing partner right now." },
@@ -110,6 +146,7 @@ const conversations: Conversation[] = [
     ],
   },
 ];
+
 
 const kpis = [
   {
@@ -437,40 +474,30 @@ const AutoDemo = () => {
                 <CardTitle>Recent AI Conversations</CardTitle>
                 <CardDescription>Calls handled automatically by your agent</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="rounded-lg border overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="whitespace-nowrap">Date/Time</TableHead>
-                        <TableHead>Customer Name</TableHead>
-                        <TableHead>Intent</TableHead>
-                        <TableHead>Outcome</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {conversations.map((c) => (
-                        <TableRow key={c.id}>
-                          <TableCell className="whitespace-nowrap text-muted-foreground">{c.datetime}</TableCell>
-                          <TableCell className="font-medium whitespace-nowrap">{c.name}</TableCell>
-                          <TableCell className="text-sm">{c.intent}</TableCell>
-                          <TableCell>
-                            <Badge className={outcomeClass(c.tone)} variant="secondary">
-                              {c.outcome}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="outline" size="sm" onClick={() => setSelected(c)}>
-                              View Transcript
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+              <CardContent className="space-y-2">
+                {conversations.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelected(c)}
+                    className="w-full text-left rounded-xl border bg-card p-3 flex items-center gap-3 transition-colors hover:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span
+                      className={`h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-xs font-semibold ${outcomeClass(c.tone)}`}
+                    >
+                      {c.name.split(" ").map((n) => n[0]).join("")}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold truncate">{c.name}</span>
+                      <span className="block text-xs text-muted-foreground truncate">
+                        {c.datetime} · {c.duration}
+                      </span>
+                    </span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                ))}
               </CardContent>
+
             </Card>
 
             <div className="space-y-6">
@@ -628,28 +655,65 @@ const AutoDemo = () => {
       </div>
 
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{selected?.name} · Call Transcript</DialogTitle>
+            <DialogTitle className="flex flex-wrap items-center gap-2">
+              {selected?.name}
+              {selected && (
+                <Badge className={outcomeClass(selected.tone)} variant="secondary">
+                  {selected.outcome}
+                </Badge>
+              )}
+            </DialogTitle>
             <DialogDescription>
-              {selected?.datetime} · {selected?.intent}
+              {selected?.datetime} · {selected?.duration} · {selected?.intent}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-            {selected?.transcript.map((line, i) => (
-              <div
-                key={i}
-                className={`rounded-lg p-3 text-sm ${
-                  line.speaker === "Rocky AI" ? "bg-primary/5 border border-primary/10" : "bg-muted/50"
-                }`}
-              >
-                <p className="text-xs font-semibold text-muted-foreground mb-1">{line.speaker}</p>
-                <p className="leading-relaxed">{line.text}</p>
+
+          <div className="space-y-5 max-h-[65vh] overflow-y-auto pr-1">
+            <div className="rounded-xl border bg-muted/40 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
+                Call summary
+              </p>
+              <p className="text-sm leading-relaxed">{selected?.summary}</p>
+            </div>
+
+            <div className="rounded-xl border p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                Suggested next actions
+              </p>
+              <ul className="space-y-2">
+                {selected?.nextActions.map((action) => (
+                  <li key={action} className="flex items-start gap-2 text-sm">
+                    <CalendarCheck className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+                    <span>{action}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                What was said
+              </p>
+              <div className="space-y-3">
+                {selected?.transcript.map((line, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-lg p-3 text-sm ${
+                      line.speaker === "Rocky AI" ? "bg-primary/5 border border-primary/10" : "bg-muted/50"
+                    }`}
+                  >
+                    <p className="text-xs font-semibold text-muted-foreground mb-1">{line.speaker}</p>
+                    <p className="leading-relaxed">{line.text}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 };
