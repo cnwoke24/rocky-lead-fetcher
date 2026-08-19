@@ -381,6 +381,59 @@ const AutoDemo = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <Card className="xl:col-span-2">
               <CardHeader>
+                <CardTitle>Appointment Calendar</CardTitle>
+                <CardDescription>Days your AI agent has booked work into the shop</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <BookingsCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">
+                  {selectedDate ? formatDate(selectedDate) : "Upcoming Appointments"}
+                </CardTitle>
+                <CardDescription>
+                  {selectedDate
+                    ? `${visibleBookings.length} appointment${visibleBookings.length === 1 ? "" : "s"} this day`
+                    : "Next bookings on the schedule"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {visibleBookings.length === 0 && (
+                  <p className="text-sm text-muted-foreground">No appointments on this day.</p>
+                )}
+                {visibleBookings.slice(0, 5).map((b) => (
+                  <div key={b.id} className="rounded-xl border p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold truncate">{b.customer}</p>
+                        <p className="text-xs text-muted-foreground truncate">{b.service}</p>
+                      </div>
+                      <span className="text-xs font-medium whitespace-nowrap">{b.time}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-muted-foreground">
+                        {formatDay(b.date)} · {formatDate(b.date)}
+                      </span>
+                      <Badge className={bookingStatusClass(b.status)} variant="secondary">
+                        {b.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+                <Button variant="outline" size="sm" className="w-full" onClick={() => setView("calendar")}>
+                  <CalendarDays className="h-4 w-4" /> Open full calendar
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <Card className="xl:col-span-2">
+              <CardHeader>
                 <CardTitle>Recent AI Conversations</CardTitle>
                 <CardDescription>Calls handled automatically by your agent</CardDescription>
               </CardHeader>
