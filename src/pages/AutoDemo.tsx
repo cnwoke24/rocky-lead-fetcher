@@ -27,7 +27,15 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DemoWorkflowStudio } from "@/components/workflow-builder/DemoWorkflowStudio";
+import { WorkflowRequestCenter } from "@/components/workflow-builder/WorkflowRequestCenter";
+import { BookingsCalendar } from "@/components/auto-demo/BookingsCalendar";
+import {
+  bookings,
+  formatDate,
+  formatDay,
+  isSameDay,
+  type Booking,
+} from "@/components/auto-demo/bookings";
 import rockyLogo from "@/assets/rocky-logo.png";
 
 
