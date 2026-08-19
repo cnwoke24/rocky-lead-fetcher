@@ -473,40 +473,30 @@ const AutoDemo = () => {
                 <CardTitle>Recent AI Conversations</CardTitle>
                 <CardDescription>Calls handled automatically by your agent</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="rounded-lg border overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="whitespace-nowrap">Date/Time</TableHead>
-                        <TableHead>Customer Name</TableHead>
-                        <TableHead>Intent</TableHead>
-                        <TableHead>Outcome</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {conversations.map((c) => (
-                        <TableRow key={c.id}>
-                          <TableCell className="whitespace-nowrap text-muted-foreground">{c.datetime}</TableCell>
-                          <TableCell className="font-medium whitespace-nowrap">{c.name}</TableCell>
-                          <TableCell className="text-sm">{c.intent}</TableCell>
-                          <TableCell>
-                            <Badge className={outcomeClass(c.tone)} variant="secondary">
-                              {c.outcome}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="outline" size="sm" onClick={() => setSelected(c)}>
-                              View Transcript
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+              <CardContent className="space-y-2">
+                {conversations.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelected(c)}
+                    className="w-full text-left rounded-xl border bg-card p-3 flex items-center gap-3 transition-colors hover:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span
+                      className={`h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-xs font-semibold ${outcomeClass(c.tone)}`}
+                    >
+                      {c.name.split(" ").map((n) => n[0]).join("")}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold truncate">{c.name}</span>
+                      <span className="block text-xs text-muted-foreground truncate">
+                        {c.datetime} · {c.duration}
+                      </span>
+                    </span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                ))}
               </CardContent>
+
             </Card>
 
             <div className="space-y-6">
