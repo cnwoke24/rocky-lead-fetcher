@@ -4,6 +4,7 @@ import {
   Bot,
   CalendarCheck,
   CalendarDays,
+  Workflow,
   Car,
   ChevronDown,
   ClipboardCheck,
@@ -26,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DemoWorkflowStudio } from "@/components/workflow-builder/DemoWorkflowStudio";
 import rockyLogo from "@/assets/rocky-logo.png";
 
 
@@ -271,7 +273,7 @@ const SidebarLink = ({
 
 const AutoDemo = () => {
   const [selected, setSelected] = useState<Conversation | null>(null);
-  const [view, setView] = useState<"dashboard" | "calendar">("dashboard");
+  const [view, setView] = useState<"dashboard" | "calendar" | "workflows">("dashboard");
   const [toggles, setToggles] = useState({
     afterHours: true,
     reactivation: true,
@@ -323,6 +325,12 @@ const AutoDemo = () => {
                 active={view === "calendar"}
                 onClick={() => setView("calendar")}
               />
+              <SidebarLink
+                icon={<Workflow className="h-4 w-4" />}
+                label="Workflows"
+                active={view === "workflows"}
+                onClick={() => setView("workflows")}
+              />
               <SidebarLink icon={<Play className="h-4 w-4" />} label="Agent" />
               <SidebarLink icon={<User className="h-4 w-4" />} label="Profile" />
               <SidebarLink icon={<Settings className="h-4 w-4" />} label="Settings" />
@@ -339,7 +347,9 @@ const AutoDemo = () => {
               <p className="text-muted-foreground text-sm mt-1">
                 {view === "dashboard"
                   ? "Here's how your AI voice agent performed this week."
-                  : "Appointments your AI agent booked, with call context and next steps."}
+                  : view === "calendar"
+                    ? "Appointments your AI agent booked, with call context and next steps."
+                    : "Design the call, text, and follow-up sequences your AI agent runs."}
               </p>
             </div>
 
@@ -574,6 +584,10 @@ const AutoDemo = () => {
               ))}
             </div>
           )}
+
+          {view === "workflows" && <DemoWorkflowStudio />}
+
+
 
         </main>
       </div>
