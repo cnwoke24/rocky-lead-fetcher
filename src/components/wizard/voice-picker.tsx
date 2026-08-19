@@ -50,7 +50,7 @@ export function VoicePicker({
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 gap-3">
       {VOICES.map((v) => {
         const active = value === v.id;
         const isPlaying = playingId === v.id;
