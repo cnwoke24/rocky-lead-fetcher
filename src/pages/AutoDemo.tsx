@@ -7,6 +7,7 @@ import {
   Workflow,
   Car,
   ChevronDown,
+  ChevronRight,
   ClipboardCheck,
   Clock,
   Database,
