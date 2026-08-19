@@ -26,6 +26,9 @@ import GymPage3 from "./pages/GymPage3";
 import GymLeads from "./pages/GymLeads";
 import Privacy from "./pages/Privacy";
 import AutoDemo from "./pages/AutoDemo";
+import Workflows from "./pages/Workflows";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
+import CalendarPage from "./pages/CalendarPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
