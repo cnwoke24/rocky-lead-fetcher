@@ -216,81 +216,82 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-app flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37] mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground text-sm">Loading your dashboard…</p>
         </div>
       </div>
     );
   }
 
+  const firstName = (profile?.full_name || "").split(" ")[0];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
-      <header className="sticky top-0 z-30 backdrop-blur border-b">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center">
-              <img src={rockyLogo} alt="Rocky AI Logo" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground leading-none">Rocky AI</div>
-              <div className="text-base font-semibold leading-none">Customer Dashboard</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {subscription && (
-              <div className="text-right mr-2">
-                <div className="text-xs text-muted-foreground">Subscription</div>
-                <Badge variant={subscription.status === 'trial' ? 'secondary' : 'default'} className="text-xs">
-                  {subscription.status === 'trial' ? 'Free Trial' : 
-                   subscription.status === 'active' ? 'Active' : 
-                   subscription.status === 'past_due' ? 'Past Due' : 'Inactive'}
-                </Badge>
-              </div>
-            )}
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              Sign Out
-            </Button>
-          </div>
+    <AppShell
+      title={firstName ? `Welcome back, ${firstName}` : "Dashboard"}
+      subtitle="Track your setup, your workflows, and every call your AI agent handles."
+      actions={
+        <>
+          {subscription && <StatusBadge status={subscription.status === "trial" ? "pending" : subscription.status} />}
+          <Button variant="outline" size="sm" onClick={handleSignOut}>
+            Sign Out
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            label="Setup Progress"
+            value={`${[onboardingDone, agreementSigned, setupFeePaid].filter(Boolean).length}/3`}
+            hint="steps completed"
+            icon={ClipboardCheck}
+            tone="primary"
+          />
+          <StatCard
+            label="Agent Status"
+            value={agentEnabled ? "Live" : allPrereqsDone ? "Building" : "Locked"}
+            hint={agentEnabled ? "handling calls" : "not answering yet"}
+            icon={Bot}
+            tone={agentEnabled ? "success" : "muted"}
+          />
+          <StatCard
+            label="Recent Calls"
+            value={callsLoading ? "—" : (recentCalls?.length ?? 0)}
+            hint="in your latest batch"
+            icon={Play}
+            tone="primary"
+          />
+          <StatCard
+            label="Subscription"
+            value={
+              subscription?.status === "trial"
+                ? "Free Trial"
+                : subscription?.status === "active"
+                  ? "Active"
+                  : subscription?.status === "past_due"
+                    ? "Past Due"
+                    : "Inactive"
+            }
+            hint="billing plan"
+            icon={Wrench}
+            tone={subscription?.status === "active" ? "success" : "warning"}
+          />
         </div>
-      </header>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <aside className="lg:col-span-3 xl:col-span-2">
-          <Card className="sticky top-20">
-            <CardHeader>
-              <CardTitle className="text-base">Navigation</CardTitle>
-              <CardDescription>Manage your account and agent</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <SidebarLink icon={<Bot className="h-4 w-4" />} label="Dashboard" active={true} />
-              <SidebarLink icon={<Play className="h-4 w-4" />} label="Agent" disabled={!allPrereqsDone} />
-              <SidebarLink icon={<User className="h-4 w-4" />} label="Profile" />
-              <SidebarLink icon={<Settings className="h-4 w-4" />} label="Settings" />
-            </CardContent>
-          </Card>
-        </aside>
+        {(!subscription || !['trial', 'active'].includes(subscription.status)) && (
+          <div className="rounded-2xl border border-warning/40 bg-warning/10 p-5 shadow-card">
+            <h3 className="font-semibold">Subscription Required</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Start your free 14-day trial to access your AI voice agent and all features.
+            </p>
+            <Button className="mt-4" onClick={() => navigate("/subscription-payment")}>
+              Start Free Trial
+            </Button>
+          </div>
+        )}
 
-        <main className="lg:col-span-9 xl:col-span-10 space-y-6">
-          {(!subscription || !['trial', 'active'].includes(subscription.status)) && (
-            <Card className="border-orange-200 bg-orange-50">
-              <CardHeader>
-                <CardTitle className="text-orange-900">Subscription Required</CardTitle>
-                <CardDescription className="text-orange-700">
-                  Start your free 14-day trial to access your AI voice agent and all features.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button onClick={() => navigate("/subscription-payment")} className="bg-[#D4AF37] hover:bg-[#C5A028]">
-                  Start Free Trial
-                </Button>
-              </CardContent>
-            </Card>
-          )}
           
           <Card>
             <CardHeader>
