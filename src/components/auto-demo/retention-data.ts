@@ -4,6 +4,7 @@ export type CustomerStatus = "At Risk" | "Monitor" | "Loyal Customer";
 
 export type Customer = {
   id: string;
+  slug?: string;
   firstName: string;
   lastName: string;
   phone: string;
