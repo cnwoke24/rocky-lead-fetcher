@@ -26,7 +26,19 @@ const FUNCTION = "auto-demo-retell-call";
 async function callFunction<T>(body: Record<string, unknown>): Promise<T> {
   const { data, error } = await supabase.functions.invoke(FUNCTION, { body });
   if (error) {
-    const message = (data as { error?: string } | null)?.error ?? error.message;
+    let message = (data as { error?: string } | null)?.error ?? error.message;
+    const context = (error as { context?: { clone?: () => Response; json?: () => Promise<unknown> } }).context;
+
+    try {
+      const response = context?.clone?.() ?? context;
+      const payload = await response?.json?.();
+      if (payload && typeof payload === "object" && "error" in payload) {
+        message = String((payload as { error: unknown }).error);
+      }
+    } catch {
+      // Keep the SDK message when the provider response is not JSON.
+    }
+
     throw new Error(message);
   }
   if (data && typeof data === "object" && "error" in data) throw new Error(String((data as { error: string }).error));
