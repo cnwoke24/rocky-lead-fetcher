@@ -1,4 +1,4 @@
-# Demo call failure: voice provider account is unpaid
+# Verify and reconnect the correct Retell account
 
 ## What the logs show
 
@@ -10,22 +10,29 @@ Retell error { status: "error", message: "Payment overdue, service stopped." }
 ```
 
 So the agent ID, the from-number and Bob's record are all wired up and sent. Retell itself is refusing
-to place the call because the Retell account has an overdue balance and outbound calling is suspended.
+the request authenticated by the currently stored key. Since your Retell account shows no overdue balance,
+the most likely explanation is that the stored `RETELL_API_KEY` belongs to a different Retell account.
 
-Nothing in this project can fix that — the balance has to be settled in the Retell account. Once it is,
-the same button will place the call with no code changes.
+The key you just supplied will be stored securely and will not be added to frontend code or displayed.
 
 ## What the dashboard shows today
 
 The red toast only says "Edge Function returned a non-2xx status code", which hides the real reason.
 The function does return Retell's message, but the client throws before reading it.
 
-## Proposed fix (code)
+## Proposed fix
 
-1. In `src/components/auto-demo/demo-call.ts`, read the error response body when `supabase.functions.invoke`
+1. Replace the existing secure `RETELL_API_KEY` value with the key you just supplied.
+2. Before attempting another phone call, query Retell for agent
+   `agent_207fae2372f9309f151c8bb69b` using that key. This confirms the key and agent belong to the same
+   Retell account and that the agent is accessible.
+3. Verify the assigned outbound number `+14722261802` is available to that account.
+4. Redeploy the demo-call function so it loads the replaced key, then place one controlled test call to
+   Bob's saved destination and inspect the provider response.
+5. In `src/components/auto-demo/demo-call.ts`, read the error response body when `supabase.functions.invoke`
    fails (`error.context.json()` / `.text()`) and use the `error` field from it as the thrown message,
    falling back to the generic message only when no body is available.
-2. Keep the existing behaviour for successful calls unchanged.
+6. Keep the existing behaviour for successful calls unchanged.
 
 Result: pressing "Run demo call" while the provider account is unpaid will read
 "Payment overdue, service stopped." instead of a generic status-code message, and any future provider
@@ -33,9 +40,12 @@ error (bad number, agent misconfigured, rate limit) will surface the same way.
 
 ## Not changing
 
-- The agent ID, from-number, Bob's record, or the outreach simulation.
+- The agent ID, from-number, Bob's record, or the outreach simulation unless Retell's verification shows
+  that the supplied key cannot access that agent or number.
 - No retry loop — a payment block is terminal until the account is settled.
 
-## Your action
+## Expected outcome
 
-Settle the overdue balance on the Retell account, then press "Run demo call" again.
+The dashboard will use the newly supplied Retell key, with the agent and assigned number verified against
+the same account. If Retell still rejects the call, the dashboard will show Retell's exact reason instead
+of the generic non-2xx message.
