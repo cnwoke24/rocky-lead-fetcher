@@ -53,3 +53,40 @@ export const saveDemoCustomer = (slug: string, values: Partial<DemoCustomerRecor
 
 export const runDemoCall = (slug: string) =>
   callFunction<{ success: boolean; callId?: string; to: string }>({ action: "call", slug });
+
+export type DemoCallResult = {
+  id: string;
+  call_id: string;
+  customer_slug: string | null;
+  call_status: string | null;
+  outcome: string | null;
+  duration_seconds: number | null;
+  summary: string | null;
+  transcript: string | null;
+  recording_url: string | null;
+  sentiment: string | null;
+  to_number: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  created_at: string;
+};
+
+export async function fetchDemoCallResults(limit = 20): Promise<DemoCallResult[]> {
+  const { data, error } = await supabase
+    .from("demo_call_results")
+    .select("id, call_id, customer_slug, call_status, outcome, duration_seconds, summary, transcript, recording_url, sentiment, to_number, started_at, ended_at, created_at")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as DemoCallResult[];
+}
+
+export async function fetchDemoCallResult(callId: string): Promise<DemoCallResult | null> {
+  const { data, error } = await supabase
+    .from("demo_call_results")
+    .select("id, call_id, customer_slug, call_status, outcome, duration_seconds, summary, transcript, recording_url, sentiment, to_number, started_at, ended_at, created_at")
+    .eq("call_id", callId)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data as DemoCallResult | null) ?? null;
+}

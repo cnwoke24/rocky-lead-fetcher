@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.create-gym-checkout]
 verify_jwt = false
+
+[functions.auto-demo-call-webhook]
+verify_jwt = false
