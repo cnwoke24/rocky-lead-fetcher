@@ -45,6 +45,7 @@ const kpis = [
 ];
 
 const automations = [
+  { id: "bob", title: "Call Bob for Visit 3 campaign", detail: "Bob Hensley · 92 days since visit · $34.75 loyalty credit", time: "Ready now", type: "Live demo AI call", icon: PhoneCall, demo: true },
   { id: "mike", title: "Bring Mike back for visit 4", detail: "Mike Prouse · 92 days since visit · $31.60 loyalty credit", time: "Today, 10:30 AM", type: "Personalized AI call", icon: PhoneCall },
   { id: "sarah", title: "Send Sarah a service reminder", detail: "Sarah Johnson · Visit 2 → 3 · Oil change reminder", time: "Today, 11:00 AM", type: "Follow-up email", icon: Mail },
   { id: "robert", title: "Reconnect with Robert", detail: "Robert Miller · Visit 3 → 4 · 119 days since visit", time: "Today, 1:00 PM", type: "Personalized AI call", icon: PhoneCall },
