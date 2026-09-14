@@ -56,7 +56,7 @@ export const createCustomer = (visits: number): Customer => {
     4: { completedVisits: 4, visitStage: "Visit 4+", lastVisit: "Today", daysSinceVisit: 0, lastService: "Tire Rotation + Multi-Point Inspection", recommendedService: "Seasonal Maintenance", loyaltyCredit: 44.25, campaignReason: "Long-term retention", campaignGoal: "Ongoing retention / maintenance", status: "Loyal Customer", nextAction: "Schedule next maintenance reminder" },
   };
   const scenario = scenarios[Math.min(4, Math.max(1, visits))];
-  return { id: "cust-mike", firstName: "Mike", lastName: "Prouse", phone: "(717) 555-0148", email: "mike.prouse@example.com", vehicle: "2021 Honda Accord", ...scenario };
+  return { id: "cust-mike", slug: "mike", firstName: "Mike", lastName: "Prouse", phone: "(717) 392-6453", email: "mike.prouse@example.com", vehicle: "2021 Honda Accord", ...scenario };
 };
 
 export const initialCustomers: Customer[] = [
