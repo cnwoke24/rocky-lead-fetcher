@@ -27,7 +27,7 @@ import {
   getCallOutcome, sampleImportRows, sendEmail, simulateCompletedVisit, syncCustomerData,
   triggerRetellCall, updateCustomerRecord, uploadCustomerFile, type ImportedRow,
 } from "./mock-services";
-import { fetchDemoCustomers, runDemoCall, saveDemoCustomer, type DemoCustomerRecord } from "./demo-call";
+import { fetchDemoCustomers, runDemoCall, saveDemoCustomer } from "./demo-call";
 
 const navItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard }, { id: "customers", label: "Customers", icon: Users },
