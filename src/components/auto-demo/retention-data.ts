@@ -1,4 +1,4 @@
-export type DemoView = "overview" | "customers" | "campaigns" | "calls" | "integrations" | "analytics" | "settings";
+export type DemoView = "overview" | "customers" | "campaigns" | "calls" | "analytics" | "settings";
 export type VisitStage = "Visit 1" | "Visit 2" | "Visit 3" | "Visit 4+";
 export type CustomerStatus = "At Risk" | "Monitor" | "Loyal Customer" | "Visit Confirmed";
 

@@ -9,3 +9,4 @@
 - [x] Replace the Retell credential, verify it can access the configured agent/number, and surface provider errors clearly- [x] Receive call results via webhook and surface them in the auto-demo dashboard
 
 - [x] Fix post-call results (visit confirmed detection), new outcome fields, follow-up rules, confirmation celebration
+- [x] Brand `/auto-demo` for Mike's Motor Zone, add collapsible navigation, remove Integrations, and polish motion

@@ -94,7 +94,38 @@ All colors MUST be HSL.
   }
 
   .auto-demo-shell [data-dashboard-card] {
-    @apply border-app-border bg-card shadow-none;
+    @apply border-app-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300;
+  }
+
+  .auto-demo-shell [data-dashboard-card]:hover {
+    @apply -translate-y-0.5 border-primary/20 shadow-elevated;
+  }
+
+  .auto-demo-page > * {
+    animation: fade-in 0.45s ease-out both;
+  }
+
+  .auto-demo-page > *:nth-child(2) {
+    animation-delay: 70ms;
+  }
+
+  .auto-demo-page > *:nth-child(3) {
+    animation-delay: 140ms;
+  }
+
+  .auto-demo-page > *:nth-child(4) {
+    animation-delay: 210ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .auto-demo-shell *,
+    .auto-demo-shell *::before,
+    .auto-demo-shell *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
