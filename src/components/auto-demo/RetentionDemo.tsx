@@ -365,7 +365,7 @@ export function RetentionDemo() {
         </header>
 
         <main className="mx-auto max-w-[1180px] space-y-7 p-4 sm:p-6 lg:px-9 lg:py-8">
-          <div className="animate-fade-in flex flex-wrap items-end justify-between gap-3"><div><h1 className="text-[clamp(1.55rem,3vw,2rem)] font-bold tracking-normal">{view === "overview" ? "Mike's Motor Zone Retention Workflow" : navItems.find((item) => item.id === view)?.label}</h1><p className="mt-1 text-sm text-muted-foreground">{view === "overview" ? "Build the next visit. Let Rocky handle the follow-up." : pageSubtitle[view]}</p></div>{view === "customers" && <Button className="bg-retention text-retention-foreground hover:bg-retention/90" onClick={() => setSelectedId("cust-mike")}><Sparkles /> Open Mike Prouse</Button>}</div>
+          <div className="animate-fade-in flex flex-wrap items-end justify-between gap-3"><div><h1 className="text-[clamp(1.55rem,3vw,2rem)] font-bold tracking-normal">{view === "overview" ? "Mike's Motor Zone Retention Workflow" : navItems.find((item) => item.id === view)?.label}</h1><p className="mt-1 text-sm text-muted-foreground">{view === "overview" ? "Build the next visit. Let Rocky handle the follow-up." : pageSubtitle[view]}</p></div></div>
 
           <div key={view} className="auto-demo-page animate-fade-in">
             {view === "overview" && <Overview customers={customers} activities={activities} calls={calls} onCustomer={setSelectedId} onCall={setSelectedCall} onNavigate={navigate} onSendEmail={sendDemoEmail} onDemoCall={() => startDemoCall("bob")} demoCalling={demoCalling} />}
