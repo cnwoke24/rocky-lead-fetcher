@@ -5,3 +5,4 @@
 - [x] Add upload, campaigns, calls, integrations, analytics, and settings views
 - [x] Add semantic dashboard colors and responsive behavior
 - [x] Verify desktop/mobile interactions and console output
+- [x] Connect Retell agent `agent_207fae2372f9309f151c8bb69b` with from-number +1(472)226-1802 to the auto-demo dashboard call flow
