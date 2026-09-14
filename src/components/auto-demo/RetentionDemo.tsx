@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import {
   Activity as ActivityIcon, BarChart3, Bell, Bot, Building2, Check, CheckCircle2, ChevronRight,
-  CircleDollarSign, Clock3, Database, FileSpreadsheet, Gauge, History, Inbox, LayoutDashboard,
-  Mail, Menu, PhoneCall, Search, Settings, Sparkles, Target, Upload, UserRound, Users, X,
+  CircleDollarSign, Database, FileSpreadsheet, History, Inbox, LayoutDashboard,
+  Mail, Menu, PhoneCall, Search, Settings, Sparkles, Target, Upload, UserRound, Users,
 } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
