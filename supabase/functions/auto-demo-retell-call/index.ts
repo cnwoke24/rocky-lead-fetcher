@@ -8,8 +8,8 @@ const corsHeaders = {
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
-const FALLBACK_AGENT_ID = "agent_63426c2713064c5f302799ae36";
-const FROM_NUMBER = "+19163144644";
+const FALLBACK_AGENT_ID = "agent_207fae2372f9309f151c8bb69b";
+const FROM_NUMBER = "+14722261802";
 
 const EDITABLE_FIELDS = [
   "first_name", "last_name", "phone_number", "email",
