@@ -60,17 +60,48 @@ Deno.serve(async (req) => {
       return json({ customer: data });
     }
 
+    const apiKey = Deno.env.get("RETELL_API_KEY");
+    if (!apiKey) return json({ error: "The voice provider is not connected yet." }, 500);
+
+    const agentId = Deno.env.get("RETELL_AUTO_DEMO_AGENT_ID") || FALLBACK_AGENT_ID;
+
+    if (action === "verify") {
+      const headers = { Authorization: `Bearer ${apiKey}` };
+      const [agentResponse, numbersResponse] = await Promise.all([
+        fetch(`https://api.retellai.com/get-agent/${encodeURIComponent(agentId)}`, { headers }),
+        fetch("https://api.retellai.com/list-phone-numbers", { headers }),
+      ]);
+      const agentResult = await agentResponse.json().catch(() => ({}));
+      const numbersResult = await numbersResponse.json().catch(() => []);
+      const numbers = Array.isArray(numbersResult) ? numbersResult : [];
+      const numberAvailable = numbers.some((entry) =>
+        typeof entry === "object" && entry !== null &&
+        "phone_number" in entry && entry.phone_number === FROM_NUMBER
+      );
+
+      if (!agentResponse.ok || !numbersResponse.ok) {
+        const failure = !agentResponse.ok ? agentResult : numbersResult;
+        const detail = typeof failure === "object" && failure !== null && "message" in failure
+          ? String(failure.message)
+          : "Retell account verification failed.";
+        return json({ error: detail, agentStatus: agentResponse.status, numbersStatus: numbersResponse.status }, 502);
+      }
+
+      return json({
+        connected: true,
+        agentAccessible: typeof agentResult === "object" && agentResult !== null && "agent_id" in agentResult,
+        numberAvailable,
+        agentId,
+        fromNumber: FROM_NUMBER,
+      });
+    }
+
     if (action !== "call") return json({ error: "Unsupported action" }, 400);
 
     const { data: customer, error } = await supabase
       .from("demo_customers").select("*").eq("slug", slug).maybeSingle();
     if (error) return json({ error: error.message }, 500);
     if (!customer) return json({ error: `No demo customer found for "${slug}"` }, 404);
-
-    const apiKey = Deno.env.get("RETELL_API_KEY");
-    if (!apiKey) return json({ error: "The voice provider is not connected yet." }, 500);
-
-    const agentId = Deno.env.get("RETELL_AUTO_DEMO_AGENT_ID") || FALLBACK_AGENT_ID;
 
     const toNumber = normalizePhone(
       typeof body.phone === "string" && body.phone.trim() ? body.phone : customer.phone_number,
