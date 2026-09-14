@@ -199,6 +199,75 @@ export type Database = {
           },
         ]
       }
+      demo_customers: {
+        Row: {
+          campaign_goal: string
+          completed_visits: number
+          created_at: string
+          current_visit_stage: string
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string
+          last_service: string
+          last_visit_date: string
+          loyalty_credit: string
+          offer_description: string
+          phone_number: string
+          reason_for_call: string
+          recommended_service: string
+          slug: string
+          updated_at: string
+          vehicle_make: string
+          vehicle_model: string
+          vehicle_year: string
+        }
+        Insert: {
+          campaign_goal?: string
+          completed_visits?: number
+          created_at?: string
+          current_visit_stage?: string
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name?: string
+          last_service?: string
+          last_visit_date?: string
+          loyalty_credit?: string
+          offer_description?: string
+          phone_number: string
+          reason_for_call?: string
+          recommended_service?: string
+          slug: string
+          updated_at?: string
+          vehicle_make?: string
+          vehicle_model?: string
+          vehicle_year?: string
+        }
+        Update: {
+          campaign_goal?: string
+          completed_visits?: number
+          created_at?: string
+          current_visit_stage?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          last_service?: string
+          last_visit_date?: string
+          loyalty_credit?: string
+          offer_description?: string
+          phone_number?: string
+          reason_for_call?: string
+          recommended_service?: string
+          slug?: string
+          updated_at?: string
+          vehicle_make?: string
+          vehicle_model?: string
+          vehicle_year?: string
+        }
+        Relationships: []
+      }
       gym_leads: {
         Row: {
           business_name: string | null

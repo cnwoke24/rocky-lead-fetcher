@@ -4,6 +4,7 @@ export type CustomerStatus = "At Risk" | "Monitor" | "Loyal Customer";
 
 export type Customer = {
   id: string;
+  slug?: string;
   firstName: string;
   lastName: string;
   phone: string;
@@ -52,6 +53,7 @@ export const createCustomer = (visits: number): Customer => {
 };
 
 export const initialCustomers: Customer[] = [
+  { id: "cust-bob", slug: "bob", firstName: "Bob", lastName: "Hensley", phone: "(717) 555-0162", email: "bob.hensley@example.com", vehicle: "2020 Toyota Tacoma", completedVisits: 3, visitStage: "Visit 3", lastVisit: "92 days ago", daysSinceVisit: 92, lastService: "Oil Change + Multi-Point Inspection", recommendedService: "Tire Rotation", loyaltyCredit: 34.75, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "At Risk", nextAction: "Contact for Visit 4" },
   createCustomer(3),
   { id: "cust-sarah", firstName: "Sarah", lastName: "Johnson", phone: "(717) 555-0193", email: "sarah.johnson@example.com", vehicle: "2019 Toyota RAV4", completedVisits: 2, visitStage: "Visit 2", lastVisit: "104 days ago", daysSinceVisit: 104, lastService: "Multi-Point Inspection", recommendedService: "Oil Change", loyaltyCredit: 18.2, campaignReason: "Overdue maintenance", campaignGoal: "Get Visit 3", status: "At Risk", nextAction: "Contact for Visit 3" },
   { id: "cust-robert", firstName: "Robert", lastName: "Miller", phone: "(717) 555-0176", email: "robert.miller@example.com", vehicle: "2020 Ford F-150", completedVisits: 3, visitStage: "Visit 3", lastVisit: "119 days ago", daysSinceVisit: 119, lastService: "Oil Change", recommendedService: "Brake Inspection", loyaltyCredit: 42.5, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "At Risk", nextAction: "Contact for Visit 4" },
