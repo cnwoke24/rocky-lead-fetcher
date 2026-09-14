@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Activity as ActivityIcon, BarChart3, Bot, Building2, Check, CheckCircle2, ChevronRight,
   CircleDollarSign, Database, FileSpreadsheet, History, Inbox, LayoutDashboard,
@@ -27,6 +27,7 @@ import {
   getCallOutcome, sampleImportRows, sendEmail, simulateCompletedVisit, syncCustomerData,
   triggerRetellCall, updateCustomerRecord, uploadCustomerFile, type ImportedRow,
 } from "./mock-services";
+import { fetchDemoCustomers, runDemoCall, saveDemoCustomer, type DemoCustomerRecord } from "./demo-call";
 
 const navItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard }, { id: "customers", label: "Customers", icon: Users },
