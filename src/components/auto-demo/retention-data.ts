@@ -1,6 +1,8 @@
 export type DemoView = "overview" | "customers" | "campaigns" | "calls" | "integrations" | "analytics" | "settings";
 export type VisitStage = "Visit 1" | "Visit 2" | "Visit 3" | "Visit 4+";
-export type CustomerStatus = "At Risk" | "Monitor" | "Loyal Customer";
+export type CustomerStatus = "At Risk" | "Monitor" | "Loyal Customer" | "Visit Confirmed";
+
+export type ConfirmedVisit = { day: string; confirmedAt: string; followUpAt: string };
 
 export type Customer = {
   id: string;
@@ -21,9 +23,12 @@ export type Customer = {
   campaignGoal: string;
   status: CustomerStatus;
   nextAction: string;
+  confirmedVisit?: ConfirmedVisit | null;
 };
 
-export type Activity = { id: string; title: string; time: string; kind: "call" | "email" | "appointment" | "stage" | "sync" };
+export type Activity = { id: string; title: string; time: string; kind: "call" | "email" | "appointment" | "stage" | "sync"; celebrate?: boolean };
+
+export type CallOutcome = "Spoke with customer" | "Voicemail" | "No answer";
 
 export type CallRecord = {
   id: string;
@@ -31,15 +36,17 @@ export type CallRecord = {
   campaign: string;
   date: string;
   duration: string;
-  outcome: string;
-  sentiment: "Positive" | "Neutral";
-  appointment: "Booked" | "Pending" | "No";
+  outcome: CallOutcome;
+  visitConfirmed: boolean;
+  scheduledVisit: string | null;
+  nextFollowUp: string;
+  followUpReason: string;
   emailSent: boolean;
-  service: string;
-  loyaltyCredit: string;
   summary: string;
   transcript: { speaker: "Rocky AI" | "Customer"; text: string }[];
 };
+
+export const stageForVisits = (visits: number): VisitStage => visits >= 4 ? "Visit 4+" : (`Visit ${Math.max(1, visits)}` as VisitStage);
 
 export const createCustomer = (visits: number): Customer => {
   const scenarios: Record<number, Omit<Customer, "id" | "firstName" | "lastName" | "phone" | "email" | "vehicle">> = {
@@ -56,7 +63,7 @@ export const initialCustomers: Customer[] = [
   { id: "cust-bob", slug: "bob", firstName: "Bob", lastName: "Hensley", phone: "(717) 555-0162", email: "bob.hensley@example.com", vehicle: "2020 Toyota Tacoma", completedVisits: 3, visitStage: "Visit 3", lastVisit: "92 days ago", daysSinceVisit: 92, lastService: "Oil Change + Multi-Point Inspection", recommendedService: "Tire Rotation", loyaltyCredit: 34.75, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "At Risk", nextAction: "Contact for Visit 4" },
   createCustomer(3),
   { id: "cust-sarah", firstName: "Sarah", lastName: "Johnson", phone: "(717) 555-0193", email: "sarah.johnson@example.com", vehicle: "2019 Toyota RAV4", completedVisits: 2, visitStage: "Visit 2", lastVisit: "104 days ago", daysSinceVisit: 104, lastService: "Multi-Point Inspection", recommendedService: "Oil Change", loyaltyCredit: 18.2, campaignReason: "Overdue maintenance", campaignGoal: "Get Visit 3", status: "At Risk", nextAction: "Contact for Visit 3" },
-  { id: "cust-robert", firstName: "Robert", lastName: "Miller", phone: "(717) 555-0176", email: "robert.miller@example.com", vehicle: "2020 Ford F-150", completedVisits: 3, visitStage: "Visit 3", lastVisit: "119 days ago", daysSinceVisit: 119, lastService: "Oil Change", recommendedService: "Brake Inspection", loyaltyCredit: 42.5, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "At Risk", nextAction: "Contact for Visit 4" },
+  { id: "cust-robert", firstName: "Robert", lastName: "Miller", phone: "(717) 555-0176", email: "robert.miller@example.com", vehicle: "2020 Ford F-150", completedVisits: 3, visitStage: "Visit 3", lastVisit: "119 days ago", daysSinceVisit: 119, lastService: "Oil Change", recommendedService: "Brake Inspection", loyaltyCredit: 42.5, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "Visit Confirmed", nextAction: "Visit 4 confirmed · Thursday", confirmedVisit: { day: "Thursday morning", confirmedAt: new Date().toISOString(), followUpAt: new Date(Date.now() + 3 * 86_400_000).toISOString() } },
   { id: "cust-jennifer", firstName: "Jennifer", lastName: "Williams", phone: "(717) 555-0124", email: "jennifer.williams@example.com", vehicle: "2022 Honda CR-V", completedVisits: 1, visitStage: "Visit 1", lastVisit: "45 days ago", daysSinceVisit: 45, lastService: "First Oil Change", recommendedService: "Routine Follow-Up", loyaltyCredit: 8.75, campaignReason: "First-visit follow-up", campaignGoal: "Get Visit 2", status: "Monitor", nextAction: "Contact for Visit 2" },
   { id: "cust-alicia", firstName: "Alicia", lastName: "Grant", phone: "(717) 555-0181", email: "alicia.grant@example.com", vehicle: "2018 Mazda CX-5", completedVisits: 3, visitStage: "Visit 3", lastVisit: "87 days ago", daysSinceVisit: 87, lastService: "Brake Service", recommendedService: "Tire Rotation", loyaltyCredit: 27.1, campaignReason: "Priority retention stage", campaignGoal: "Get Visit 4", status: "At Risk", nextAction: "Contact for Visit 4" },
 ];
@@ -78,9 +85,9 @@ export const campaigns = [
 ];
 
 export const initialCalls: CallRecord[] = [
-  { id: "call-mike", customer: "Mike Prouse", campaign: "Visit 3 → Visit 4 Priority Retention", date: "Today, 10:42 AM", duration: "4m 32s", outcome: "Interested", sentiment: "Positive", appointment: "Pending", emailSent: true, service: "Tire Rotation", loyaltyCredit: "$31.60", summary: "Mike confirmed he still owns the vehicle and is interested in scheduling his next maintenance visit. Loyalty credit was discussed. Customer requested additional information by email.", transcript: [{ speaker: "Rocky AI", text: "Hi Mike, this is Rocky calling from Mike's Motor Zone. I’m reaching out about your Accord’s next maintenance visit." }, { speaker: "Customer", text: "Yes, I still have the Accord. What service is coming up?" }, { speaker: "Rocky AI", text: "A tire rotation is recommended, and you currently have $31.60 in loyalty credit available." }, { speaker: "Customer", text: "That sounds good. Email me the details and I’ll look at my schedule." }] },
-  { id: "call-robert", customer: "Robert Miller", campaign: "Visit 3 → Visit 4 Priority Retention", date: "Today, 9:18 AM", duration: "3m 06s", outcome: "Booked", sentiment: "Positive", appointment: "Booked", emailSent: true, service: "Brake Inspection", loyaltyCredit: "$42.50", summary: "Robert booked a brake inspection for Thursday morning after reviewing his available loyalty credit.", transcript: [{ speaker: "Rocky AI", text: "Hi Robert, your F-150 is due for a brake inspection." }, { speaker: "Customer", text: "Thursday morning would work." }] },
-  { id: "call-sarah", customer: "Sarah Johnson", campaign: "Visit 2 → Visit 3 Retention", date: "Yesterday, 3:35 PM", duration: "2m 41s", outcome: "Callback Requested", sentiment: "Neutral", appointment: "No", emailSent: true, service: "Oil Change", loyaltyCredit: "$18.20", summary: "Sarah asked for a callback next Tuesday after checking her work schedule.", transcript: [{ speaker: "Rocky AI", text: "Hi Sarah, I’m calling about your next oil change." }, { speaker: "Customer", text: "Could someone call me next Tuesday?" }] },
+  { id: "call-mike", customer: "Mike Prouse", campaign: "Visit 3 → Visit 4 Priority Retention", date: "Today, 10:42 AM", duration: "4m 32s", outcome: "Spoke with customer", visitConfirmed: false, scheduledVisit: null, nextFollowUp: "In 3 days", followUpReason: "Visit not confirmed · follow up on the offer", emailSent: true, summary: "Mike confirmed he still owns the vehicle and is interested in scheduling his next maintenance visit. Loyalty credit was discussed. Customer requested additional information by email.", transcript: [{ speaker: "Rocky AI", text: "Hi Mike, this is Rocky calling from Mike's Motor Zone. I’m reaching out about your Accord’s next maintenance visit." }, { speaker: "Customer", text: "Yes, I still have the Accord. What service is coming up?" }, { speaker: "Rocky AI", text: "A tire rotation is recommended, and you currently have $31.60 in loyalty credit available." }, { speaker: "Customer", text: "That sounds good. Email me the details and I’ll look at my schedule." }] },
+  { id: "call-robert", customer: "Robert Miller", campaign: "Visit 3 → Visit 4 Priority Retention", date: "Today, 9:18 AM", duration: "3m 06s", outcome: "Spoke with customer", visitConfirmed: true, scheduledVisit: "Thursday morning", nextFollowUp: "Friday", followUpReason: "Confirm the visit happened", emailSent: true, summary: "Robert booked a brake inspection for Thursday morning after reviewing his available loyalty credit.", transcript: [{ speaker: "Rocky AI", text: "Hi Robert, your F-150 is due for a brake inspection." }, { speaker: "Customer", text: "Thursday morning would work." }] },
+  { id: "call-sarah", customer: "Sarah Johnson", campaign: "Visit 2 → Visit 3 Retention", date: "Yesterday, 3:35 PM", duration: "0m 38s", outcome: "Voicemail", visitConfirmed: false, scheduledVisit: null, nextFollowUp: "In 3 days", followUpReason: "Left voicemail · retry call", emailSent: true, summary: "Reached Sarah's voicemail and left a short reminder about her overdue oil change and available loyalty credit.", transcript: [{ speaker: "Rocky AI", text: "Hi Sarah, this is Rocky from Mike's Motor Zone calling about your next oil change. We'll try you again in a few days." }] },
 ];
 
 export const initialActivity: Activity[] = [

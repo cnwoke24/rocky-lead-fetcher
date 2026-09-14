@@ -209,17 +209,22 @@ export type Database = {
           disconnection_reason: string | null
           duration_seconds: number | null
           ended_at: string | null
+          follow_up_reason: string | null
           from_number: string | null
           id: string
+          in_voicemail: boolean | null
+          next_follow_up_at: string | null
           outcome: string | null
           raw: Json | null
           recording_url: string | null
+          scheduled_visit: string | null
           sentiment: string | null
           started_at: string | null
           summary: string | null
           to_number: string | null
           transcript: string | null
           updated_at: string
+          visit_confirmed: boolean | null
         }
         Insert: {
           agent_id?: string | null
@@ -230,17 +235,22 @@ export type Database = {
           disconnection_reason?: string | null
           duration_seconds?: number | null
           ended_at?: string | null
+          follow_up_reason?: string | null
           from_number?: string | null
           id?: string
+          in_voicemail?: boolean | null
+          next_follow_up_at?: string | null
           outcome?: string | null
           raw?: Json | null
           recording_url?: string | null
+          scheduled_visit?: string | null
           sentiment?: string | null
           started_at?: string | null
           summary?: string | null
           to_number?: string | null
           transcript?: string | null
           updated_at?: string
+          visit_confirmed?: boolean | null
         }
         Update: {
           agent_id?: string | null
@@ -251,17 +261,22 @@ export type Database = {
           disconnection_reason?: string | null
           duration_seconds?: number | null
           ended_at?: string | null
+          follow_up_reason?: string | null
           from_number?: string | null
           id?: string
+          in_voicemail?: boolean | null
+          next_follow_up_at?: string | null
           outcome?: string | null
           raw?: Json | null
           recording_url?: string | null
+          scheduled_visit?: string | null
           sentiment?: string | null
           started_at?: string | null
           summary?: string | null
           to_number?: string | null
           transcript?: string | null
           updated_at?: string
+          visit_confirmed?: boolean | null
         }
         Relationships: []
       }
@@ -269,6 +284,9 @@ export type Database = {
         Row: {
           campaign_goal: string
           completed_visits: number
+          confirmed_follow_up_at: string | null
+          confirmed_visit_at: string | null
+          confirmed_visit_day: string | null
           created_at: string
           current_visit_stage: string
           email: string | null
@@ -291,6 +309,9 @@ export type Database = {
         Insert: {
           campaign_goal?: string
           completed_visits?: number
+          confirmed_follow_up_at?: string | null
+          confirmed_visit_at?: string | null
+          confirmed_visit_day?: string | null
           created_at?: string
           current_visit_stage?: string
           email?: string | null
@@ -313,6 +334,9 @@ export type Database = {
         Update: {
           campaign_goal?: string
           completed_visits?: number
+          confirmed_follow_up_at?: string | null
+          confirmed_visit_at?: string | null
+          confirmed_visit_day?: string | null
           created_at?: string
           current_visit_stage?: string
           email?: string | null

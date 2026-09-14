@@ -17,6 +17,7 @@ const EDITABLE_FIELDS = [
   "completed_visits", "current_visit_stage", "last_visit_date",
   "last_service", "recommended_service", "loyalty_credit",
   "campaign_goal", "reason_for_call", "offer_description",
+  "confirmed_visit_day", "confirmed_visit_at", "confirmed_follow_up_at",
 ] as const;
 
 const normalizePhone = (value: string) => {

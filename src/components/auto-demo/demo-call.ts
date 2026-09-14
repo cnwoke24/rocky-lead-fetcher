@@ -19,6 +19,9 @@ export type DemoCustomerRecord = {
   campaign_goal: string;
   reason_for_call: string;
   offer_description: string;
+  confirmed_visit_day: string | null;
+  confirmed_visit_at: string | null;
+  confirmed_follow_up_at: string | null;
 };
 
 const FUNCTION = "auto-demo-retell-call";
@@ -66,15 +69,21 @@ export type DemoCallResult = {
   recording_url: string | null;
   sentiment: string | null;
   to_number: string | null;
+  visit_confirmed: boolean | null;
+  scheduled_visit: string | null;
+  next_follow_up_at: string | null;
+  follow_up_reason: string | null;
   started_at: string | null;
   ended_at: string | null;
   created_at: string;
 };
 
+const RESULT_COLUMNS = "id, call_id, customer_slug, call_status, outcome, duration_seconds, summary, transcript, recording_url, sentiment, to_number, visit_confirmed, scheduled_visit, next_follow_up_at, follow_up_reason, started_at, ended_at, created_at";
+
 export async function fetchDemoCallResults(limit = 20): Promise<DemoCallResult[]> {
   const { data, error } = await supabase
     .from("demo_call_results")
-    .select("id, call_id, customer_slug, call_status, outcome, duration_seconds, summary, transcript, recording_url, sentiment, to_number, started_at, ended_at, created_at")
+    .select(RESULT_COLUMNS)
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw new Error(error.message);
@@ -84,7 +93,7 @@ export async function fetchDemoCallResults(limit = 20): Promise<DemoCallResult[]
 export async function fetchDemoCallResult(callId: string): Promise<DemoCallResult | null> {
   const { data, error } = await supabase
     .from("demo_call_results")
-    .select("id, call_id, customer_slug, call_status, outcome, duration_seconds, summary, transcript, recording_url, sentiment, to_number, started_at, ended_at, created_at")
+    .select(RESULT_COLUMNS)
     .eq("call_id", callId)
     .maybeSingle();
   if (error) throw new Error(error.message);
