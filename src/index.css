@@ -63,6 +63,15 @@ All colors MUST be HSL.
     --sidebar-border: 218 20% 91%;
     --sidebar-ring: 217 91% 45%;
 
+    --demo-navy: 222 47% 11%;
+    --demo-navy-foreground: 210 40% 98%;
+    --demo-navy-muted: 215 20% 65%;
+    --demo-navy-accent: 217 33% 18%;
+    --retention: 24 94% 50%;
+    --retention-foreground: 0 0% 100%;
+    --retention-soft: 24 100% 95%;
+    --retention-soft-foreground: 20 83% 31%;
+
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
     --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
