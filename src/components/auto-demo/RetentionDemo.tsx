@@ -202,7 +202,8 @@ export function RetentionDemo() {
     try {
       const result = await runDemoCall(slug);
       setActivities((current) => [{ id: `live-${Date.now()}`, title: `Live demo call placed to ${name} (${result.to})`, time: "Just now", kind: "call" }, ...current]);
-      toast({ title: "Call placed", description: `Rocky is calling ${result.to} now.` });
+      toast({ title: "Call placed", description: `Rocky is calling ${result.to} now. Results will appear here when the call ends.` });
+      if (result.callId) void watchCallResult(result.callId, name);
     } catch (error) {
       toast({ variant: "destructive", title: "Call could not be placed", description: error instanceof Error ? error.message : "Please try again." });
     } finally {
