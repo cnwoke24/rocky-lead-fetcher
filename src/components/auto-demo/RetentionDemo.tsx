@@ -84,10 +84,6 @@ const confirmedFromRecord = (record: DemoCustomerRecord): ConfirmedVisit | null 
 const withConfirmedVisit = (customer: Customer, confirmed: ConfirmedVisit | null): Customer => ({
   ...customer,
   confirmedVisit: confirmed,
-  status: confirmed ? "Visit Confirmed" : customer.status === "Visit Confirmed" ? "At Risk" : customer.status,
-  nextAction: confirmed
-    ? isPast(confirmed.followUpAt) ? "Missed visit · follow up" : `Visit ${Math.min(4, customer.completedVisits + 1)} confirmed · ${confirmed.day}`
-    : customer.nextAction === "Missed visit · follow up" || customer.nextAction.startsWith("Visit ") && customer.nextAction.includes("confirmed") ? `Contact for Visit ${Math.min(4, customer.completedVisits + 1)}` : customer.nextAction,
 });
 
 const celebrate = () => {
