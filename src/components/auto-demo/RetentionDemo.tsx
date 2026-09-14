@@ -82,6 +82,67 @@ export function RetentionDemo() {
   const [analyzedRows, setAnalyzedRows] = useState<ImportedRow[]>([]);
   const [importName, setImportName] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [demoCalling, setDemoCalling] = useState(false);
+  const [savingRecord, setSavingRecord] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetchDemoCustomers()
+      .then((records) => {
+        if (!active) return;
+        setCustomers((current) => current.map((customer) => {
+          const record = records.find((item) => item.slug === customer.slug);
+          if (!record) return customer;
+          return {
+            ...customer,
+            firstName: record.first_name,
+            lastName: record.last_name,
+            phone: record.phone_number,
+            email: record.email ?? customer.email,
+            vehicle: [record.vehicle_year, record.vehicle_make, record.vehicle_model].filter(Boolean).join(" "),
+            completedVisits: record.completed_visits,
+            lastVisit: record.last_visit_date,
+            lastService: record.last_service,
+            recommendedService: record.recommended_service,
+            loyaltyCredit: Number(String(record.loyalty_credit).replace(/[^0-9.]/g, "")) || customer.loyaltyCredit,
+            campaignGoal: record.campaign_goal,
+          };
+        }));
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+
+  const saveContactDetails = async (customer: Customer) => {
+    if (!customer.slug) return;
+    setSavingRecord(true);
+    try {
+      await saveDemoCustomer(customer.slug, { phone_number: customer.phone, email: customer.email });
+      toast({ title: "Contact details saved", description: `${customer.firstName}'s number is ready for the demo call.` });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Could not save details", description: error instanceof Error ? error.message : "Please try again." });
+    } finally {
+      setSavingRecord(false);
+    }
+  };
+
+  const startDemoCall = async (slug = "bob") => {
+    if (demoCalling) return;
+    setDemoCalling(true);
+    const customer = customers.find((item) => item.slug === slug);
+    const name = customer ? fullName(customer) : "the customer";
+    toast({ title: "Dialing now…", description: `Rocky is placing a live call to ${name}.` });
+    try {
+      const result = await runDemoCall(slug);
+      setActivities((current) => [{ id: `live-${Date.now()}`, title: `Live demo call placed to ${name} (${result.to})`, time: "Just now", kind: "call" }, ...current]);
+      toast({ title: "Call placed", description: `Rocky is calling ${result.to} now.` });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Call could not be placed", description: error instanceof Error ? error.message : "Please try again." });
+    } finally {
+      setDemoCalling(false);
+    }
+  };
+
 
   const selectedCustomer = customers.find((customer) => customer.id === selectedId) ?? null;
   const filteredCustomers = useMemo(() => customers.filter((customer) => `${fullName(customer)} ${customer.vehicle}`.toLowerCase().includes(query.toLowerCase())), [customers, query]);
