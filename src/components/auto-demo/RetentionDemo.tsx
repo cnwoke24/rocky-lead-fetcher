@@ -27,7 +27,38 @@ import {
   getCallOutcome, sampleImportRows, sendEmail, simulateCompletedVisit, syncCustomerData,
   triggerRetellCall, updateCustomerRecord, uploadCustomerFile, type ImportedRow,
 } from "./mock-services";
-import { fetchDemoCustomers, runDemoCall, saveDemoCustomer } from "./demo-call";
+import { fetchDemoCallResult, fetchDemoCallResults, fetchDemoCustomers, runDemoCall, saveDemoCustomer, type DemoCallResult } from "./demo-call";
+
+const formatDuration = (seconds: number | null) => {
+  if (!seconds || seconds < 0) return "—";
+  return `${Math.floor(seconds / 60)}m ${String(seconds % 60).padStart(2, "0")}s`;
+};
+
+const parseTranscript = (text: string | null): CallRecord["transcript"] =>
+  (text ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const isAgent = /^rocky ai:/i.test(line) || /^agent:/i.test(line);
+      return { speaker: (isAgent ? "Rocky AI" : "Customer") as CallRecord["transcript"][number]["speaker"], text: line.replace(/^(rocky ai|agent|customer|user):\s*/i, "") };
+    });
+
+const resultToCallRecord = (result: DemoCallResult, customerName: string): CallRecord => ({
+  id: `live-${result.call_id}`,
+  customer: customerName,
+  campaign: "Visit 3 → Visit 4 Priority Retention",
+  date: new Date(result.started_at ?? result.created_at).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
+  duration: formatDuration(result.duration_seconds),
+  outcome: result.outcome ?? "Completed",
+  sentiment: result.sentiment?.toLowerCase() === "positive" ? "Positive" : "Neutral",
+  appointment: result.outcome === "Booked" ? "Booked" : result.outcome === "Callback Requested" ? "Pending" : "No",
+  emailSent: false,
+  service: "Recommended service",
+  loyaltyCredit: "—",
+  summary: result.summary ?? "The call has ended. A written summary is being prepared.",
+  transcript: parseTranscript(result.transcript),
+});
 
 const navItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard }, { id: "customers", label: "Customers", icon: Users },
