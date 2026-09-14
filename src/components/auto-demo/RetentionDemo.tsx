@@ -141,8 +141,44 @@ export function RetentionDemo() {
         }));
       })
       .catch(() => undefined);
+
+    fetchDemoCallResults(10)
+      .then((results) => {
+        if (!active || !results.length) return;
+        setCalls((current) => {
+          const live = results.map((result) => resultToCallRecord(result, nameForSlug(result.customer_slug)));
+          const ids = new Set(live.map((item) => item.id));
+          return [...live, ...current.filter((item) => !ids.has(item.id))];
+        });
+      })
+      .catch(() => undefined);
+
     return () => { active = false; };
   }, []);
+
+  const nameForSlugRef = customers;
+  function nameForSlug(slug: string | null) {
+    const match = slug ? nameForSlugRef.find((item) => item.slug === slug) : undefined;
+    return match ? fullName(match) : "Demo customer";
+  }
+
+  const watchCallResult = async (callId: string, name: string) => {
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      let result: DemoCallResult | null = null;
+      try {
+        result = await fetchDemoCallResult(callId);
+      } catch {
+        result = null;
+      }
+      if (!result) continue;
+      const record = resultToCallRecord(result, name);
+      setCalls((current) => [record, ...current.filter((item) => item.id !== record.id)]);
+      setActivities((current) => [{ id: `result-${callId}`, title: `Call result received for ${name} · ${record.outcome} (${record.duration})`, time: "Just now", kind: "call" }, ...current]);
+      toast({ title: "Call result received", description: `${name}: ${record.outcome} · ${record.duration}` });
+      if (result.summary) return;
+    }
+  };
 
   const saveContactDetails = async (customer: Customer) => {
     if (!customer.slug) return;
