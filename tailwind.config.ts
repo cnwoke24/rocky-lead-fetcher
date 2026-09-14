@@ -75,6 +75,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        demo: {
+          navy: "hsl(var(--demo-navy))",
+          "navy-foreground": "hsl(var(--demo-navy-foreground))",
+          "navy-muted": "hsl(var(--demo-navy-muted))",
+          "navy-accent": "hsl(var(--demo-navy-accent))",
+        },
+        retention: {
+          DEFAULT: "hsl(var(--retention))",
+          foreground: "hsl(var(--retention-foreground))",
+          soft: "hsl(var(--retention-soft))",
+          "soft-foreground": "hsl(var(--retention-soft-foreground))",
+        },
       },
       boxShadow: {
         card: "0 1px 2px 0 hsl(217 40% 40% / 0.05), 0 4px 16px -2px hsl(217 40% 40% / 0.07)",
