@@ -27,7 +27,38 @@ import {
   getCallOutcome, sampleImportRows, sendEmail, simulateCompletedVisit, syncCustomerData,
   triggerRetellCall, updateCustomerRecord, uploadCustomerFile, type ImportedRow,
 } from "./mock-services";
-import { fetchDemoCustomers, runDemoCall, saveDemoCustomer } from "./demo-call";
+import { fetchDemoCallResult, fetchDemoCallResults, fetchDemoCustomers, runDemoCall, saveDemoCustomer, type DemoCallResult } from "./demo-call";
+
+const formatDuration = (seconds: number | null) => {
+  if (!seconds || seconds < 0) return "—";
+  return `${Math.floor(seconds / 60)}m ${String(seconds % 60).padStart(2, "0")}s`;
+};
+
+const parseTranscript = (text: string | null): CallRecord["transcript"] =>
+  (text ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const isAgent = /^rocky ai:/i.test(line) || /^agent:/i.test(line);
+      return { speaker: (isAgent ? "Rocky AI" : "Customer") as CallRecord["transcript"][number]["speaker"], text: line.replace(/^(rocky ai|agent|customer|user):\s*/i, "") };
+    });
+
+const resultToCallRecord = (result: DemoCallResult, customerName: string): CallRecord => ({
+  id: `live-${result.call_id}`,
+  customer: customerName,
+  campaign: "Visit 3 → Visit 4 Priority Retention",
+  date: new Date(result.started_at ?? result.created_at).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
+  duration: formatDuration(result.duration_seconds),
+  outcome: result.outcome ?? "Completed",
+  sentiment: result.sentiment?.toLowerCase() === "positive" ? "Positive" : "Neutral",
+  appointment: result.outcome === "Booked" ? "Booked" : result.outcome === "Callback Requested" ? "Pending" : "No",
+  emailSent: false,
+  service: "Recommended service",
+  loyaltyCredit: "—",
+  summary: result.summary ?? "The call has ended. A written summary is being prepared.",
+  transcript: parseTranscript(result.transcript),
+});
 
 const navItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard }, { id: "customers", label: "Customers", icon: Users },
@@ -110,8 +141,44 @@ export function RetentionDemo() {
         }));
       })
       .catch(() => undefined);
+
+    fetchDemoCallResults(10)
+      .then((results) => {
+        if (!active || !results.length) return;
+        setCalls((current) => {
+          const live = results.map((result) => resultToCallRecord(result, nameForSlug(result.customer_slug)));
+          const ids = new Set(live.map((item) => item.id));
+          return [...live, ...current.filter((item) => !ids.has(item.id))];
+        });
+      })
+      .catch(() => undefined);
+
     return () => { active = false; };
   }, []);
+
+  const nameForSlugRef = customers;
+  function nameForSlug(slug: string | null) {
+    const match = slug ? nameForSlugRef.find((item) => item.slug === slug) : undefined;
+    return match ? fullName(match) : "Demo customer";
+  }
+
+  const watchCallResult = async (callId: string, name: string) => {
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      let result: DemoCallResult | null = null;
+      try {
+        result = await fetchDemoCallResult(callId);
+      } catch {
+        result = null;
+      }
+      if (!result) continue;
+      const record = resultToCallRecord(result, name);
+      setCalls((current) => [record, ...current.filter((item) => item.id !== record.id)]);
+      setActivities((current) => [{ id: `result-${callId}`, title: `Call result received for ${name} · ${record.outcome} (${record.duration})`, time: "Just now", kind: "call" }, ...current]);
+      toast({ title: "Call result received", description: `${name}: ${record.outcome} · ${record.duration}` });
+      if (result.summary) return;
+    }
+  };
 
   const saveContactDetails = async (customer: Customer) => {
     if (!customer.slug) return;
@@ -135,7 +202,8 @@ export function RetentionDemo() {
     try {
       const result = await runDemoCall(slug);
       setActivities((current) => [{ id: `live-${Date.now()}`, title: `Live demo call placed to ${name} (${result.to})`, time: "Just now", kind: "call" }, ...current]);
-      toast({ title: "Call placed", description: `Rocky is calling ${result.to} now.` });
+      toast({ title: "Call placed", description: `Rocky is calling ${result.to} now. Results will appear here when the call ends.` });
+      if (result.callId) void watchCallResult(result.callId, name);
     } catch (error) {
       toast({ variant: "destructive", title: "Call could not be placed", description: error instanceof Error ? error.message : "Please try again." });
     } finally {

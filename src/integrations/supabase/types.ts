@@ -199,6 +199,72 @@ export type Database = {
           },
         ]
       }
+      demo_call_results: {
+        Row: {
+          agent_id: string | null
+          call_id: string
+          call_status: string | null
+          created_at: string
+          customer_slug: string | null
+          disconnection_reason: string | null
+          duration_seconds: number | null
+          ended_at: string | null
+          from_number: string | null
+          id: string
+          outcome: string | null
+          raw: Json | null
+          recording_url: string | null
+          sentiment: string | null
+          started_at: string | null
+          summary: string | null
+          to_number: string | null
+          transcript: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent_id?: string | null
+          call_id: string
+          call_status?: string | null
+          created_at?: string
+          customer_slug?: string | null
+          disconnection_reason?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          from_number?: string | null
+          id?: string
+          outcome?: string | null
+          raw?: Json | null
+          recording_url?: string | null
+          sentiment?: string | null
+          started_at?: string | null
+          summary?: string | null
+          to_number?: string | null
+          transcript?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string | null
+          call_id?: string
+          call_status?: string | null
+          created_at?: string
+          customer_slug?: string | null
+          disconnection_reason?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          from_number?: string | null
+          id?: string
+          outcome?: string | null
+          raw?: Json | null
+          recording_url?: string | null
+          sentiment?: string | null
+          started_at?: string | null
+          summary?: string | null
+          to_number?: string | null
+          transcript?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       demo_customers: {
         Row: {
           campaign_goal: string
